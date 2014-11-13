@@ -1,1 +1,9 @@
 .DS_Store
+gs
+logs
+*.log
+
+# Runtime data
+pids
+# NODE DEPENDENCIES
+node_modules
