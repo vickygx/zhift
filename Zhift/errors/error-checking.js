@@ -36,7 +36,7 @@ module.exports.badTime = function(timeString) {
 	} 
 	var hour = parseInt(hourString);
 	var minute = parseInt(minuteString);
-	if (hour > 60 || minute > 60) {
+	if (hour > 23 || minute > 60) {
 		return true;
 	}
 	return false;
