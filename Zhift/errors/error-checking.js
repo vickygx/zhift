@@ -47,6 +47,9 @@ module.exports.shifts.isProperDayOfWeek = function(value){
 
 module.exports.shifts.isProperTime = function(value){
     var isProperFormat = /^\d\d:\d\d$/i.test(value);
+    
+    if (!isProperFormat)
+        return isProperFormat
 
     var hour = parseInt(timeString.split(":")[0]);
     var minute = parseInt(timeString.split(":")[1]);

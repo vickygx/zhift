@@ -3,8 +3,8 @@
     @author: Vicky Gong
     
     Formats-
-        dayOfWeek: "Monday", "Tuesday", etc.
-        start, end: "HH:MM"
+        dayOfWeek: 'Monday', 'Tuesday', etc.
+        start, end: 'HH:MM'
 
     upForGrabs: boolean indicating whether the shift is being offered
         default: False
