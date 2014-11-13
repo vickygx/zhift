@@ -44,13 +44,14 @@ module.exports.shifts.isProperDayOfWeek = function(value){
     @param {String} value
     @return {Boolean}
 */
+
 module.exports.shifts.isProperTime = function(value){
     var isProperFormat = /^\d\d:\d\d$/i.test(value);
 
     var hour = parseInt(timeString.split(":")[0]);
     var minute = parseInt(timeString.split(":")[1]);
     
-    var isProperTime = hour < 60 && minute < 60;
+    var isProperTime = hour < 24 && minute < 60;
    
     return isProperFormat && isProperTime
 }
