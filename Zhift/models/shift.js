@@ -41,4 +41,10 @@ ShiftSchema.path('start').validate(
     errorChecking.shifts.isProperTime, 
     'Invalid start time. Must be in HH:MM');
 
+/*  Validator for end for Shift Schema
+*/
+ShiftSchema.path('end').validate(
+    errorChecking.shifts.isProperTime, 
+    'Invalid start time. Must be in HH:MM');
+
 module.exports = mongoose.model('Shift', ShiftSchema);
