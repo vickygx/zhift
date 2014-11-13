@@ -1,12 +1,12 @@
-/*  Module Dependencies
+/*  NODE DEPENDENCIES
 */
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-
+var express         = require('express');
+var path            = require('path');
+var favicon         = require('serve-favicon');
+var logger          = require('morgan');
+var cookieParser    = require('cookie-parser');
+var bodyParser      = require('body-parser');
+var mongoose        = require('mongoose');
 // Set up routes
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -15,9 +15,15 @@ var shift = require('./routes/shift');
 // Set up app
 var app = express();
 
-// Set up mongoose
-// TODO @ Anji
+// Mongoose connection to MongoLab DB.
+var MONGOLAB_CONNECTION_STRING = 'zhifty:6170@ds051110.mongolab.com:51110/zhift';
+mongoose.connect('mongodb://' + MONGOLAB_CONNECTION_STRING);
 
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function callback () {
+    console.log("Database ready.");
+});
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
