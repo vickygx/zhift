@@ -1,7 +1,36 @@
-doctype html
+//- General layout for main pages of app
+//- @author Vicky Gong
+
+doctype
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,200italic,300italic,400italic,600italic,700italic")
+
+    // jQuery
+    script(type="text/javascript", src="http://code.jquery.com/jquery-1.10.1.min.js")
+    script(type="text/javascript", src="http://code.jquery.com/jquery-migrate-1.2.1.min.js")
+
+    // Bootstrap
+    link(rel="stylesheet", href="external/css/bootstrap.css")
+    script(type="text/javascript", src="/external/js/bootstrap.js")
+
+    // Angular
+    script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js")
+    script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.js")
+    script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-sanitize.js")
+    script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-resource.min.js") 
+
+    // Main js
+    script(type="text/javascript", src="javascripts/main.js")
+
+    // Main css
+    include mixins/css.jade
+    +css('main')
+
+    block head
+    
+
   body
-    block content
+    div#content
+      block content

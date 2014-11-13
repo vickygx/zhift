@@ -1,0 +1,8 @@
+Folder containing files that are the controllers for the databases.
+
+These functions directly interact with mutating the database.
+Examples:
+
+    - find
+    - remove
+    - create
