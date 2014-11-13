@@ -21,3 +21,23 @@ module.exports.shifts = {};
 module.exports.invalidId = function(id) {
   return !ObjectId.isValid(id);
 }
+
+/**
+* Returns true if the timeString represents an invalid time, false otherwise
+*
+* @param {String} timeString
+* return {Boolean}
+*/
+module.exports.badTime = function(timeString) {
+	var hourString = timeString.split(":")[0];
+	var minuteString = timeString.split(":")[1];
+	if (hourString.length > 2 || minuteString.length > 2) {
+		return true;
+	} 
+	var hour = parseInt(hourString);
+	var minute = parseInt(minuteString);
+	if (hour > 60 || minute > 60) {
+		return true;
+	}
+	return false;
+}
