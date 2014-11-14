@@ -25,6 +25,19 @@ router.post('/', function(req, res){
 	)
 });
 
+/* GET request for a template shift */
+router.get('/:id', function(req, res){
+	TemplateShiftController.retrieveShift(req.param('id'),
+		function(e, o) {
+			if (e) {
+				res.send(e);
+			} else {
+				res.send(o);
+			}
+		}
+	)
+});
+
 /* POST request to delete existing template shift */
 router.put('/delete/:id', function(req, res){
 	TemplateShiftController.deleteShift(req.param('id'),
@@ -52,7 +65,7 @@ router.put('/reassign/:id', function(req, res){
 });
 
 /* GET request to get all template shifts associated with a schedule */
-router.get('/all/:scheduleid', function(req, res){
+router.get('/all/:scheduleId', function(req, res){
 	TemplateShiftController.getAllShiftsBySchedule(req.param('scheduleId'),
 		function(e, o) {
 			if (e) {

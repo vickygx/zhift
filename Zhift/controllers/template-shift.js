@@ -33,11 +33,22 @@ module.exports.createShift = function(day, startTime, endTime, employeeId, sched
     shift.save(fn);
 };
 
+/*  Function to retrieve a template for a regularly occurring shift
+    
+    @param 
+        {ObjectId} shiftId:  id of the shift to be retrieved
+        {function} fn:       callback function
+
+    @return ---
+*/
+module.exports.retrieveShift = function(shiftId, fn){
+    TemplateShift.findById(shiftId, fn);
+};
 
 /*  Function to delete a template for a regularly occurring shift
     
     @param 
-        {ObjectId} shiftId:  id of the shift to be put up for grabs
+        {ObjectId} shiftId:  id of the shift to be deleted
         {function} fn:       callback function
 
     @return ---
@@ -64,7 +75,7 @@ module.exports.giveShiftTo = function(shiftId, employeeId, fn){
 /*  Function to get all template shifts associated with a schedule
     
     @param 
-        {ObjectId} scheduleId:  id of the schedule
+        {ObjectId} scheduleId:  id of the schedule shift is part of
         {function} fn:          callback function
 
     @return ---
