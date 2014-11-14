@@ -13,6 +13,7 @@ var users = require('./routes/users');
 var shift = require('./routes/shift');
 var templateShift = require('./routes/template-shift');
 var schedule = require('./routes/schedule');
+var organization = require('./routes/organization');
 
 // Set up app
 var app = express();
@@ -44,6 +45,7 @@ app.use('/users', users);
 app.use('/shift', shift);
 app.use('/shift/template', templateShift);
 app.use('/schedule', schedule);
+app.use('/org', organization);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

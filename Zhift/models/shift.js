@@ -25,7 +25,8 @@ var ShiftSchema = new mongoose.Schema({
   schedule: {type: ObjectId, ref: 'Schedule', required: true},
   dateScheduled: {type: Date, required: true},
   upForGrabs: {type: Boolean, required: true},
-  upForSwap: {type: Boolean, required: true}
+  upForSwap: {type: Boolean, required: true},
+  templateShift: {type: ObjectId, ref: 'TemplateShift', required: true}
 
 });
 
