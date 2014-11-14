@@ -7,6 +7,7 @@ var logger          = require('morgan');
 var cookieParser    = require('cookie-parser');
 var bodyParser      = require('body-parser');
 var mongoose        = require('mongoose');
+var errorHandler    = require('errorhandler');
 // Set up routes
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -47,36 +48,43 @@ app.use('/shift/template', templateShift);
 app.use('/schedule', schedule);
 app.use('/org', organization);
 
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
+    var err = new Error('Not Found hihi');
     err.status = 404;
     next(err);
 });
 
-// error handlers
+// Error middleware 
+app.use(function(err, req, res, next) {
+    //TODO: figure out why error not going into middleware
+    console.log("In error middleware");
+    if (err.status === 400) {
+        res.send(400, err.message);
+    } else if (err.status === 401) {
+        res.send(401, err.message);
+    } else if (err.status === 403) {
+        res.send(403, err.message);
+    } else if (err.status === 404) {
+        res.send(404, err.message);
+    } else if (err.status === 500) {
+        res.send(500, err.message);
+    } else {
+        return next(err);
+    }
+});
 
 // development error handler
-// will print stacktrace
 if (app.get('env') === 'development') {
+    app.use(errorHandler({ dumpExceptions: true, showStack: true }));
+}
+// production error handler
+else {
     app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
+        app.use(errorHandler());
     });
 }
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
 
 // Setting up port
 var port = Number(process.env.OPENSHIFT_NODEJS_PORT || 8080);

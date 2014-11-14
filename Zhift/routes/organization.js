@@ -11,12 +11,12 @@ var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
 
 /* GET home page. */
-router.get('/', function(req, res) {
+router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express through org for now' });
 });
 
 /* POST request to create org */
-router.post('/', function(req, res){
+router.post('/', function(req, res, next){
     // TODO : any permissions
 
     OrgController.createOrg(req.body.name,
@@ -31,16 +31,20 @@ router.post('/', function(req, res){
 });
 
 /* GET request to get org with name */
-router.get('/:name', function(req, res){
+router.get('/:name', function(req, res, next){
     // TODO : any permissions
 
-    OrgController.getOrg(req.body.name,
+    OrgController.getOrg(req.param('name'),
         // TODO: error handling
         function(err, org){
             if (err){
                 next(err);
             } else {
                 res.send(org);
+                //TODO: figure out why error not going into middleware
+                // next({status: 400, message: 'test'});
             }
         });
 });
+
+module.exports = router;
