@@ -27,6 +27,12 @@ module.exports.invalidIdError = {
 
 //================== User error functions =================//
 
+module.exports.users.invalidUserId = {
+    status: 400,
+    name: "Bad Input",
+    message: "The given user id doesn't exist"
+}
+
 //================== Shift error functions =================//
 
 module.exports.shifts.invalidShiftId = {

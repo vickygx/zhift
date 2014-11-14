@@ -60,6 +60,24 @@ router.put('/putUpForGrabs/:id', function(req, res){
     });
 });
 
+/*  GET request to get all shifts associated with a user*/
+router.get('user/:userid', function(req, res){
+    //TODO: make sure session user is userid
+    //TODO: can change the format if we only doign for session id to using req.session.user
+
+    ShiftController.getAllUserShifts(req.param('userid'),
+        function(err, shifts){
+            // TODO: erorr handling
+            if (err){
+                next(err);
+            } else if (shifts){
+                res.send({'shifts': shifts});
+            } else {
+                next(errors.users.invalidUserId);
+            }
+        });
+});
+
 /*  GET request to get all shifts associated with a schedule */
 router.get('/all/:scheduleid', function(req, res){
     //TODO: make sure user is part of schedule / manager
@@ -79,11 +97,41 @@ router.get('/all/:scheduleid', function(req, res){
 
 /*  GET request to get all shifts being offered associated with a schedule */
 router.get('/upForGrabs/:scheduleid', function(req, res){
+    // TODO: make sure user is part of same schedule/ manger
 
+    ShiftController.getOfferedShiftsOnASchedule(req.param('scheduleid'),
+        function(err, shifts){
+            // TODO : error handling
+            if (err) {
+                next(err);
+            }
+            else if (shifts){
+                res.send({'shifts': shifts});
+            }
+            else {
+                next(errors.schedules.invalidScheduleId);
+            }
+        });
 });
 
 /*  GET request to claim a given shift by user who is logged in */
 router.get('/claimShift/:id', function(req, res){
+    // Make sure user logged in is in same schedule as shift to claim
+    employeeId = 'tempIdOfPersonLoggedIn';
+
+    ShiftController.giveShiftTo(req.param('id'), employeeId,
+        function(err, shift){
+            // TODO : error handling
+            if (err) {
+                next(err);
+            }
+            else if (shifts){
+                res.send(shift);
+            }
+            else {
+                next(errors.schedules.invalidShiftId);
+            }
+        });
 
 });
 

@@ -37,6 +37,17 @@ module.exports.createShift = function(day, startTime, endTime, employeeId, sched
     shift.save(fn);
 };
 
+/*  Function to delete all shifts based on the same template shift
+    
+    @param 
+        {ObjectId} templateShiftId:  id of the template shift
+        {function} fn :         call back function
+
+    @return ---
+*/
+module.exports.deleteShiftsOnTemplateShift = function(templateShiftId, fn){
+    Shift.remove({templateShift: templateShiftId}, fn);
+}
 
 /*  Function to put a shift up for grabs
     
@@ -108,6 +119,17 @@ module.exports.tradeShifts = function(shiftIdA, employeeIdA, shiftIdB, employeeI
         });
 }
 
+/*  Function to get all shifts associated to a user
+    
+    @param 
+        {ObjectId} employeeId:  id of the employee
+        {function} fn :         call back function
+
+    @return ---
+*/
+module.exports.getAllUserShifts = function(employeeId, fn){
+    Shift.find({responsiblePerson: employeeId}, fn);
+}
 
 /*  Function to get all shifts associated to a schedule
     
