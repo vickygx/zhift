@@ -35,11 +35,8 @@ router.post('/', function(req, res){
             if (err){
                 // we can send custom errors instead
                 next(err);
-            } else if (shift){
+            } else {
                 res.send(shift);
-            }
-            else {
-                next()
             }
         });
 });

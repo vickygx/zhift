@@ -5,7 +5,7 @@
 */
 var Shift = require('../models/shift');
 var errors = require('../errors/errors');
-module.exports = {}
+module.exports = {};
 
 /*  Function to create a shift
     
