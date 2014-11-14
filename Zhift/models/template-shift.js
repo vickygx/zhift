@@ -1,20 +1,40 @@
+/*  Schema + Mongoose model for Template Shift
+
+    @author: Anji Ren
+    
+    Formats-
+        dayOfWeek: "Monday", "Tuesday", etc.
+        start, end: "HH:MM"
+*/
+
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.Types.ObjectId;
+var errorChecking = require('../errors/error-checking');
 
 var TemplateShiftSchema = new mongoose.Schema({
-  dayOfWeek: { type: String, required: true}, 	// "Monday"
-  start: { type: String, required: true}, 		// "HH:MM"
-  end: {type: String, required: true}, 			// "HH:MM"
-  responsiblePerson: {type: ObjectId, ref: 'User', required: true},
-  schedule: {type: ObjectId, ref: 'Schedule', required: true}
+	dayOfWeek: { type: String, required: true},
+  	start: { type: String, required: true},
+  	end: {type: String, required: true},
+  	responsiblePerson: {type: ObjectId, ref: 'User', required: true},
+  	schedule: {type: ObjectId, ref: 'Schedule', required: true}
 });
 
-TemplateShiftSchema.path('dayOfWeek').validate(function (value) {
-  return /Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday/i.test(value);
-}, 'Invalid day of week.');
-TemplateShfitSchema.path('start').required(true, 'Missing start time.');
-TemplateShfitSchema.path('end').required(true, 'Missing end time.');
-TemplateShfitSchema.path('responsiblePerson').required(true, 'Missing responsible person reference.');
-TemplateShfitSchema.path('schedule').required(true, 'Missing schedule reference.');
+/*  Validator for dayOfWeek for TemplateShift Schema
+*/
+TemplateShiftSchema.path('dayOfWeek').validate(
+    errorChecking.shifts.isProperDayOfWeek, 
+    'Invalid day of the week');
+
+/*  Validator for start for TemplateShift Schema
+*/
+TemplateShiftSchema.path('start').validate(
+    errorChecking.shifts.isProperTime, 
+    'Invalid start time or format. Must be formatted HH:MM');
+
+/*  Validator for end for TemplateShift Schema
+*/
+TemplateShiftSchema.path('end').validate(
+    errorChecking.shifts.isProperTime, 
+    'Invalid end time or format. Must be formatted HH:MM');
 
 module.exports = mongoose.model('TemplateShift', TemplateShiftSchema);

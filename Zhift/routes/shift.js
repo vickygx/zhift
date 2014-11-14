@@ -8,7 +8,7 @@ var router = express.Router();
 // Controllers
 var ShiftController = require('../controllers/shift');
 var errors = require('../errors/errors');
-var errorChecking = require('../errors/errorChecking');
+var errorChecking = require('../errors/error-checking');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -44,7 +44,5 @@ router.get('/upForGrabs/:scheduleid', function(req, res){
 router.get('/claimShift/:id', function(req, res){
 
 });
-
-
 
 module.exports = router;
