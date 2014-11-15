@@ -15,7 +15,7 @@ module.exports = {};
 
     @return ---
 */
-module.exports.createOrg = function(name, fn){
+module.exports.createOrg = function(name, fn) {
     // Create new Shift
     var org = new Organization({
        _id: name
@@ -33,6 +33,6 @@ module.exports.createOrg = function(name, fn){
 
     @return ---
 */
-module.exports.getOrg = function(name, fn){
+module.exports.getOrg = function(name, fn) {
     Organization.findById(name, fn);
 }

@@ -17,16 +17,16 @@ ZhiftApp.controller('ShiftController', function($scope, ShiftService) {
     $scope.viewModel = {
         shifts: ShiftService.shifts,
         test: 'Controller test succeded!'
-    }
+    };
 
     /* Updator function for shifts variables changing */
-    $scope.$on('shifts.update', function( event ) {
+    $scope.$on('shifts.update', function(event) {
         $scope.viewModel.shifts = ShiftService.shifts;
         $scope.$apply();
     });
 
     /* Updator function for error variable changing */
-    $scope.$on('images.error', function( event) {
+    $scope.$on('images.error', function(event) {
         helpers.updateError();
     });
 
@@ -34,19 +34,19 @@ ZhiftApp.controller('ShiftController', function($scope, ShiftService) {
     var helpers = (function() { 
 
         /* Updates the error box */
-        var updateError = function(){
+        var updateError = function() {
             $('.grid .error').html(ShiftService.error);
-        }
+        };
 
         /* Displays all shifts */
-        var displayAllShifts = function(){
+        var displayAllShifts = function() {
             ShiftService.displayAllShifts();
-        }
+        };
 
         return {
             displayAllShifts: displayAllShifts,
             updateError : updateError
-        }
+        };
     })();
 
     /* Initializer function 

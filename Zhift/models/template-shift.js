@@ -12,7 +12,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 var errorChecking = require('../errors/error-checking');
 
 var TemplateShiftSchema = new mongoose.Schema({
-	dayOfWeek: { type: String, required: true},
+    dayOfWeek: { type: String, required: true},
   	start: { type: String, required: true},
   	end: {type: String, required: true},
   	responsiblePerson: {type: ObjectId, ref: 'User', required: true},
@@ -23,18 +23,21 @@ var TemplateShiftSchema = new mongoose.Schema({
 */
 TemplateShiftSchema.path('dayOfWeek').validate(
     errorChecking.shifts.isProperDayOfWeek, 
-    'Invalid day of the week');
+    'Invalid day of the week'
+);
 
 /*  Validator for start for TemplateShift Schema
 */
 TemplateShiftSchema.path('start').validate(
     errorChecking.shifts.isProperTime, 
-    'Invalid start time or format. Must be formatted HH:MM');
+    'Invalid start time or format. Must be formatted HH:MM'
+);
 
 /*  Validator for end for TemplateShift Schema
 */
 TemplateShiftSchema.path('end').validate(
     errorChecking.shifts.isProperTime, 
-    'Invalid end time or format. Must be formatted HH:MM');
+    'Invalid end time or format. Must be formatted HH:MM'
+);
 
 module.exports = mongoose.model('TemplateShift', TemplateShiftSchema);

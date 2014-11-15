@@ -12,11 +12,11 @@ var DemoController = function() {
 
     var eventListeners = function() {
         /*================================= Organization ===============================*/
-        (function(){
+        (function() {
 
             // Listener for creating organization form
-            $('#createOrgForm').on('submit', function(e){
-                e.preventDefault();
+            $('#createOrgForm').on('submit', function(evt) {
+                evt.preventDefault();
 
                 var data = $(this).serializeArray();
 
@@ -33,8 +33,8 @@ var DemoController = function() {
             });
 
             // Listener for getting organization form
-            $('#getOrgForm').on('submit', function(e){
-                e.preventDefault();
+            $('#getOrgForm').on('submit', function(evt) {
+                evt.preventDefault();
                 var name = $(this)[0].elements["name"].value;
                 // Sending request 
                 $.ajax({
@@ -49,11 +49,11 @@ var DemoController = function() {
 
         })();
     /*=================================== Schedule =================================*/
-        (function(){
+        (function() {
             
             // Listener for creating schedule form
-            $('#createScheduleForm').on('submit', function(e){
-                e.preventDefault();
+            $('#createScheduleForm').on('submit', function(evt) {
+                evt.preventDefault();
 
                 var data = $(this).serializeArray();
 
@@ -70,8 +70,8 @@ var DemoController = function() {
             });
 
             // Listener for getting schedule form
-            $('#getScheduleForm').on('submit', function(e){
-                e.preventDefault();
+            $('#getScheduleForm').on('submit', function(evt) {
+                evt.preventDefault();
 
                 var scheduleid = $(this)[0].elements["id"].value;
 
@@ -105,5 +105,5 @@ var DemoController = function() {
       
     return {
         init: init
-    }
+    };
 }

@@ -113,7 +113,7 @@ else {
 // Setting up port
 var port = Number(process.env.OPENSHIFT_NODEJS_PORT || 8080);
 app.listen(port, process.env.OPENSHIFT_NODEJS_IP, function() {
-    console.log("Express server listening on port %d in %s mode", port, app.settings.env);
+    console.log('Express server listening on port %d in %s mode', port, app.settings.env);
 });
 
 module.exports = app;

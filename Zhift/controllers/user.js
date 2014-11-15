@@ -7,14 +7,15 @@ var User = require('../models/user');
 var ManagerUser = require('../models/manager-user');
 var EmployeeUser = require('../models/employee-user');
 var errors = require('../errors/errors');
-module.exports = {}
+module.exports = {};
 
 var getUserModel = module.exports.getUserModel = function(type) {
-  if (type.toLowerCase() == "manager") {
-    return ManagerUser;
-  } else if (type.toLowerCase() == "employee") {
-    return EmployeeUser;
-  }
+    if (type.toLowerCase() == "manager") {
+        return ManagerUser;
+    } 
+    else if (type.toLowerCase() == "employee") {
+        return EmployeeUser;
+    }
 }
 
 /*  Function to create a user
@@ -37,7 +38,7 @@ module.exports.createUser = function(name, email, password, org, type, callback)
         email: email,
         password: password,
         org: org
-    })
+    });
 
     // Add to database
     console.log('New user successfully created.');
@@ -62,5 +63,5 @@ module.exports.retrieveUser = function(email, org, callback) {
             callback(null, false, {message: 'Incorrect name or organization.'})
         } 
         callback(null, user);
-    })
+    });
 };

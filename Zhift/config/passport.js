@@ -6,7 +6,7 @@ var bCrypt			= require('bcrypt-nodejs')
 
 module.exports = function(passport) {
 
-	var createHash = function(password){
+	var createHash = function(password) {
         return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
     }
 
@@ -45,15 +45,15 @@ module.exports = function(passport) {
 				if (user) {
 					console.log("An user with this email and in this organization already exists!");
 					return done(null, false, req.flash('message', 
-						'An user with this email already exists in this organization.'))
+						'An user with this email already exists in this organization.'));
 				}
 
 				// encrypt password
 				password = createHash(password);
-				UserController.createUser(name, email, password, org, type, function(e, newUser) {
+				UserController.createUser(name, email, password, org, type, function(err, newUser) {
 					if (err) {
-						console.log(e);
-						return done(null, false, req.flash('message', e)); 
+						console.log(err);
+						return done(null, false, req.flash('message', err)); 
 						//TODO
 					}
 					console.log("New user successfully created.");
@@ -76,7 +76,7 @@ module.exports = function(passport) {
 	  			}
 	  			if (!isCorrectPassword(user, password)) {
 	  				console.log('Incorrect password.');
-	  				return done(null, false, req.flash('message', 'Incorrect password.'))
+	  				return done(null, false, req.flash('message', 'Incorrect password.'));
 	  			}
 	  			return done(null, user);
 	  		});

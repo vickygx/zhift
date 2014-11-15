@@ -15,7 +15,7 @@ module.exports = {};
         {function} fn:                callback function
     @return ---
 */
-module.exports.createSwap = function(shiftId, scheduleId, fn){
+module.exports.createSwap = function(shiftId, scheduleId, fn) {
     // Create new Shift
     var swap = new Swap({
        shiftUpForSwap: shiftId,
@@ -34,9 +34,9 @@ module.exports.createSwap = function(shiftId, scheduleId, fn){
         {function} fn:                callback function
     @return ---
 */
-module.exports.getSwapsOnSchedule = function(scheduleId, fn){
+module.exports.getSwapsOnSchedule = function(scheduleId, fn) {
     Swap.find({schedule: scheduleId}, fn);
-}
+};
 
 /*  Function to set up a shift for offer on a swap 
     Replaces old shiftOfferedInReturn with new value
@@ -48,9 +48,9 @@ module.exports.getSwapsOnSchedule = function(scheduleId, fn){
     @return ---
 
 */
-module.exports.offerShiftForSwap = function(swapId, shiftId, fn){
+module.exports.offerShiftForSwap = function(swapId, shiftId, fn) {
     Swap.findByIdAndUpdate(swapId, {shiftOfferedInReturn: shiftId}, fn);
-}
+};
 
 /*  Function to reset shiftOfferedInReturn to be an empty value
 
@@ -60,9 +60,9 @@ module.exports.offerShiftForSwap = function(swapId, shiftId, fn){
     @return ---
 
 */
-module.exports.resetOfferedShiftInSwap = function(swapId, fn){
+module.exports.resetOfferedShiftInSwap = function(swapId, fn) {
     Swap.findByIdAndUpdate(swapId, {shiftOfferedInReturn: null}, fn);
-}
+};
 
 /*  Function to delete a swap
 
@@ -72,6 +72,6 @@ module.exports.resetOfferedShiftInSwap = function(swapId, fn){
     @return ---
 
 */
-module.exports.deleteSwap = function(swapId, fn){
+module.exports.deleteSwap = function(swapId, fn) {
     Swap.findByIdAndRemove(swapId, fn);
-}
+};

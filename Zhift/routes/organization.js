@@ -16,33 +16,37 @@ router.get('/', function(req, res, next) {
 });
 
 /* POST request to create org */
-router.post('/', function(req, res, next){
+router.post('/', function(req, res, next) {
     // TODO : any permissions
 
     OrgController.createOrg(req.body.name,
         // TODO: error handling
-        function(err, org){
-            if (err){
+        function(err, org) {
+            if (err) {
                 next(err);
-            } else {
+            } 
+            else {
                 res.send(org);
             }
-        });
+        }
+    );
 });
 
 /* GET request to get org with name */
-router.get('/:name', function(req, res, next){
+router.get('/:name', function(req, res, next) {
     // TODO : any permissions
 
     OrgController.getOrg(req.param('name'),
         // TODO: error handling
-        function(err, org){
-            if (err){
+        function(err, org) {
+            if (err) {
                 next(err);
-            } else {
+            } 
+            else {
                 res.send(org);
             }
-        });
+        }
+    );
 });
 
 module.exports = router;

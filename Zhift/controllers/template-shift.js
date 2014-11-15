@@ -5,7 +5,7 @@
 */
 var TemplateShift = require('../models/template-shift');
 var errors = require('../errors/errors');
-module.exports = {}
+module.exports = {};
 
 /*  Function to create a template for a regularly occurring shift
     
@@ -19,7 +19,7 @@ module.exports = {}
 
     @return ---
 */
-module.exports.createShift = function(day, startTime, endTime, employeeId, scheduleId, fn){
+module.exports.createShift = function(day, startTime, endTime, employeeId, scheduleId, fn) {
     // Create new Template Shift
     var shift = new TemplateShift({
        dayOfWeek: day,
@@ -41,7 +41,7 @@ module.exports.createShift = function(day, startTime, endTime, employeeId, sched
 
     @return ---
 */
-module.exports.retrieveShift = function(shiftId, fn){
+module.exports.retrieveShift = function(shiftId, fn) {
     TemplateShift.findById(shiftId, fn);
 };
 
@@ -53,7 +53,7 @@ module.exports.retrieveShift = function(shiftId, fn){
 
     @return ---
 */
-module.exports.deleteShift = function(shiftId, fn){
+module.exports.deleteShift = function(shiftId, fn) {
     TemplateShift.findByIdAndRemove(shiftId, fn);
 };
 
@@ -68,9 +68,9 @@ module.exports.deleteShift = function(shiftId, fn){
 
     @return ---
 */
-module.exports.giveShiftTo = function(shiftId, employeeId, fn){
+module.exports.giveShiftTo = function(shiftId, employeeId, fn) {
     TemplateShift.findByIdAndUpdate(shiftId, {responsiblePerson: employeeId}, fn);
-}
+};
 
 /*  Function to get all template shifts associated with a schedule
     
@@ -80,6 +80,6 @@ module.exports.giveShiftTo = function(shiftId, employeeId, fn){
 
     @return ---
 */
-module.exports.getAllShiftsBySchedule = function(scheduleId, fn){
+module.exports.getAllShiftsBySchedule = function(scheduleId, fn) {
     TemplateShift.find({schedule: scheduleId}, fn);
-}
+};

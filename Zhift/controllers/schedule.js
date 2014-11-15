@@ -5,7 +5,7 @@
 */
 var Schedule = require('../models/schedule');
 var errors = require('../errors/errors');
-module.exports = {}
+module.exports = {};
 
 /*  Function to create a schedule
     
@@ -16,7 +16,7 @@ module.exports = {}
 
     @return ---
 */
-module.exports.createSchedule = function(orgName, role, fn){
+module.exports.createSchedule = function(orgName, role, fn) {
     // Create new Schedule
     var schedule = new Schedule({
        org: orgName,

@@ -30,7 +30,7 @@ module.exports.invalidId = function(id) {
     @param {String} value
     @return {Boolean}
 */
-module.exports.shifts.isProperDayOfWeek = function(value){
+module.exports.shifts.isProperDayOfWeek = function(value) {
     return /Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday/i.test(value);
 }
 
@@ -45,16 +45,16 @@ module.exports.shifts.isProperDayOfWeek = function(value){
     @return {Boolean}
 */
 
-module.exports.shifts.isProperTime = function(value){
+module.exports.shifts.isProperTime = function(value) {
     var isProperFormat = /^\d\d:\d\d$/i.test(value);
     
-    if (!isProperFormat)
-        return isProperFormat
+    if (!isProperFormat) {
+        return isProperFormat;
+    }
 
     var hour = parseInt(timeString.split(":")[0]);
     var minute = parseInt(timeString.split(":")[1]);
-    
     var isProperTime = hour < 24 && minute < 60;
    
-    return isProperFormat && isProperTime
+    return isProperFormat && isProperTime;
 }
