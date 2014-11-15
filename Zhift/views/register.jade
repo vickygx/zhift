@@ -1,0 +1,31 @@
+extends layout
+
+block content
+	h1.text-center.login-title Register as the manager of a new organization
+	form.form-horizontal(action='/signup', method='POST')
+		fieldset
+			div.form-group
+				label.col-lg-2.control-label(for="inputName") Name
+				div.col-lg-10
+					input.form-control#inputName(type='text', name='name', placeholder='Name', required, autofocus)
+			div.form-group
+				label.col-lg-2.control-label(for="inputPassword") Password
+				div.col-lg-10
+					input.form-control#inputPassword(type='password', name='password', placeholder='Password', required)
+			div.form-group
+				label.col-lg-2.control-label(for="inputEmail") Email
+				div.col-lg-10
+					input.form-control#inputEmail(type='email', name='email', placeholder='Email', required)
+			div.form-group
+				label.col-lg-2.control-label(for="inputOrg") Organization
+				div.col-lg-10
+					input.form-control#inputOrg(type='text', name='org', placeholder='Organization', required, autofocus)
+			div.form-group
+				label.col-lg-2.control-label(for="inputType") Account Type
+				div.col-lg-10
+					input.form-control#inputType(type='text', name='userType', placeholder='User Type', required, autofocus)
+			button(class='btn btn-lg btn-primary btn-block', type='submit') Register
+			span.clearfix
+		#message
+			if message
+				h1.text-center.error-message #{message}
