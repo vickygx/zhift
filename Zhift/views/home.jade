@@ -1,4 +1,10 @@
 extends layout
+block head
+	include mixins/css.jade
+	+css('main')
+	+css('shift')
+
+	include mixins/shift-display.jade
 
 block content
 	div.container
@@ -12,3 +18,8 @@ block content
 								li Email ---> #{user.email}
 								li Organization ---> #{user.org} 
 						a(href='/signout', class='text-center new-account') Sign Out
+	h1= title
+	p Welcome to #{title}
+
+	p Showing shift mixin
+	+shiftDisplay('shiftDisplay')

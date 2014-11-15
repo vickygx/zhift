@@ -63,3 +63,70 @@ block content
                 legend.responseLegend
                     div Response: 
                     div.responseDiv#getScheduleResponse
+    div.collectionDiv 
+        h1.collectionTitle User
+        ul
+            li Create
+                legend
+                    form#createUserForm(name="createUserForm")
+                        input(name="organization", placeholder="Organization", required) 
+                        br
+                        input(name="username", placeholder="Username", required) 
+                        br
+                        input(name="password", placeholder="Password", required) 
+                        br
+                        input(type="radio" name="type" value="employee" checked) 
+                        | Employee
+                        input(type="radio" name="type" value="manager") 
+                        | Manager
+                        br
+                        input(type="submit")
+                        br
+                legend.responseLegend
+                    div Response: 
+                    div.responseDiv#createUserResponse
+            li Get
+                legend
+                    form#getUserForm(name="getUserForm")
+                        input(name="organization", placeholder="Organization", required) 
+                        br
+                        input(name="username", placeholder="Username", required) 
+                        br
+                        input(type="submit") 
+                        br
+                legend.responseLegend
+                    div Response: 
+                    div.responseDiv#getUserResponse
+    div.collectionDiv 
+        h1.collectionTitle Shift
+        ul
+            li Create
+                legend
+                    form#createShiftForm(name="createShiftForm")
+                        input(name="day", placeholder="day", required) 
+                        br
+                        input(name="startTime", placeholder="start time", required) 
+                        br
+                        input(name="endTime", placeholder="end time", required) 
+                        br
+                        input(name="employeeId", placeholder="employeeId", required) 
+                        br
+                        input(name="scheduleId", placeholder="scheduleId", required) 
+                        br
+                        input(name="date", placeholder="date", required) 
+                        br
+                        input(type="submit")
+                        br
+                legend.responseLegend
+                    div Response: 
+                    div.responseDiv#createShiftResponse
+            li Get User Shifts
+                legend
+                    form#getUserShiftsForm(name="getUserShiftsForm")
+                        input(name="employeeId", placeholder="employeeId", required) 
+                        br
+                        input(type="submit") 
+                        br
+                legend.responseLegend
+                    div Response: 
+                    div.responseDiv#getUserShiftsResponse
