@@ -8,6 +8,8 @@ var cookieParser    = require('cookie-parser');
 var bodyParser      = require('body-parser');
 var mongoose        = require('mongoose');
 var errorHandler    = require('errorhandler');
+var passport        = require('passport');
+var expressSession  = require('express-session');
 // Set up routes
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -18,6 +20,9 @@ var organization = require('./routes/organization');
 
 // Set up app
 var app = express();
+app.use(expressSession({secret: 'WAH505ECRET'}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Mongoose connection to MongoLab DB.
 var MONGOLAB_CONNECTION_STRING = 'zhifty:6170@ds051110.mongolab.com:51110/zhift';
