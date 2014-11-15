@@ -1,7 +1,7 @@
 /*  Controller for the api testing page
 *   Contains all the eventlisteners and varaibles.
 * 
-*   @author: Vicky Gong
+*   @author: Vicky Gong, Lily Seropian
 */
 var DemoController = function() {
   
@@ -11,95 +11,84 @@ var DemoController = function() {
     };
 
     var eventListeners = function() {
+        var runCreate = function(formId, url, responseBoxId) {
+            $('#' + formId).on('submit', function(e) {
+                e.preventDefault();
+
+                var data = $(this).serializeArray();
+
+                $.ajax({
+                    datatype: 'json', 
+                    type: 'POST', 
+                    url: '/' + url, 
+                    data: data
+                }).always(function(res) {
+                    $('#' + responseBoxId).text(JSON.stringify(res));
+                });
+            });
+        };
+
+        var runGet = function(formId, url, responseBoxId) {
+            $('#' + formId).on('submit', function(e) {
+                e.preventDefault();
+
+                var id = $(this)[0].elements['id'].value;
+
+                $.ajax({
+                    datatype: 'json',
+                    type: 'GET',
+                    url: '/' + url + '/' + id
+                }).always(function(res) {
+                    $('#' + responseBoxId).text(JSON.stringify(res));
+                })
+            });
+        };
+
+        var runDelete = function(formId, url, responseBoxId) {
+            $('#' + formId).on('submit', function(e){
+                e.preventDefault();
+
+                var id = $(this)[0].elements['id'].value;
+
+                $.ajax({
+                    datatype: 'json', 
+                    type: 'DELETE', 
+                    url: '/' + url + '/' + id, 
+                }).always(function(res) {
+                    $('#' + responseBoxId).text(JSON.stringify(res));
+                });
+            });
+        };
+
         /*================================= Organization ===============================*/
-        (function(){
-
-            // Listener for creating organization form
-            $('#createOrgForm').on('submit', function(e){
-                e.preventDefault();
-
-                var data = $(this).serializeArray();
-
-                // Sending request 
-                $.ajax({
-                    datatype: "json", 
-                    type: 'POST', 
-                    url: '/org', 
-                    data: data
-                }).always(function(res) {
-                    $("#createOrgResponse").text(JSON.stringify(res));
-                });
-
-            });
-
-            // Listener for getting organization form
-            $('#getOrgForm').on('submit', function(e){
-                e.preventDefault();
-                var name = $(this)[0].elements["name"].value;
-                // Sending request 
-                $.ajax({
-                    datatype: "json", 
-                    type: 'GET', 
-                    url: '/org/' + name
-                }).always(function(res) {
-                    $("#getOrgResponse").text(JSON.stringify(res));
-                });
-            });
-
-
+        (function() {
+            runCreate('createOrgForm', 'org', 'createOrgResponse');
+            runGet('getOrgForm', 'org', 'getOrgResponse');
         })();
-    /*=================================== Schedule =================================*/
+
+        /*=================================== Schedule =================================*/
         (function(){
-            
-            // Listener for creating schedule form
-            $('#createScheduleForm').on('submit', function(e){
-                e.preventDefault();
-
-                var data = $(this).serializeArray();
-
-                // Sending request 
-                $.ajax({
-                    datatype: "json", 
-                    type: 'POST', 
-                    url: '/schedule', 
-                    data: data
-                }).always(function(res) {
-                    $("#createScheduleResponse").text(JSON.stringify(res));
-                });
-
-            });
-
-            // Listener for getting schedule form
-            $('#getScheduleForm').on('submit', function(e){
-                e.preventDefault();
-
-                var scheduleid = $(this)[0].elements["id"].value;
-
-                // Sending request 
-                $.ajax({
-                    datatype: "json", 
-                    type: 'GET', 
-                    url: '/schedule/' + scheduleid, 
-                }).always(function(res) {
-                    $("#getScheduleResponse").text(JSON.stringify(res));
-                });
-
-            });
+            runCreate('createScheduleForm', 'schedule', 'createScheduleResponse');
+            runGet('getScheduleForm', 'schedule', 'getScheduleResponse');
         })();
 
         /*===================================== User ===================================*/
         (function(){
-
+            runCreate('createUserForm', 'user', 'createUserResponse');
+            runGet('getUserForm', 'user', 'getUserResponse');
         })();
 
         /*================================ TemplateShift ===============================*/
         (function(){
-
+            runCreate('createTemplateShiftForm', 'shift/template', 'createTemplateShiftResponse');
+            runGet('getTemplateShift', 'shift/template', 'getTemplateShiftResponse');
+            runDelete('deleteTemplateShift', 'shift/template', 'deleteTemplateShiftResponse');
         })();
 
         /*==================================== Shift ===================================*/
         (function(){
-
+            runCreate('createShiftForm', 'shift', 'createShiftResponse');
+            runGet('getShift', 'shift', 'getShiftResponse');
         })();
     }
       

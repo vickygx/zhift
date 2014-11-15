@@ -1,5 +1,5 @@
 //- Demo File
-//- @author Vicky Gong
+//- @author Vicky Gong, Lily Seropian
 
 extends layout
 
@@ -31,7 +31,7 @@ block content
             li Get
                 legend
                     form#getOrgForm(name="getOrgForm")
-                        input(name="name", placeholder="Name of org", required)
+                        input(name="id", placeholder="Name of org", required)
                         br
                         input(type="submit") 
                         br
@@ -97,6 +97,47 @@ block content
                 legend.responseLegend
                     div Response: 
                     div.responseDiv#getUserResponse
+    div.collectionDiv
+        h1.collectionTitle Template Shift
+        ul
+            li Create
+                legend
+                    form#createTemplateShiftForm(name="createTemplateShiftForm")
+                        input(name="day", placeholder="day", required)
+                        br
+                        input(name="startTime", placeholder="start time", required) 
+                        br
+                        input(name="endTime", placeholder="end time", required) 
+                        br
+                        input(name="employeeId", placeholder="employeeId", required) 
+                        br
+                        input(name="scheduleId", placeholder="scheduleId", required) 
+                        br
+                        input(type="submit")
+                        br
+                legend.responseLegend
+                    div Response: 
+                    div.responseDiv#createTemplateShiftResponse
+            li Get
+                legend
+                    form#getTemplateShiftForm(name="getTemplateShiftForm")
+                        input(name="templateShiftId", placeholder="templateShiftId", required) 
+                        br
+                        input(type="submit")
+                        br
+                legend.responseLegend
+                    div Response: 
+                    div.responseDiv#deleteShiftResponse
+            li Delete
+                legend
+                    form#deleteTemplateShiftForm(name="deleteTemplateShiftForm")
+                        input(name="templateShiftId", placeholder="templateShiftId", required) 
+                        br
+                        input(type="submit")
+                        br
+                legend.responseLegend
+                    div Response: 
+                    div.responseDiv#deleteShiftResponse
     div.collectionDiv 
         h1.collectionTitle Shift
         ul
