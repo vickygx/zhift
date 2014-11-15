@@ -5,6 +5,7 @@
 */
 
 var errors = require('./errors');
+var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
 // Any specific errors go into their own object
