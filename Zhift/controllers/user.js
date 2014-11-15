@@ -43,20 +43,39 @@ module.exports.createUser = function(name, email, password, org, type, callback)
 };
 
 /**
- * Function to retrieve existing user
- * @param {String} email:         user email
- * @param {String} org:           organization user is part of
- * @param {function} callback:    callback function - called with user, if
+ * Function to retrieve existing manager
+ * @param {String} email:         manager email
+ * @param {String} org:           organization employee is part of
+ * @param {function} callback:    callback function - called with manager, if
  *                                found, otherwise with error
  */
-module.exports.retrieveUser = function(email, org, callback) {
-    User.findOne({email: email, org: org}, function(err, user) {
+module.exports.retrieveManagerUser = function(email, org, callback) {
+    ManagerUser.findOne({email: email, org: org}, function(err, managerUser) {
         if (err) {
             return callback(err);
         } 
-        if (!user) {
+        if (!managerUser) {
             return callback(null, false, {message: 'Incorrect name or organization.'})
         } 
-        callback(null, user);
+        callback(null, managerUser);
+    });
+};
+
+/**
+ * Function to retrieve existing employee
+ * @param {String} email:         employee email
+ * @param {String} org:           organization employee is part of
+ * @param {function} callback:    callback function - called with manager, if
+ *                                found, otherwise with error
+ */
+module.exports.retrieveEmployeeUser = function(email, org, callback) {
+    EmployeeUser.findOne({email: email, org: org}, function(err, employeeUser) {
+        if (err) {
+            return callback(err);
+        } 
+        if (!employeeUser) {
+            return callback(null, false, {message: 'Incorrect name or organization.'})
+        } 
+        callback(null, employeeUser);
     });
 };
