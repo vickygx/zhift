@@ -11,8 +11,9 @@ var errorHandler    = require('errorhandler');
 // Set up routes
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var shift = require('./routes/shift');
 var templateShift = require('./routes/template-shift');
+var shift = require('./routes/shift');
+var swap = require('./routes/swap');
 var schedule = require('./routes/schedule');
 var organization = require('./routes/organization');
 
@@ -47,6 +48,7 @@ app.use('/shift', shift);
 app.use('/shift/template', templateShift);
 app.use('/schedule', schedule);
 app.use('/org', organization);
+app.use('/swap', swap);
 
 
 // catch 404 and forward to error handler
