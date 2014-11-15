@@ -16,7 +16,7 @@ var flash           = require('connect-flash');
 
 // Set up routes
 var routes = require('./routes/index')(passport);
-var users = require('./routes/user');
+var user = require('./routes/user');
 var shift = require('./routes/shift');
 var templateShift = require('./routes/template-shift');
 var shift = require('./routes/shift');
@@ -61,7 +61,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/user', users);
 app.use('/shift', shift);
 app.use('/shift/template', templateShift);
 app.use('/schedule', schedule);
