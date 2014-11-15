@@ -11,7 +11,6 @@
 
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.Types.ObjectId;
-var errorChecking = require('../errors/error-checking');
 
 var SwapSchema = new mongoose.Schema({
     shiftUpForSwap: {type: ObjectId, ref: 'Shift', required: true},

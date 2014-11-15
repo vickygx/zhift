@@ -5,6 +5,7 @@
 */
 
 var errors = require('./errors');
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 // Any specific errors go into their own object
 module.exports.users = {};
@@ -26,6 +27,7 @@ module.exports.invalidId = function(id) {
     
     Requirements: must be in
         ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] 
+    (case-insensitive)
     
     @param {String} value
     @return {Boolean}
@@ -52,9 +54,9 @@ module.exports.shifts.isProperTime = function(value) {
         return isProperFormat;
     }
 
-    var hour = parseInt(timeString.split(":")[0]);
-    var minute = parseInt(timeString.split(":")[1]);
-    var isProperTime = hour < 24 && minute < 60;
+    var hour = parseInt(value.split(":")[0]);
+    var minute = parseInt(value.split(":")[1]);
+    var isProperTime = (hour >= 0 && hour < 24 && minute >= 0 && minute < 60);
    
     return isProperFormat && isProperTime;
 }
