@@ -45,7 +45,7 @@ module.exports.createShift = function(day, startTime, endTime, employeeId, sched
 
     @return ---
 */
-module.exports.deleteShiftsOnTemplateShift = function(templateShiftId, fn){
+module.exports.deleteShiftsGeneratedFromTemplateShift = function(templateShiftId, fn){
     Shift.remove({templateShift: templateShiftId}, fn);
 }
 
