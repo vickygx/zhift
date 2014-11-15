@@ -9,10 +9,13 @@ var bodyParser      = require('body-parser');
 var mongoose        = require('mongoose');
 var errorHandler    = require('errorhandler');
 var passport        = require('passport');
-var expressSession  = require('express-session');
+var session         = require('express-session');
+// To use flash middleware for displaying messages in templates
+var flash           = require('connect-flash');
+
 // Set up routes
-var routes = require('./routes/index');
-var users = require('./routes/users');
+var routes = require('./routes/index')(passport);
+var users = require('./routes/user');
 var shift = require('./routes/shift');
 var templateShift = require('./routes/template-shift');
 var schedule = require('./routes/schedule');
@@ -20,9 +23,10 @@ var organization = require('./routes/organization');
 
 // Set up app
 var app = express();
-app.use(expressSession({secret: 'WAH505ECRET'}));
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(session({
+    secret: 'WAH505ECRET',
+    resave: true,
+    saveUninitialized: true}));
 
 // Mongoose connection to MongoLab DB.
 var MONGOLAB_CONNECTION_STRING = 'zhifty:6170@ds051110.mongolab.com:51110/zhift';
@@ -33,6 +37,12 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback () {
     console.log("Database ready.");
 });
+
+// Configure passport
+app.use(passport.initialize());
+app.use(passport.session());
+var initPassport = require('./config/passport');
+initPassport(passport);
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -45,6 +55,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(flash());
 
 app.use('/', routes);
 app.use('/users', users);

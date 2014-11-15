@@ -6,10 +6,10 @@
 var mongoose = require('mongoose');
 var extend = require('mongoose-schema-extend');
 
-var EmployeeUserSchema = require('./user');
+var UserSchema = require('./user').schema;
 
 //
 
 var EmployeeUserSchema = UserSchema.extend({});
 
-module.exports = EmployeeUserSchema;
+module.exports = mongoose.model('EmployeeUser', EmployeeUserSchema);
