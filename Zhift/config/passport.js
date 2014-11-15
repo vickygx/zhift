@@ -1,3 +1,7 @@
+/**
+ * @author Anji Ren, Lily Seropian
+ */
+
 var mongoose 		= require('mongoose')
 var LocalStrategy 	= require('passport-local').Strategy
 var User 			= require('../models/user')
@@ -33,7 +37,7 @@ module.exports = function(passport) {
 			var name = req.body.name;
 			var org = req.body.org;
 			var type = req.body.userType;
-			console.log('here');
+
 			UserController.retrieveUser(email, org, function(err, user) {
 				if (err) {
 					console.log(err);
@@ -43,9 +47,9 @@ module.exports = function(passport) {
 				//TODO: DO FIND ON ORG TO SEE IF ORG WAS ALREADY CREATED
 
 				if (user) {
-					console.log("An user with this email and in this organization already exists!");
+					console.log('A user with this email and in this organization already exists!');
 					return done(null, false, req.flash('message', 
-						'An user with this email already exists in this organization.'));
+						'A user with this email already exists in this organization.'));
 				}
 
 				// encrypt password
@@ -56,10 +60,9 @@ module.exports = function(passport) {
 						return done(null, false, req.flash('message', err)); 
 						//TODO
 					}
-					console.log("New user successfully created.");
 					return done(null, newUser);
 				});
-			})
+			});
 	}));
 
 	passport.use('login', new LocalStrategy({
