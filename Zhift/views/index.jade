@@ -1,5 +1,15 @@
 extends layout
 
+block head
+    include mixins/css.jade
+    +css('main')
+    +css('shift')
+
+    include mixins/shift-display.jade
+
 block content
   h1= title
   p Welcome to #{title}
+
+  p Showing shift mixin
+  +shiftDisplay('shiftDisplay')

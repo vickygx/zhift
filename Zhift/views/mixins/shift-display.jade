@@ -1,0 +1,19 @@
+//- Mixin for Shift display
+//- author: @vicky gong
+
+block head
+    script(type="text/javascript", src="/javascripts/controllers/shifts-controller.js")
+
+mixin shiftDisplay(id)
+    div.shiftDisplay(id=id, data-ng-controller="ShiftController")
+        h1.title Shifts
+        //- div(ng-init="$root.user=#{JSON.stringify(session.user.username)}")
+        div.error(id='errorBox')
+        div.shiftItemContainer
+            //- Testing controller
+            p(ng-bind="viewModel.test")
+
+            //- Loop of shifts
+            div.shiftItem(id='{{}}' ng-repeat="shift in viewModel.shifts track by $index")
+                div.weekday
+                    p(ng-bind="shift.dayOfWeek")

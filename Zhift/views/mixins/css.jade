@@ -2,5 +2,7 @@
 //- @author Vicky Gong
 
 mixin css(moduleName)
-  if (moduleName == 'main')
-    link(type="text/css", rel="stylesheet", href="stylesheets/main.css")
+    if (moduleName == 'main')
+        link(type="text/css", rel="stylesheet", href="stylesheets/main.css")
+    else if (moduleName == 'shift')
+        link(type="text/css", rel="stylesheet", href="stylesheets/mixin/shift.css")

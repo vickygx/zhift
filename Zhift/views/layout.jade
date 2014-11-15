@@ -24,6 +24,9 @@ html
     // Main js
     script(type="text/javascript", src="javascripts/main.js")
 
+    // Service
+    script(type="text/javascript", src="javascripts/services/shifts-service.js")
+
     // Main css
     include mixins/css.jade
     +css('main')
@@ -31,6 +34,6 @@ html
     block head
     
 
-  body
+  body(data-ng-app="ZhiftApp")
     div#content
       block content
