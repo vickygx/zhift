@@ -25,11 +25,12 @@ router.post('/', function(req, res, next) {
     endTime = req.body.endTime;
     employee = req.body.employeeId;
     schedule = req.body.scheduleId;
+    templateShift = req.body.templateShiftId;
     date = req.body.date;
 
     // TODO sanitize parameters? / make sure they exist?
 
-    ShiftController.createShift(day, startTime, endTime, employee, schedule, date, function(err, shift) {
+    ShiftController.createShift(day, startTime, endTime, employee, schedule, templateShift, date, function(err, shift) {
         // TODO: cover all error cases / send proper error
         if (err) {
             // we can send custom errors instead
@@ -131,6 +132,16 @@ router.get('/claimShift/:id', function(req, res, next) {
             next(errors.schedules.invalidShiftId);
         }
     });
+});
+
+router.get('/:id', function(req, res, next) {
+    ShiftController.getShift(req.param('id'), function(err, shift) {
+        if (err) {
+            next(err);
+        } else {
+            res.send(shift);
+        }
+    })
 });
 
 module.exports = router;

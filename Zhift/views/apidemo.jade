@@ -90,7 +90,7 @@ block content
                     form#getUserForm(name="getUserForm")
                         input(name="organization", placeholder="Organization", required) 
                         br
-                        input(name="username", placeholder="Username", required) 
+                        input(name="id", placeholder="User ID", required) 
                         br
                         input(type="submit") 
                         br
@@ -103,15 +103,15 @@ block content
             li Create
                 legend
                     form#createTemplateShiftForm(name="createTemplateShiftForm")
-                        input(name="day", placeholder="day", required)
+                        input(name="day", placeholder="Day", required)
                         br
-                        input(name="startTime", placeholder="start time", required) 
+                        input(name="startTime", placeholder="Start Time", required) 
                         br
-                        input(name="endTime", placeholder="end time", required) 
+                        input(name="endTime", placeholder="End Time", required) 
                         br
-                        input(name="employeeId", placeholder="employeeId", required) 
+                        input(name="employeeId", placeholder="Employee ID", required) 
                         br
-                        input(name="scheduleId", placeholder="scheduleId", required) 
+                        input(name="scheduleId", placeholder="Schedule ID", required) 
                         br
                         input(type="submit")
                         br
@@ -121,13 +121,13 @@ block content
             li Get
                 legend
                     form#getTemplateShiftForm(name="getTemplateShiftForm")
-                        input(name="templateShiftId", placeholder="templateShiftId", required) 
+                        input(name="id", placeholder="Template Shift ID", required) 
                         br
                         input(type="submit")
                         br
                 legend.responseLegend
                     div Response: 
-                    div.responseDiv#deleteShiftResponse
+                    div.responseDiv#getTemplateShiftResponse
             li Delete
                 legend
                     form#deleteTemplateShiftForm(name="deleteTemplateShiftForm")
@@ -137,11 +137,11 @@ block content
                         br
                 legend.responseLegend
                     div Response: 
-                    div.responseDiv#deleteShiftResponse
+                    div.responseDiv#deleteTemplateShiftResponse
     div.collectionDiv 
         h1.collectionTitle Shift
         ul
-            li Create
+            li Create Shift
                 legend
                     form#createShiftForm(name="createShiftForm")
                         input(name="day", placeholder="day", required) 
@@ -154,6 +154,8 @@ block content
                         br
                         input(name="scheduleId", placeholder="scheduleId", required) 
                         br
+                        input(name="templateShiftId", placeholder="Template Shift ID", required) 
+                        br
                         input(name="date", placeholder="date", required) 
                         br
                         input(type="submit")
@@ -161,13 +163,13 @@ block content
                 legend.responseLegend
                     div Response: 
                     div.responseDiv#createShiftResponse
-            li Get User Shifts
+            li Get
                 legend
-                    form#getUserShiftsForm(name="getUserShiftsForm")
-                        input(name="employeeId", placeholder="employeeId", required) 
+                    form#getShiftForm(name="getUserShiftsForm")
+                        input(name="id", placeholder="Shift ID", required) 
                         br
                         input(type="submit") 
                         br
                 legend.responseLegend
                     div Response: 
-                    div.responseDiv#getUserShiftsResponse
+                    div.responseDiv#getShiftResponse

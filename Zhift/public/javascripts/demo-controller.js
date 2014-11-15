@@ -82,14 +82,14 @@ var DemoController = function() {
         /*================================ TemplateShift ===============================*/
         (function(){
             attachCreateListener('createTemplateShiftForm', 'shift/template', 'createTemplateShiftResponse');
-            attachGetListener('getTemplateShift', 'shift/template', 'getTemplateShiftResponse');
-            attachDeleteListener('deleteTemplateShift', 'shift/template', 'deleteTemplateShiftResponse');
+            attachGetListener('getTemplateShiftForm', 'shift/template', 'getTemplateShiftResponse');
+            attachDeleteListener('deleteTemplateShiftForm', 'shift/template', 'deleteTemplateShiftResponse');
         })();
 
         /*==================================== Shift ===================================*/
         (function(){
             attachCreateListener('createShiftForm', 'shift', 'createShiftResponse');
-            attachGetListener('getShift', 'shift', 'getShiftResponse');
+            attachGetListener('getShiftForm', 'shift', 'getShiftResponse');
         })();
     }
       

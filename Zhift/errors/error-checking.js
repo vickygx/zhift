@@ -52,8 +52,8 @@ module.exports.shifts.isProperTime = function(value) {
         return isProperFormat;
     }
 
-    var hour = parseInt(timeString.split(":")[0]);
-    var minute = parseInt(timeString.split(":")[1]);
+    var hour = parseInt(value.split(":")[0]);
+    var minute = parseInt(value.split(":")[1]);
     var isProperTime = hour < 24 && minute < 60;
    
     return isProperFormat && isProperTime;
