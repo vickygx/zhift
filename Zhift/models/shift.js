@@ -2,7 +2,7 @@
 
     @author: Vicky Gong
     
-    Formats-
+    Formats:
         dayOfWeek: 'Monday', 'Tuesday', etc.
         start, end: 'HH:MM'
 
@@ -18,10 +18,10 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 var errorChecking = require('../errors/error-checking');
 
 var ShiftSchema = new mongoose.Schema({
-    dayOfWeek: { type: String, required: true},
-    start: { type: String, required: true}, // should be type Date or number?
+    dayOfWeek: {type: String, required: true},
+    start: {type: String, required: true},
     end: {type: String, required: true},
-    responsiblePerson: {type: ObjectId, ref: 'User', required: true},
+    responsiblePerson: {type: ObjectId, ref: 'Employee', required: true},
     schedule: {type: ObjectId, ref: 'Schedule', required: true},
     dateScheduled: {type: Date, required: true},
     upForGrabs: {type: Boolean, required: true},
@@ -40,14 +40,14 @@ ShiftSchema.path('dayOfWeek').validate(
 */
 ShiftSchema.path('start').validate(
     errorChecking.shifts.isProperTime, 
-    'Invalid start time. Must be in HH:MM'
+    'Invalid start time. Must be in the format HH:MM.'
 );
 
 /*  Validator for end for Shift Schema
 */
 ShiftSchema.path('end').validate(
     errorChecking.shifts.isProperTime, 
-    'Invalid start time. Must be in HH:MM'
+    'Invalid end time. Must be in the format HH:MM.'
 );
 
 module.exports = mongoose.model('Shift', ShiftSchema);

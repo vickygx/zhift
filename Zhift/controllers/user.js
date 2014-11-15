@@ -31,15 +31,22 @@ module.exports.createUser = function(name, email, password, org, type, callback)
     // Create new User depending on type
     var newUser = getUserModel(type);
 
-    var newUser = new newUser({
+    var userData = {
         name: name,
         email: email,
         password: password,
         org: org
-    });
+    };
 
-    // Add to database
-    newUser.save(callback);
+    var newUser = new newUser(userData);
+    var newUserCopy = new User(userData);
+
+    // Add to specific database (i.e. manager or employee)
+    newUser.save(function() {
+        newUserCopy.save(callback);
+    });
+    // Add to User database
+    
 };
 
 /**
