@@ -38,8 +38,9 @@ router.get('/:id', function(req, res){
 	)
 });
 
-/* POST request to delete existing template shift */
-router.put('/delete/:id', function(req, res){
+/* DELETE request to delete existing template shift and all shifts generated
+   from that template shift */
+router.delete('/:id', function(req, res){
 	TemplateShiftController.deleteShift(req.param('id'),
 		function(e, o) {
 			if (e) {
