@@ -16,7 +16,7 @@ var flash           = require('connect-flash');
 
 // Set up routes
 var routes = require('./routes/index')(passport);
-var users = require('./routes/user');
+var user = require('./routes/user');
 var shift = require('./routes/shift');
 var templateShift = require('./routes/template-shift');
 var shift = require('./routes/shift');
@@ -61,7 +61,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/user', user);
 app.use('/shift', shift);
 app.use('/shift/template', templateShift);
 app.use('/schedule', schedule);
@@ -71,7 +71,7 @@ app.use('/swap', swap);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var err = new Error('Not Found hihi');
+    var err = new Error('404 Not Found');
     err.status = 404;
     next(err);
 });
@@ -81,15 +81,20 @@ app.use(function(err, req, res, next) {
     if (err.status === 400) {
         console.log("errormessage: ", err.message); 
         res.status(400).send(err.message);
-    } else if (err.status === 401) {
+    } 
+    else if (err.status === 401) {
         res.status(401).send(err.message);
-    } else if (err.status === 403) {
+    } 
+    else if (err.status === 403) {
         res.status(403).send(err.message);
-    } else if (err.status === 404) {
+    } 
+    else if (err.status === 404) {
         res.status(404).send(err.message);
-    } else if (err.status === 500) {
+    } 
+    else if (err.status === 500) {
         res.status(500).send(err.message);
-    } else {
+    } 
+    else {
         return next(err);
     }
 });
@@ -110,6 +115,5 @@ var port = Number(process.env.OPENSHIFT_NODEJS_PORT || 8080);
 app.listen(port, process.env.OPENSHIFT_NODEJS_IP, function() {
     console.log("Express server listening on port %d in %s mode", port, app.settings.env);
 });
-
 
 module.exports = app;
