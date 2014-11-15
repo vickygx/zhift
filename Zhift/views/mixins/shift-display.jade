@@ -14,6 +14,7 @@ mixin shiftDisplay(id)
             p(ng-bind="viewModel.test")
 
             //- Loop of shifts
-            div.shiftItem(id='{{}}' ng-repeat="shift in viewModel.shifts track by $index")
+            div.shiftItem(id='{{shift._id}}' ng-repeat="shift in viewModel.shifts track by $index")
+                div.shiftTitle Shift
                 div.weekday
                     p(ng-bind="shift.dayOfWeek")

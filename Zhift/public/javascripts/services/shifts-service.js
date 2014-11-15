@@ -23,7 +23,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
     error: 'All is good!',
     
     test: function(){
-        service.shifts = [{dayOfWeek: 'Service test succeeded!'}];
+        service.shifts = [{dayOfWeek: 'Service test succeeded!'},{dayOfWeek: 'Monday'}];
         $rootScope.$broadcast( 'shifts.update' );
     },
 
