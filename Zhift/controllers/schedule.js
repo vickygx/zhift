@@ -35,7 +35,7 @@ module.exports.createSchedule = function(orgName, role, fn){
 
     @return ---
 */
-module.exports.deleteSchedule = function(scheduleId, fn) {
+module.exports.retrieveSchedule = function(scheduleId, fn) {
     Schedule.findById(scheduleId, fn);
 }
 
@@ -61,8 +61,4 @@ module.exports.deleteSchedule = function(scheduleId, fn) {
 */
 module.exports.getSchedulesByOrg = function(orgName, fn) {
     Schedule.find({org: orgName}, fn);
-}
-
-module.exports.retrieveSchedule = function(id, fn){
-    
 }
