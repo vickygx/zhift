@@ -31,51 +31,37 @@ module.exports.createUser = function(name, email, password, org, type, callback)
     // Create new User depending on type
     var newUser = getUserModel(type);
 
-    var newUser = new newUser({
+    var userData = {
         name: name,
         email: email,
         password: password,
         org: org
-    });
+    };
 
-    // Add to database
+    var newUser = new newUser(userData);
+    var newUserCopy = new User(userData);
+
+    // Add to specific database (i.e. manager or employee)
     newUser.save(callback);
+    // Add to User database
+    newUserCopy.save(callback);
 };
 
 /**
- * Function to retrieve existing manager
- * @param {String} email:         manager email
- * @param {String} org:           organization employee is part of
- * @param {function} callback:    callback function - called with manager, if
+ * Function to retrieve existing user
+ * @param {String} email:         user email
+ * @param {String} org:           organization user is part of
+ * @param {function} callback:    callback function - called with user, if
  *                                found, otherwise with error
  */
-module.exports.retrieveManagerUser = function(email, org, callback) {
-    ManagerUser.findOne({email: email, org: org}, function(err, managerUser) {
+module.exports.retrieveUser = function(email, org, callback) {
+    User.findOne({email: email, org: org}, function(err, user) {
         if (err) {
             return callback(err);
         } 
-        if (!managerUser) {
+        if (!user) {
             return callback(null, false, {message: 'Incorrect name or organization.'})
         } 
-        callback(null, managerUser);
-    });
-};
-
-/**
- * Function to retrieve existing employee
- * @param {String} email:         employee email
- * @param {String} org:           organization employee is part of
- * @param {function} callback:    callback function - called with manager, if
- *                                found, otherwise with error
- */
-module.exports.retrieveEmployeeUser = function(email, org, callback) {
-    EmployeeUser.findOne({email: email, org: org}, function(err, employeeUser) {
-        if (err) {
-            return callback(err);
-        } 
-        if (!employeeUser) {
-            return callback(null, false, {message: 'Incorrect name or organization.'})
-        } 
-        callback(null, employeeUser);
+        callback(null, user);
     });
 };
