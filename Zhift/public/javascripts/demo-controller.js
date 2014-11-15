@@ -11,7 +11,7 @@ var DemoController = function() {
     };
 
     var eventListeners = function() {
-        var runCreate = function(formId, url, responseBoxId) {
+        var attachCreateListener = function(formId, url, responseBoxId) {
             $('#' + formId).on('submit', function(e) {
                 e.preventDefault();
 
@@ -28,7 +28,7 @@ var DemoController = function() {
             });
         };
 
-        var runGet = function(formId, url, responseBoxId) {
+        var attachGetListener = function(formId, url, responseBoxId) {
             $('#' + formId).on('submit', function(e) {
                 e.preventDefault();
 
@@ -44,7 +44,7 @@ var DemoController = function() {
             });
         };
 
-        var runDelete = function(formId, url, responseBoxId) {
+        var attachDeleteListener = function(formId, url, responseBoxId) {
             $('#' + formId).on('submit', function(e){
                 e.preventDefault();
 
@@ -62,33 +62,33 @@ var DemoController = function() {
 
         /*================================= Organization ===============================*/
         (function() {
-            runCreate('createOrgForm', 'org', 'createOrgResponse');
-            runGet('getOrgForm', 'org', 'getOrgResponse');
+            attachCreateListener('createOrgForm', 'org', 'createOrgResponse');
+            attachGetListener('getOrgForm', 'org', 'getOrgResponse');
         })();
 
         /*=================================== Schedule =================================*/
         (function(){
-            runCreate('createScheduleForm', 'schedule', 'createScheduleResponse');
-            runGet('getScheduleForm', 'schedule', 'getScheduleResponse');
+            attachCreateListener('createScheduleForm', 'schedule', 'createScheduleResponse');
+            attachGetListener('getScheduleForm', 'schedule', 'getScheduleResponse');
         })();
 
         /*===================================== User ===================================*/
         (function(){
-            runCreate('createUserForm', 'user', 'createUserResponse');
-            runGet('getUserForm', 'user', 'getUserResponse');
+            attachCreateListener('createUserForm', 'user', 'createUserResponse');
+            attachGetListener('getUserForm', 'user', 'getUserResponse');
         })();
 
         /*================================ TemplateShift ===============================*/
         (function(){
-            runCreate('createTemplateShiftForm', 'shift/template', 'createTemplateShiftResponse');
-            runGet('getTemplateShift', 'shift/template', 'getTemplateShiftResponse');
-            runDelete('deleteTemplateShift', 'shift/template', 'deleteTemplateShiftResponse');
+            attachCreateListener('createTemplateShiftForm', 'shift/template', 'createTemplateShiftResponse');
+            attachGetListener('getTemplateShift', 'shift/template', 'getTemplateShiftResponse');
+            attachDeleteListener('deleteTemplateShift', 'shift/template', 'deleteTemplateShiftResponse');
         })();
 
         /*==================================== Shift ===================================*/
         (function(){
-            runCreate('createShiftForm', 'shift', 'createShiftResponse');
-            runGet('getShift', 'shift', 'getShiftResponse');
+            attachCreateListener('createShiftForm', 'shift', 'createShiftResponse');
+            attachGetListener('getShift', 'shift', 'getShiftResponse');
         })();
     }
       
