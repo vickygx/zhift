@@ -58,18 +58,17 @@ app.use(function(req, res, next) {
 
 // Error middleware 
 app.use(function(err, req, res, next) {
-    //TODO: figure out why error not going into middleware
-    console.log("In error middleware");
     if (err.status === 400) {
-        res.send(400, err.message);
+        console.log("errormessage: ", err.message); 
+        res.status(400).send(err.message);
     } else if (err.status === 401) {
-        res.send(401, err.message);
+        res.status(401).send(err.message);
     } else if (err.status === 403) {
-        res.send(403, err.message);
+        res.status(403).send(err.message);
     } else if (err.status === 404) {
-        res.send(404, err.message);
+        res.status(404).send(err.message);
     } else if (err.status === 500) {
-        res.send(500, err.message);
+        res.status(500).send(err.message);
     } else {
         return next(err);
     }

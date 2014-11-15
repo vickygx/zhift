@@ -62,3 +62,7 @@ module.exports.deleteSchedule = function(scheduleId, fn) {
 module.exports.getSchedulesByOrg = function(orgName, fn) {
     Schedule.find({org: orgName}, fn);
 }
+
+module.exports.retrieveSchedule = function(id, fn){
+    
+}

@@ -41,8 +41,6 @@ router.get('/:name', function(req, res, next){
                 next(err);
             } else {
                 res.send(org);
-                //TODO: figure out why error not going into middleware
-                // next({status: 400, message: 'test'});
             }
         });
 });
