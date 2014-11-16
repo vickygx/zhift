@@ -6,8 +6,8 @@ block head
     script(type="text/javascript", src="/javascripts/services/schedule-service.js")
     script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
 
-mixin templateShiftDisplay()
-    div.templateShiftDisplay(data-ng-controller="TemplateShiftController")
+mixin templateShiftDisplay(org)
+    div.templateShiftDisplay(data-ng-controller="TemplateShiftController" ng-init="init('#{org}')")
         div(ng-repeat="role in roles")
             h2 {{role.role}}
             h3.title Template Shifts

@@ -7,8 +7,6 @@
 var ZhiftApp = angular.module('ZhiftApp');
 
 ZhiftApp.controller('HomeController', function($scope, ShiftService) {
-
-    /*======================== Scope Variables ========================*/
     $scope.page = 'home';
 
     $scope.goToPage = function(page) {

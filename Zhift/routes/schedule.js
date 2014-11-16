@@ -13,7 +13,7 @@ var errorChecking = require('../errors/error-checking');
 
 /* POST request to create schedule */
 router.post('/', function(req, res) {
-    ScheduleController.createSchedule(req.body.org, req.body.role, function(err, schedule) {
+    ScheduleController.createSchedule(req.body.orgName, req.body.role, function(err, schedule) {
         if (err) {
             res.status(500).send(err);
         } 

@@ -6,7 +6,7 @@ block head
     script(type="text/javascript", src="/javascripts/services/schedule-service.js")
 
 mixin editOrg(org)
-    div(ng-controller="EditOrgController")
+    div(ng-controller="EditOrgController" ng-init="init('#{org}')")
         h3 Existing Roles
         div(ng-repeat="role in roles")
             li {{role.role}}

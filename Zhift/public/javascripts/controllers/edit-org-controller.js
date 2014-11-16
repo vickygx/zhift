@@ -7,11 +7,14 @@
 var ZhiftApp = angular.module('ZhiftApp');
 
 ZhiftApp.controller('EditOrgController', function($scope, ScheduleService) {
-    // TODO: don't hardcode
-    ScheduleService.getSchedules('test', function(schedules) {
-        $scope.roles = schedules;
-        $scope.$apply();
-    });
+    $scope.init = function(org) {
+        $scope.org = org;
+
+        ScheduleService.getSchedules($scope.org, function(schedules) {
+            $scope.roles = schedules;
+            $scope.$apply();
+        });
+    }
 
     $scope.roleName = '';
 
