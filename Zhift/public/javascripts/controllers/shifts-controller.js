@@ -22,7 +22,6 @@ ZhiftApp.controller('ShiftController', function($scope, ShiftService) {
     /* Updator function for shifts variables changing */
     $scope.$on('shifts.update', function(event) {
         $scope.viewModel.shifts = ShiftService.shifts;
-        $scope.$apply();
     });
 
     /* Updator function for error variable changing */
