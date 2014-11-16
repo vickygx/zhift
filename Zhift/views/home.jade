@@ -5,7 +5,7 @@ block head
     +css("shift")
 
     script(type="text/javascript", src="javascripts/controllers/home-controller.js")
-    
+
     include mixins/shift-display.jade
     include mixins/edit-org.jade
 
@@ -30,4 +30,4 @@ block content
         div(ng-if="page=='home'")
             +shiftDisplay("shiftDisplay")
         div(ng-if="page=='editOrg'")
-            +editOrg()
+            +editOrg(user.org)

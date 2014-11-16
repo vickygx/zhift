@@ -9,8 +9,7 @@ var ZhiftApp = angular.module('ZhiftApp');
 ZhiftApp.controller('EditOrgController', function($scope, EditOrgService) {
     $scope.roleName = '';
 
-    $scope.createSchedule = function() {
-        // TODO: don't hardcode org
-        EditOrgService.createSchedule('test', $scope.roleName);
+    $scope.createSchedule = function(orgName) {
+        EditOrgService.createSchedule(orgName, $scope.roleName);
     };
 });

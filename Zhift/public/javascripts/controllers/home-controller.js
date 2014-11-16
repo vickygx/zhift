@@ -10,7 +10,7 @@ ZhiftApp.controller('HomeController', function($scope, ShiftService) {
 
     /*======================== Scope Variables ========================*/
     $scope.page = 'home';
-    
+
     $scope.goToPage = function(page) {
         $scope.page = page;
     };
