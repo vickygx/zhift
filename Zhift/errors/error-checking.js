@@ -1,7 +1,7 @@
 /*  File containing all error checkings and helper functions
     used by the app
 
-    @author: Vicky Gong 
+    @author: Vicky Gong, Dylan Joss 
 */
 
 var errors = require('./errors');
