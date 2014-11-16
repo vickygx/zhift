@@ -89,7 +89,7 @@ router.get('/all/:scheduleid', function(req, res, next) {
             next(err);
         } 
         else if (shifts) {
-            res.send({'shifts': shifts});
+            res.send(shifts);
         } 
         else {
             next(errors.schedules.invalidScheduleId);

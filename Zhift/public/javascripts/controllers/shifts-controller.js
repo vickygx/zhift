@@ -1,59 +1,23 @@
-/*  gridController
-*
-*   Angular Controller for shift mixin
-*     Takes care of the view for the shift mixin while getting updates from ShiftService
-*     for data updates.
-*
-*   Dependencies: ShiftService
-* 
-*   @author: Vicky Gong
-*/
+/**
+ * Angular Controller for shift mixin. Takes care of the view for the shift mixin.
+ *
+ * Dependencies: ShiftService, ScheduleService
+ * 
+ * @author: Lily Seropian, Vicky Gong
+ */
 
 var ZhiftApp = angular.module('ZhiftApp');
 
-ZhiftApp.controller('ShiftController', function($scope, ShiftService) {
-
-    /*======================== Scope Variables ========================*/
-    $scope.viewModel = {
-        shifts: ShiftService.shifts,
-        test: 'Controller test succeded!'
-    };
-
-    /* Updator function for shifts variables changing */
-    $scope.$on('shifts.update', function(event) {
-        $scope.viewModel.shifts = ShiftService.shifts;
+ZhiftApp.controller('ShiftController', function($scope, ScheduleService, ShiftService) {
+    // TODO: don't hardcode
+    ScheduleService.getSchedules('test', function(schedules) {
+        $scope.roles = schedules;
+        $scope.roles.forEach(function(role) {
+            ShiftService.getShifts(role._id, function(shifts) {
+                role.shifts = shifts;
+                $scope.$apply();
+            });
+        });
     });
-
-    /* Updator function for error variable changing */
-    $scope.$on('images.error', function(event) {
-        helpers.updateError();
-    });
-
-    /*============================== Helpers ============================*/
-    var helpers = (function() { 
-
-        /* Updates the error box */
-        var updateError = function() {
-            $('.grid .error').html(ShiftService.error);
-        };
-
-        /* Displays all shifts */
-        var displayAllShifts = function() {
-            ShiftService.displayAllShifts();
-        };
-
-        return {
-            displayAllShifts: displayAllShifts,
-            updateError : updateError
-        };
-    })();
-
-    /* Initializer function 
-    */
-    var init = (function() {
-        // helpers.displayAllShifts();
-        ShiftService.test();
-    })();
-
 });
 
