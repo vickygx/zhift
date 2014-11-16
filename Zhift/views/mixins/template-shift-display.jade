@@ -1,0 +1,17 @@
+//- Mixin for TemplateShift display
+//- author: @Lily Seropian
+
+block head
+    script(type="text/javascript", src="/javascripts/controllers/template-shift-controller.js")
+    script(type="text/javascript", src="/javascripts/services/schedule-service.js")
+    script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
+
+mixin templateShiftDisplay()
+    div.templateShiftDisplay(data-ng-controller="TemplateShiftController")
+        div(ng-repeat="role in roles")
+            h2 {{role.role}}
+            h3.title Template Shifts
+            div(ng-repeat="templateShift in role.templateShifts")
+                div {{templateShift.dayOfWeek}}: {{templateShift.start}} - {{templateShift.end}} ({{templateShift.responsiblePerson}})
+            div.error(id='errorBox')
+            div.templateShiftItemContainer

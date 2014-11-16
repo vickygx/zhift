@@ -8,7 +8,7 @@
 
 var ZhiftApp = angular.module('ZhiftApp');
 
-ZhiftApp.service('EditOrgService', ['$rootScope', function($rootScope) {
+ZhiftApp.service('ScheduleService', ['$rootScope', function($rootScope) {
     var service = {
         // Function to display all shifts associated with a schedule
         createSchedule: function(orgName, roleName, callback) {
