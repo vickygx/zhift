@@ -2,11 +2,12 @@
  * All the functions related to manipulating and retrieving information
  * from the User database
  *
- * @author: Anji Ren, Lily Seropian
+ * @author: Anji Ren, Lily Seropian, Dylan Joss
  */
 var User = require('../models/user');
 var ManagerUser = require('../models/manager-user');
 var EmployeeUser = require('../models/employee-user');
+var OrgController   = require('../controllers/organization');
 var errors = require('../errors/errors');
 module.exports = {};
 
@@ -25,11 +26,11 @@ var getUserModel = module.exports.getUserModel = function(type) {
  * @param {String} email:         user email
  * @param {String} password:      user password
  * @param {String} org:           organization user is part of
+ * @param {Number} scheduleID:    a user's scheduleID (null if the user is a manager)
  * @param {function} callback:    callback function
  */
-module.exports.createUser = function(name, email, password, org, type, callback) {
-    // Create new User depending on type
-    var newUser = getUserModel(type);
+module.exports.createUser = function(name, email, password, org, scheduleID, callback) {    
+    var userModel;
 
     var userData = {
         name: name,
@@ -38,15 +39,28 @@ module.exports.createUser = function(name, email, password, org, type, callback)
         org: org
     };
 
-    var newUser = new newUser(userData);
+    if (scheduleID) {
+        userData.schedule = scheduleID;
+
+        userModel = EmployeeUser;
+    }
+    else {
+        userModel = ManagerUser;
+    }
+
+    var newUser = new userModel(userData);
     var newUserCopy = new User(userData);
 
-    // Add to specific database (i.e. manager or employee)
-    newUser.save(function() {
+    // Add to specific database (i.e. ManagerUser or EmployeeUser)
+    newUser.save(function(err) {
+        if (err) {
+            console.log(err);
+        }
+        // Add to User database
+        // We do this to avoid have to make queries on both ManagerUser DB and EmployeeUser DB
+        // when looking up a user (and we don't know the user's type)
         newUserCopy.save(callback);
     });
-    // Add to User database
-    
 };
 
 /**

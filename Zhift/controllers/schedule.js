@@ -1,7 +1,7 @@
 /*  All the functions related to manipulating and retrieving information 
     from the Schedule database
 
-    @author: Anji Ren
+    @author: Anji Ren, Dylan Joss
 */
 var Schedule = require('../models/schedule');
 var errors = require('../errors/errors');
@@ -51,14 +51,27 @@ module.exports.deleteSchedule = function(scheduleId, fn) {
     Schedule.findByIdAndRemove(scheduleId, fn);
 }
 
-/*  Function to get all schedules associated with an organization
+/*  Function to retrieve all schedules associated with an organization
     
     @param 
-        {ObjectId} orgName:  name of organization
+        {String} orgName:  name of organization
         {function} fn:       callback function
 
     @return ---
 */
-module.exports.getSchedulesByOrg = function(orgName, fn) {
+module.exports.retrieveSchedulesByOrg = function(orgName, fn) {
     Schedule.find({org: orgName}, fn);
+}
+
+/*  Function to retrieve the schedule associated with an organization and a role
+    
+    @param 
+        {String} orgName:  name of organization
+        {String} roleName: name of role
+        {function} fn:       callback function
+
+    @return ---
+*/
+module.exports.retrieveScheduleByOrgAndRole = function(orgName, roleName, fn) {
+    Schedule.findOne({org: orgName, role: roleName}, fn);
 }
