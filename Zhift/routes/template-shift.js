@@ -42,23 +42,23 @@ router.get('/:id', function(req, res){
 /* DELETE request to delete existing template shift and all shifts generated
    from that template shift */
 router.delete('/:id', function(req, res){
-	TemplateShiftController.deleteShift(req.param('id'),
-		function(err, templateShift) {
-			if (err) {
-				res.send(err);
-			} else {
-                ShiftController.deleteShiftsGeneratedFromTemplateShift(
-                    req.param('id'), function(err) {
-                        if (err) {
-                            res.send(err);
-                        } else {
-                            res.send(templateShift);
-                        }
+	TemplateShiftController.deleteShift(req.param('id'), function(err, templateShift) {
+		if (err) {
+			res.send(err);
+		} 
+        else {
+            ShiftController.deleteShiftsGeneratedFromTemplateShift(
+                req.param('id'), function(err) {
+                    if (err) {
+                        res.send(err);
+                    } 
+                    else {
+                        res.send(templateShift);
                     }
-                );
-			}
+                }
+            );
 		}
-	)
+	});
 });
 
 /* PUT request to reassign person responsible for existing template shift */
