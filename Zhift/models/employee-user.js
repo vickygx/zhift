@@ -1,6 +1,6 @@
 /*  Schema + Mongoose model for EmployeeUser
 
-    @author: Anji Ren
+    @author: Anji Ren, Dylan Joss
 */
 
 var mongoose = require('mongoose');
@@ -9,7 +9,7 @@ var UserSchema = require('./user').schema;
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var EmployeeUserSchema = UserSchema.extend({
-    schedule: {type: ObjectId, required: false} // TODO: will need to be true for the final
+    schedule: {type: ObjectId, required: true} 
 });
 
 module.exports = mongoose.model('EmployeeUser', EmployeeUserSchema);
