@@ -1,4 +1,4 @@
-/*  File controller all the routes relating to shifts
+/*  All the routes relating to shifts
     
     @author: Vicky Gong 
 */
