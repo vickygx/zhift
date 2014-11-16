@@ -16,6 +16,10 @@ ZhiftApp.controller('EditOrgController', function($scope, EditOrgService) {
     $scope.roleName = '';
 
     $scope.createSchedule = function(orgName) {
-        EditOrgService.createSchedule(orgName, $scope.roleName);
+        EditOrgService.createSchedule(orgName, $scope.roleName, function(newSchedule) {
+            $scope.roles.push(newSchedule);
+            $scope.roleName = '';
+            $scope.$apply();
+        });
     };
 });
