@@ -12,6 +12,6 @@ mixin templateShiftDisplay()
             h2 {{role.role}}
             h3.title Template Shifts
             div(ng-repeat="templateShift in role.templateShifts")
-                div {{templateShift.dayOfWeek}}: {{templateShift.start}} - {{templateShift.end}} ({{templateShift.responsiblePerson}})
+                div {{templateShift.dayOfWeek}}: {{templateShift.start}} - {{templateShift.end}} (employee {{templateShift.responsiblePerson}})
             div.error(id='errorBox')
             div.templateShiftItemContainer
