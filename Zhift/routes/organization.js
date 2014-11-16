@@ -36,7 +36,7 @@ router.post('/', function(req, res, next) {
 router.get('/:name', function(req, res, next) {
     // TODO : any permissions
 
-    OrgController.getOrg(req.param('name'),
+    OrgController.retrieveOrg(req.param('name'),
         // TODO: error handling
         function(err, org) {
             if (err) {

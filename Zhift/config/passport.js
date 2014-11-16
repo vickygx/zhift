@@ -1,12 +1,14 @@
 /**
- * @author Anji Ren, Lily Seropian
+ * @author Anji Ren, Lily Seropian, Dylan Joss
  */
 
-var mongoose 		= require('mongoose')
-var LocalStrategy 	= require('passport-local').Strategy
-var User 			= require('../models/user')
-var UserController 	= require('../controllers/user')
-var bCrypt			= require('bcrypt-nodejs')
+var mongoose 		   = require('mongoose');
+var LocalStrategy 	   = require('passport-local').Strategy;
+var User 			   = require('../models/user');
+var UserController 	   = require('../controllers/user');
+var OrgController      = require('../controllers/organization');
+var ScheduleController = require('../controllers/schedule');
+var bCrypt			   = require('bcrypt-nodejs');
 
 module.exports = function(passport) {
 
@@ -37,29 +39,71 @@ module.exports = function(passport) {
 			var name = req.body.name;
 			var org = req.body.org;
 			var type = req.body.userType;
+			var role = req.body.userRole;
+			var scheduleID = null;
 
-			UserController.retrieveUser(email, org, function(err, user) {
+			// only employees accounts are associated with a role
+			if (role) {
+				ScheduleController.retrieveScheduleByOrgAndRole(org, role, function(err, schedule) {
+					if (err) {
+						console.log(err);
+						return done(null, false, req.flash('message', err));                 
+					}
+					if (schedule) {
+						console.log('successfully associated new employee with an existing schedule');
+						scheduleID = schedule._id;
+					}
+				});
+			}
+
+			UserController.retrieveUser(email, org, function(err, retrievedUser) {
 				if (err) {
 					console.log(err);
-					//TODO
+					// TODO
 					return done(null, false, req.flash('message', err));                 
 				}
-				//TODO: DO FIND ON ORG TO SEE IF ORG WAS ALREADY CREATED
 
-				if (user) {
-					console.log('A user with this email and in this organization already exists!');
+				OrgController.retrieveOrg(org, function(err, retrievedOrg) {
+					if (err) {
+						console.log(err);
+						return done(null, false, req.flash('message', err));
+					}
+					if (retrievedOrg && retrievedUser) {
+						console.log('An organization with this name already exists!');
+						return done(null, false, req.flash('message',
+							'An organization with this name already exists!'));
+					}
+					// creating a manager associated with a new organization --> create that
+					// organization
+					if (!retrievedOrg && !scheduleID) {
+        				OrgController.createOrg(org, function(err, newOrg) {
+        					if (err) {
+        						console.log('messed up creating a new org');
+        						console.log(err);
+        						return done(null, false, req.flash('message', err)); 
+        					}
+        					console.log('da new org we done created is');
+        					console.log(newOrg);
+        				});
+					}
+				});
+				/*
+				if (retrievedUser) {
+					console.log('A user with this email already exists in this organization.');
 					return done(null, false, req.flash('message', 
 						'A user with this email already exists in this organization.'));
 				}
+				*/
 
-				// encrypt password
 				password = createHash(password);
-				UserController.createUser(name, email, password, org, type, function(err, newUser) {
+				UserController.createUser(name, email, password, org, scheduleID, function(err, newUser) {
 					if (err) {
 						console.log(err);
 						return done(null, false, req.flash('message', err)); 
 						//TODO
 					}
+					console.log('created newUser');
+					console.log(newUser);
 					return done(null, newUser);
 				});
 			});

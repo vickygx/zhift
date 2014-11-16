@@ -1,7 +1,7 @@
 extends layout
 
 block content
-	h1.text-center.login-title Register as the manager of a new organization
+	h1.text-center.login-title Register as a user of a new organization
 	form.form-horizontal(action='/signup', method='POST')
 		fieldset
 			div.form-group
@@ -24,6 +24,12 @@ block content
 				label.col-lg-2.control-label(for="inputType") Account Type
 				div.col-lg-10
 					input.form-control#inputType(type='text', name='userType', placeholder='User Type', required, autofocus)
+				p "Manager" or "Employee"
+			div.form-group
+				label.col-lg-2.control-label(for="inputRole") Role
+				div.col-lg-10
+					input.form-control#inputType(type='text', name='userRole', placeholder='Employee Role', autofocus)
+				p (Only used when creating an employee)
 			button(class='btn btn-lg btn-primary btn-block', type='submit') Register
 			span.clearfix
 		#message

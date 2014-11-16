@@ -11,7 +11,7 @@ module.exports = {};
     
     @param 
         {String} name:          Name of the organization
-        {function} fn :         call back function
+        {function} fn :         callback function
 
     @return ---
 */
@@ -25,14 +25,14 @@ module.exports.createOrg = function(name, fn) {
     org.save(fn);
 };
 
-/*  Function to get an org
+/*  Function to retrieve an org
     
     @param 
         {String} name:          Name of the organization to get
-        {function} fn :         call back function
+        {function} fn :         callback function
 
     @return ---
 */
-module.exports.getOrg = function(name, fn) {
+module.exports.retrieveOrg = function(name, fn) {
     Organization.findById(name, fn);
 }
