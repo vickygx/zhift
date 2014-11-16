@@ -50,31 +50,32 @@ module.exports = function(passport) {
 						return done(null, false, req.flash('message', err));                 
 					}
 					if (schedule) {
+						console.log('successfully associated new employee with an existing schedule');
 						scheduleID = schedule._id;
 					}
 				});
 			}
 
-			UserController.retrieveUser(email, org, function(err, user) {
+			UserController.retrieveUser(email, org, function(err, retrievedUser) {
 				if (err) {
 					console.log(err);
 					// TODO
 					return done(null, false, req.flash('message', err));                 
 				}
-				
+
 				OrgController.retrieveOrg(org, function(err, retrievedOrg) {
 					if (err) {
 						console.log(err);
 						return done(null, false, req.flash('message', err));
 					}
-					if (retrievedOrg) {
+					if (retrievedOrg && retrievedUser) {
 						console.log('An organization with this name already exists!');
 						return done(null, false, req.flash('message',
 							'An organization with this name already exists!'));
 					}
 					// creating a manager associated with a new organization --> create that
 					// organization
-					if (!scheduleID) {
+					if (!retrievedOrg && !scheduleID) {
         				OrgController.createOrg(org, function(err, newOrg) {
         					if (err) {
         						console.log('messed up creating a new org');
@@ -86,12 +87,13 @@ module.exports = function(passport) {
         				});
 					}
 				});
-
-				if (user) {
+				/*
+				if (retrievedUser) {
 					console.log('A user with this email already exists in this organization.');
 					return done(null, false, req.flash('message', 
 						'A user with this email already exists in this organization.'));
 				}
+				*/
 
 				password = createHash(password);
 				UserController.createUser(name, email, password, org, scheduleID, function(err, newUser) {
@@ -100,6 +102,8 @@ module.exports = function(passport) {
 						return done(null, false, req.flash('message', err)); 
 						//TODO
 					}
+					console.log('created newUser');
+					console.log(newUser);
 					return done(null, newUser);
 				});
 			});
