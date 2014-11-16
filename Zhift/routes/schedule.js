@@ -49,7 +49,7 @@ router.get('/:id', function(req, res){
 
 /* GET request to get all schedules associated with an organization */
 router.get('/all/:orgName', function(req, res){
-    ScheduleController.getAllSchedulesByOrg(req.param('orgName'), function(err, schedules) {
+    ScheduleController.retrieveSchedulesByOrg(req.param('orgName'), function(err, schedules) {
         if (err) {
             res.send(err);
         } 
