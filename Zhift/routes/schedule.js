@@ -27,7 +27,7 @@ router.post('/', function(req, res) {
 router.put('/delete/:id', function(req, res){
     ScheduleController.deleteSchedule(req.param('id'), function(err, schedule) {
         if (err) {
-            res.send(e);
+            res.send(err);
         } 
         else {
             res.send(schedule);
@@ -50,8 +50,8 @@ router.get('/:id', function(req, res){
 /* GET request to get all schedules associated with an organization */
 router.get('/all/:orgName', function(req, res){
     ScheduleController.getAllSchedulesByOrg(req.param('orgName'), function(err, schedules) {
-        if (e) {
-            res.send(e);
+        if (err) {
+            res.send(err);
         } 
         else {
             res.send(schedules);

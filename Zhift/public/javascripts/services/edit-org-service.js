@@ -27,6 +27,20 @@ ZhiftApp.service('EditOrgService', ['$rootScope', function($rootScope) {
                 console.log(res.responseText);
             });
         },
+
+        getSchedules: function(orgName, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'GET',
+                url: '/schedule/all/' + orgName,
+            }).success(function(res) {
+                callback(res);
+            }).error(function(res) {
+                // TODO: error handling
+                console.log(res.responseText);
+                callback(res.responseText);
+            });
+        },
     };
   
     return service;

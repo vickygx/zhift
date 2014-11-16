@@ -59,6 +59,6 @@ module.exports.deleteSchedule = function(scheduleId, fn) {
 
     @return ---
 */
-module.exports.getSchedulesByOrg = function(orgName, fn) {
+module.exports.getAllSchedulesByOrg = function(orgName, fn) {
     Schedule.find({org: orgName}, fn);
 }
