@@ -10,19 +10,31 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
     $scope.init = function(user_id) {
         UserService.getEmployee(user_id, function(employee) {
             $scope.user = employee;
-           
+            $scope.myShifts = {};
+            $scope.allShiftsForMyRole = {};
+            $scope.openShifts = {};
+
             ShiftService.getShiftsFor($scope.user._id.$oid, function(shifts) {
-                $scope.myShifts = shifts;
+                $scope.myShifts = {};
+                for (var i = 0; i < shifts.length; i++) {
+                    $scope.myShifts[shifts[i]._id] = shifts[i];
+                }
                 $scope.$apply();
             });
 
             ShiftService.getShifts($scope.user.schedule.$oid, function(shifts) {
-                $scope.allShiftsForMyRole = shifts;
+                $scope.allShiftsForMyRole = {};
+                for (var i = 0; i < shifts.length; i++) {
+                    $scope.allShiftsForMyRole[shifts[i]._id] = shifts[i];
+                }
                 $scope.$apply();
             });
 
             ShiftService.getOpenShifts($scope.user.schedule.$oid, function(shifts) {
-                $scope.openShifts = shifts;
+                $scope.openShifts = {};
+                for (var i = 0; i < shifts.length; i++) {
+                    $scope.openShifts[shifts[i]._id] = shifts[i];
+                }
                 $scope.$apply();
             });
         });
@@ -34,22 +46,16 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
 
     $scope.putUpForGrabs = function(shiftId) {
         ShiftService.putUpForGrabs(shiftId, function(shift) {
-            $scope.openShifts.push(shift);
+            $scope.openShifts[shift._id] = shift;
+            $scope.myShifts[shift._id] = shift;
             $scope.$apply();
         });
     }
 
     $scope.claim = function(shiftId) {
         ShiftService.claim(shiftId, function(shift) {
-            // TODO: make idiomatic
-            var index = 0;
-            for (var i = 0; i < $scope.openShifts.length; i++) {
-                if ($scope.openShifts[i]._id === shift._id) {
-                    index = i;
-                    break;
-                }
-            }
-            $scope.openShifts.splice(index, 1);
+            delete $scope.openShifts[shift._id];
+            $scope.myShifts[shift._id] = shift;
             $scope.$apply();
         });
     }

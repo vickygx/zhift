@@ -19,34 +19,30 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
     // TODO : any permissions
 
-    OrgController.createOrg(req.body.name,
-        // TODO: error handling
-        function(err, org) {
-            if (err) {
-                next(err);
-            } 
-            else {
-                res.send(org);
-            }
+    // TODO: error handling
+    OrgController.createOrg(req.body.name, function(err, org) {
+        if (err) {
+            next(err);
+        } 
+        else {
+            res.send(org);
         }
-    );
+    });
 });
 
 /* GET request to get org with name */
 router.get('/:name', function(req, res, next) {
     // TODO : any permissions
 
-    OrgController.retrieveOrg(req.param('name'),
-        // TODO: error handling
-        function(err, org) {
-            if (err) {
-                next(err);
-            } 
-            else {
-                res.send(org);
-            }
+    // TODO: error handling
+    OrgController.retrieveOrg(req.param('name'), function(err, org) {
+        if (err) {
+            next(err);
+        } 
+        else {
+            res.send(org);
         }
-    );
+    });
 });
 
 module.exports = router;
