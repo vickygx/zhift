@@ -24,7 +24,7 @@ router.post('/', function(req, res) {
 });
 
 /* POST request to delete existing schedule */
-router.put('/delete/:id', function(req, res){
+router.put('/delete/:id', function(req, res) {
     ScheduleController.deleteSchedule(req.param('id'), function(err, schedule) {
         if (err) {
             res.send(err);
@@ -36,7 +36,7 @@ router.put('/delete/:id', function(req, res){
 });
 
 /* GET request to get schedule */
-router.get('/:id', function(req, res){
+router.get('/:id', function(req, res) {
     ScheduleController.retrieveSchedule(req.param('id'), function(err, schedule) {
         if (err) {
             res.send(err);
@@ -48,7 +48,7 @@ router.get('/:id', function(req, res){
 });
 
 /* GET request to get all schedules associated with an organization */
-router.get('/all/:orgName', function(req, res){
+router.get('/all/:orgName', function(req, res) {
     ScheduleController.retrieveSchedulesByOrg(req.param('orgName'), function(err, schedules) {
         if (err) {
             res.send(err);
