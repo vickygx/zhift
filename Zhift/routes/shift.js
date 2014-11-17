@@ -1,7 +1,9 @@
-/*  All the routes relating to shifts
-    
-    @author: Vicky Gong 
-*/
+/**
+ * All the routes relating to shifts
+ * 
+ * @author: Vicky Gong, Lily Seropian
+ */
+
 var express = require('express');
 var router = express.Router();
 
@@ -61,12 +63,11 @@ router.put('/putUpForGrabs/:id', function(req, res, next) {
 });
 
 /*  GET request to get all shifts associated with a user*/
-router.get('user/:userid', function(req, res, next) {
+router.get('/user/:userid', function(req, res, next) {
     //TODO: make sure session user is userid
-    //TODO: can change the format if we only doign for session id to using req.session.user
-
+    //TODO: can change the format if we only doing for session id to using req.session.user
     ShiftController.getAllUserShifts(req.param('userid'), function(err, shifts) {
-        // TODO: erorr handling
+        // TODO: error handling
         if (err) {
             next(err);
         } 
@@ -115,17 +116,17 @@ router.get('/upForGrabs/:scheduleid', function(req, res, next) {
     });
 });
 
-/*  GET request to claim a given shift by user who is logged in */
-router.get('/claimShift/:id', function(req, res, next) {
-    // Make sure user logged in is in same schedule as shift to claim
-    employeeId = 'tempIdOfPersonLoggedIn';
+/*  PUT request to claim a given shift by user who is logged in */
+router.put('/claim/:id', function(req, res, next) {
+    // TODO: Make sure user logged in is in same schedule as shift to claim
+    employeeId = '54695460ebfaf2f129a79db4';
 
     ShiftController.giveShiftTo(req.param('id'), employeeId, function(err, shift) {
         // TODO : error handling
         if (err) {
             next(err);
         }
-        else if (shifts) {
+        else if (shift) {
             res.send(shift);
         }
         else {

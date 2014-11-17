@@ -18,6 +18,7 @@ var getUserModel = module.exports.getUserModel = function(type) {
     else if (type.toLowerCase() == 'employee') {
         return EmployeeUser;
     }
+    throw new Error('Unknown account type:', type);
 }
 
 /**
@@ -52,13 +53,15 @@ module.exports.createUser = function(name, email, password, org, scheduleID, cal
     var newUserCopy = new User(userData);
 
     // Add to specific database (i.e. ManagerUser or EmployeeUser)
-    newUser.save(function(err) {
+    newUser.save(function(err, user) {
         if (err) {
             console.log(err);
         }
+
         // Add to User database
         // We do this to avoid have to make queries on both ManagerUser DB and EmployeeUser DB
         // when looking up a user (and we don't know the user's type)
+        newUserCopy._id = user._id;
         newUserCopy.save(callback);
     });
 };
