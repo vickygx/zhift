@@ -2,11 +2,13 @@
  * Angular Controller for an employee.
  *
  * @author: Lily Seropian
+ *
+ * TODO: error handling
  */
 
 var ZhiftApp = angular.module('ZhiftApp');
 
-ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserService) {
+ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserService, SwapService) {
     $scope.init = function(user_id) {
         UserService.getEmployee(user_id, function(employee) {
             $scope.user = employee;
@@ -41,7 +43,18 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
     }
 
     $scope.swap = function(shiftId) {
+        SwapService.putUpForSwap(shiftId, $scope.myShifts[shiftId].schedule, function(swap) {
+            $scope.myShifts[shiftId].upForSwap = true;
+            $scope.openShifts[shiftId] = $scope.myShifts[shiftId];
+            $scope.$apply();
+        });
+    }
+
+    $scope.tryToSwap = function(shiftId) {
         console.log('swapping', shiftId);
+        // SwapService.tryToSwap(shiftId, $scope.myShifts[shiftId].schedule.$oid, function(swap) {
+
+        // });
     }
 
     $scope.putUpForGrabs = function(shiftId) {

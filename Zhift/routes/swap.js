@@ -22,6 +22,7 @@ router.post('/', function(req, res, next) {
     // and do Swap.find({_id: shiftId, originalOwner: userId}) and add originalOwner to schema
     // but there are other ways like making another DB call
 
+    // TODO: modify shift to be upForSwap
     SwapController.createSwap(req.body.shiftId, req.body.scheduleId, function(err, swap) {
         // TODO: cover all error cases / send proper error
         if (err){

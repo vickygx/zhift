@@ -1,6 +1,7 @@
 block head
     script(type="text/javascript", src="/javascripts/controllers/employee-controller.js")
     script(type="text/javascript", src="/javascripts/services/user-service.js")
+    script(type="text/javascript", src="/javascripts/services/swap-service.js")
 
 mixin employee()
     div(ng-controller="EmployeeController" ng-init="init('#{user._id}')")
@@ -8,10 +9,11 @@ mixin employee()
         h2 My Shifts
         div(ng-repeat="shift in myShifts")
             div {{shift.dayOfWeek}}: {{shift.start}} - {{shift.end}} (employee {{shift.responsiblePerson}})
-            div(ng-show="shift.upForGrabs") UP FOR GRABS
+            i(ng-show="shift.upForGrabs") UP FOR GRABS
+            i(ng-show="shift.upForSwap") UP FOR SWAP
             div
-                input(type="submit", value="Swap", ng-click="swap(shift._id)", ng-if="!shift.upForGrabs")
-                input(type="submit", value="Put Up For Grabs", ng-click="putUpForGrabs(shift._id)", ng-if="!shift.upForGrabs")
+                input(type="submit", value="Put Up For Swap", ng-click="swap(shift._id)", ng-if="!shift.upForGrabs && !shift.upForSwap")
+                input(type="submit", value="Put Up For Grabs", ng-click="putUpForGrabs(shift._id)", ng-if="!shift.upForGrabs && !shift.upForSwap")
         div(ng-show="myShifts.length === 0") None
 
         h2 All Shifts For My Role
@@ -22,5 +24,6 @@ mixin employee()
         h2 Unclaimed Shifts
         div(ng-repeat="shift in openShifts")
             div {{shift.dayOfWeek}}: {{shift.start}} - {{shift.end}} (employee {{shift.responsiblePerson}})
-                input(type="submit", value="Claim", ng-click="claim(shift._id)")
+                input(type="submit", value="Claim", ng-click="claim(shift._id)", ng-if="shift.upForGrabs")
+                input(type="submit", value="Swap", ng-click="tryToSwap(shift._id)", ng-if="shift.upForSwap")
         div(ng-show="openShifts.length === 0") None
