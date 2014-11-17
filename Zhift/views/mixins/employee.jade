@@ -10,8 +10,8 @@ mixin employee()
             div {{shift.dayOfWeek}}: {{shift.start}} - {{shift.end}} (employee {{shift.responsiblePerson}})
             div(ng-show="shift.upForGrabs") UP FOR GRABS
             div
-                input(type="submit", value="Swap", ng-click="swap(shift._id)")
-                input(type="submit", value="Put Up For Grabs", ng-click="putUpForGrabs(shift._id)")
+                input(type="submit", value="Swap", ng-click="swap(shift._id)", ng-if="!shift.upForGrabs")
+                input(type="submit", value="Put Up For Grabs", ng-click="putUpForGrabs(shift._id)", ng-if="!shift.upForGrabs")
         div(ng-show="myShifts.length === 0") None
 
         h2 All Shifts For My Role

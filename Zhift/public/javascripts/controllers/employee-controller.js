@@ -41,7 +41,7 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
     }
 
     $scope.swap = function(shiftId) {
-        console.log('swapping', shift);
+        console.log('swapping', shiftId);
     }
 
     $scope.putUpForGrabs = function(shiftId) {
