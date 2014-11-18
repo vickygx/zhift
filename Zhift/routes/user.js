@@ -111,7 +111,7 @@ router.delete('/:id', function(req, res) {
 
 /* GET all employees associated with the schedule with the id */
 router.get('/sched/:id', function(req, res) {
-    EmployeeUser.retrieveEmployeesByScheduleId(req.param('id'), function(err, employees) {
+    UserController.retrieveEmployeesByScheduleId(req.param('id'), function(err, employees) {
         if (err) {
             res.send(err);
         } 
