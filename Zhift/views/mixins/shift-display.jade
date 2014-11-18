@@ -5,7 +5,6 @@ block head
     script(type="text/javascript", src="/javascripts/controllers/shifts-controller.js")
 
 mixin shiftDisplay(org)
-    div SHIFT
     div(ng-controller="ShiftController" ng-init="init('#{org}')")
         div(ng-repeat="role in roles")
             h2 {{role.role}}

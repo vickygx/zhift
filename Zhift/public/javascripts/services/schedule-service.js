@@ -17,7 +17,7 @@ ZhiftApp.service('ScheduleService', ['$rootScope', function($rootScope) {
                 type: 'POST', 
                 url: '/schedule/',
                 data: {
-                    org: orgName,
+                    orgName: orgName,
                     role: roleName,
                 }
             }).success(function(res) {

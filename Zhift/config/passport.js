@@ -4,7 +4,8 @@
 
 var mongoose 		   = require('mongoose');
 var LocalStrategy 	   = require('passport-local').Strategy;
-var User 			   = require('../models/user');
+var User               = require('../models/user');
+var EmployeeUser       = require('../models/employee-user');
 var UserController 	   = require('../controllers/user');
 var OrgController      = require('../controllers/organization');
 var ScheduleController = require('../controllers/schedule');
@@ -26,9 +27,16 @@ module.exports = function(passport) {
 	});
 
 	passport.deserializeUser(function(id, done) {
-		User.findById(id, function(err, user) {
-			done(err, user);
-		})
+		EmployeeUser.findById(id, function(err, user) {
+            if (!user) {
+                User.findById(id, function(err, user) {
+                    done(err, user);
+                });
+            }
+            else {
+                done(err, user);
+            }
+		});
 	});
 
 	passport.use('signup', new LocalStrategy({

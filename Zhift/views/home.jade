@@ -9,27 +9,25 @@ block head
     include mixins/shift-display.jade
     include mixins/template-shift-display.jade
     include mixins/edit-org.jade
+    include mixins/manager.jade
+    include mixins/employee.jade
 
 block content
     div(ng-controller="HomeController")
         div.container
             div.row
                 div.col-sm-6.col-md-4.col-md-offset-4
-                    #user
-                        h1.text-center.login-title Welcome #{user.name}. Check your details below:
-                            div.signup-wall
-                                ul.user-details
-                                    li Name: #{user.name}
-                                    li Email: #{user.email}
-                                    li Organization: #{user.org}
-                            div
-                                a(href="/signout", class="text-center") Sign Out
-                            div
-                                a(ng-click="goToPage('home')", href="") Home
-                            div
-                                a(ng-click="goToPage('editOrg')", href="") Edit Organization
-        div(ng-if="page=='home'")
-            +templateShiftDisplay(user.org)
-            +shiftDisplay(user.org)
-        div(ng-if="page=='editOrg'")
-            +editOrg(user.org)
+                    div
+                        a(href="/signout", class="text-center") Sign Out
+                    h1.text-center.login-title Welcome #{user.name}. Check your details below:
+                        div.signup-wall
+                            ul.user-details
+                                li Name: #{user.name}
+                                li Email: #{user.email}
+                                li Organization: #{user.org}
+                                if user.schedule
+                                    li Schedule ID: #{user.schedule}
+        if user.schedule
+            +employee()
+        else
+            +manager(user)

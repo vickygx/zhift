@@ -1,0 +1,26 @@
+block head
+    script(type="text/javascript", src="/javascripts/controllers/employee-controller.js")
+    script(type="text/javascript", src="/javascripts/services/user-service.js")
+
+mixin employee()
+    div(ng-controller="EmployeeController" ng-init="init('#{user._id}')")
+
+        h2 My Shifts
+        div(ng-repeat="shift in myShifts")
+            div {{shift.dayOfWeek}}: {{shift.start}} - {{shift.end}} (employee {{shift.responsiblePerson}})
+            div(ng-show="shift.upForGrabs") UP FOR GRABS
+            div
+                input(type="submit", value="Swap", ng-click="swap(shift._id)")
+                input(type="submit", value="Put Up For Grabs", ng-click="putUpForGrabs(shift._id)")
+        div(ng-show="myShifts.length === 0") None
+
+        h2 All Shifts For My Role
+        div(ng-repeat="shift in allShiftsForMyRole")
+            div {{shift.dayOfWeek}}: {{shift.start}} - {{shift.end}} (employee {{shift.responsiblePerson}})
+        div(ng-show="allShiftsForMyRole.length === 0") None
+
+        h2 Unclaimed Shifts
+        div(ng-repeat="shift in openShifts")
+            div {{shift.dayOfWeek}}: {{shift.start}} - {{shift.end}} (employee {{shift.responsiblePerson}})
+                input(type="submit", value="Claim", ng-click="claim(shift._id)")
+        div(ng-show="openShifts.length === 0") None
