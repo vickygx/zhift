@@ -11,6 +11,7 @@ var ZhiftApp = angular.module('ZhiftApp');
 ZhiftApp.controller('ShiftController', function($scope, ScheduleService, ShiftService) {
     $scope.init = function(org) {
         $scope.org = org;
+        $scope.roles = [];
         
         ScheduleService.getSchedules($scope.org, function(schedules) {
             $scope.roles = schedules;

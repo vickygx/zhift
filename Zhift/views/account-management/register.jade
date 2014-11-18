@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+  h1 Register for Zhift
+  form(action="/signup", method="POST")
+    div
+      label(for="inputName") Name
+      div
+        input(id="inputName", type="text", name="name", placeholder="Name", required, autofocus)
+    br
+    div
+      label(for="inputPassword") Password
+      div
+        input(id="inputPassword", type="password", name="password", placeholder="Password", required)
+    br      
+    div
+      label(for="inputEmail") Email
+      div
+        input(id="inputEmail", type="email", name="email", placeholder="Email", required)
+    br      
+    div
+      label(for="inputOrg") Organization
+      div
+        input(id="inputOrg", type="text", name="org", placeholder="Organization", required, autofocus)
+    br      
+    div
+      label(for="inputType") Account Type ("Manager" or "Employee")
+      div
+        input(id="inputType", type="text", name="userType", placeholder="Account Type", required, autofocus)
+    br      
+    div
+      label(for="inputRole") Role (Only used when creating an employee)
+      div
+        input(id="inputType", type="text", name="userRole", placeholder="Employee Role", autofocus)
+    br      
+    input(type="submit", value="Register")

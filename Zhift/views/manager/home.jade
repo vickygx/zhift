@@ -21,6 +21,8 @@ mixin allTemplateShifts(org)
           li {{templateShift.dayOfWeek}}: {{templateShift.start}} - {{templateShift.end}} (employee {{templateShift.responsiblePerson}})
         div(ng-if="role.templateShifts.length === 0") 
           i None
+    div(ng-if="roles.length === 0")
+      i None
 
 mixin allShifts(org)
   h2.title Shifts
@@ -31,3 +33,5 @@ mixin allShifts(org)
           li {{shift.dayOfWeek}}: {{shift.start}} - {{shift.end}} (employee {{shift.responsiblePerson}})
         div(ng-if="role.shifts.length === 0") 
           i None
+    div(ng-if="roles.length === 0")
+      i None

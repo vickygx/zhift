@@ -3,14 +3,14 @@ extends layout
 block head
   script(type="text/javascript", src="javascripts/controllers/home-controller.js")
 
-  include manager.jade
-  include employee.jade
+  include manager/manager.jade
+  include employee/employee.jade
 
 block content
   div(ng-controller="HomeController")
     a(href="/signout", class="text-center") Sign Out
 
-    h1 Welcome #{user.name}.
+    h1 Welcome, #{user.name}!
     h2 Check your details below:
     ul
       li Name: #{user.name}

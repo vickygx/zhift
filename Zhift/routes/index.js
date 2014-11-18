@@ -15,13 +15,13 @@ var isAuthenticated = function (req, res, next) {
 module.exports = function(passport) {
 	/* GET API TEST */
 	router.get('/api', function(req, res){
-	    res.render('apidemo', {title: 'API testing'});
+	    res.render('api-demo/apidemo', {title: 'API testing'});
 	});
 
 	/* GET login page. */
 	router.get('/', function(req, res) {
     	// Display the Login page with any flash message, if any
-		res.render('login', { message: req.flash('message') });
+		res.render('account-management/login', { message: req.flash('message') });
 	});
 
 	/* Handle Login POST */
@@ -33,7 +33,7 @@ module.exports = function(passport) {
 
 	/* GET Registration Page */
 	router.get('/signup', function(req, res) {
-		res.render('register', {message: req.flash('message')});
+		res.render('account-management/register', {message: req.flash('message')});
 	});
 
 	/* Handle Registration POST */
