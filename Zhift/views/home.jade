@@ -1,33 +1,33 @@
-extends layout
+//- Shift display: show all shifts for each role (shifts and template shfits).
+//- author: @Lily Seropian
+
 block head
-    include mixins/css.jade
-    +css("main")
-    +css("shift")
+  script(type="text/javascript", src="/javascripts/controllers/template-shift-controller.js")
+  script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
 
-    script(type="text/javascript", src="javascripts/controllers/home-controller.js")
+  script(type="text/javascript", src="/javascripts/controllers/shift-controller.js")
+  script(type="text/javascript", src="/javascripts/services/shift-service.js")
 
-    include mixins/shift-display.jade
-    include mixins/template-shift-display.jade
-    include mixins/edit-org.jade
-    include mixins/manager.jade
-    include mixins/employee.jade
+  script(type="text/javascript", src="/javascripts/services/schedule-service.js")
 
-block content
-    div(ng-controller="HomeController")
-        div.container
-            div.row
-                div.col-sm-6.col-md-4.col-md-offset-4
-                    div
-                        a(href="/signout", class="text-center") Sign Out
-                    h1.text-center.login-title Welcome #{user.name}. Check your details below:
-                        div.signup-wall
-                            ul.user-details
-                                li Name: #{user.name}
-                                li Email: #{user.email}
-                                li Organization: #{user.org}
-                                if user.schedule
-                                    li Schedule ID: #{user.schedule}
-        if user.schedule
-            +employee()
-        else
-            +manager(user)
+
+mixin allTemplateShifts(org)
+  h2.title Template Shifts
+
+  div(ng-controller="TemplateShiftController" ng-init="init('#{org}')")
+    ul(ng-repeat="role in roles")
+      li {{role.role}}
+        ul(ng-repeat="templateShift in role.templateShifts")
+          li {{templateShift.dayOfWeek}}: {{templateShift.start}} - {{templateShift.end}} (employee {{templateShift.responsiblePerson}})
+        div(ng-if="role.templateShifts.length === 0") 
+          i None
+
+mixin allShifts(org)
+  h2.title Shifts
+  div(ng-controller="ShiftController" ng-init="init('#{org}')")
+    ul(ng-repeat="role in roles")
+      li {{role.role}}
+        ul(ng-repeat="shift in role.shifts")
+          li {{shift.dayOfWeek}}: {{shift.start}} - {{shift.end}} (employee {{shift.responsiblePerson}})
+        div(ng-if="role.shifts.length === 0") 
+          i None

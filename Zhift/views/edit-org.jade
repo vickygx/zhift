@@ -1,0 +1,17 @@
+//- Organization editing: view and add roles.
+//- author: @Lily Seropian
+
+block head
+  script(type="text/javascript", src="/javascripts/controllers/edit-org-controller.js")
+  script(type="text/javascript", src="/javascripts/services/schedule-service.js")
+
+mixin editOrg(org)
+  div(ng-controller="EditOrgController" ng-init="init('#{org}')")
+    hr
+    h3 Existing Roles
+    div(ng-repeat="role in roles")
+      li {{role.role}}
+    h3 Add Role
+    input(type="text", placeholder="Role Name", ng-model="roleName")
+    input(type="submit", ng-click="createSchedule('#{org}')")
+    hr

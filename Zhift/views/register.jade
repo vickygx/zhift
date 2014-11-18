@@ -1,37 +1,26 @@
 extends layout
 
 block content
-	h1.text-center.login-title Register as a user of a new organization
-	form.form-horizontal(action='/signup', method='POST')
-		fieldset
-			div.form-group
-				label.col-lg-2.control-label(for="inputName") Name
-				div.col-lg-10
-					input.form-control#inputName(type='text', name='name', placeholder='Name', required, autofocus)
-			div.form-group
-				label.col-lg-2.control-label(for="inputPassword") Password
-				div.col-lg-10
-					input.form-control#inputPassword(type='password', name='password', placeholder='Password', required)
-			div.form-group
-				label.col-lg-2.control-label(for="inputEmail") Email
-				div.col-lg-10
-					input.form-control#inputEmail(type='email', name='email', placeholder='Email', required)
-			div.form-group
-				label.col-lg-2.control-label(for="inputOrg") Organization
-				div.col-lg-10
-					input.form-control#inputOrg(type='text', name='org', placeholder='Organization', required, autofocus)
-			div.form-group
-				label.col-lg-2.control-label(for="inputType") Account Type
-				div.col-lg-10
-					input.form-control#inputType(type='text', name='userType', placeholder='User Type', required, autofocus)
-				p "Manager" or "Employee"
-			div.form-group
-				label.col-lg-2.control-label(for="inputRole") Role
-				div.col-lg-10
-					input.form-control#inputType(type='text', name='userRole', placeholder='Employee Role', autofocus)
-				p (Only used when creating an employee)
-			button(class='btn btn-lg btn-primary btn-block', type='submit') Register
-			span.clearfix
-		#message
-			if message
-				h1.text-center.error-message #{message}
+  h1 Register as a user of a new organization
+  form(action="/signup", method="POST")
+    div
+      label(for="inputName") Name
+      input(id="inputName", type="text", name="name", placeholder="Name", required, autofocus)
+    div
+      label(for="inputPassword") Password
+      input(id="inputPassword", type="password", name="password", placeholder="Password", required)
+    div
+      label(for="inputEmail") Email
+      input(id="inputEmail", type="email", name="email", placeholder="Email", required)
+    div
+      label(for="inputOrg") Organization
+      input(id="inputOrg", type="text", name="org", placeholder="Organization", required, autofocus)
+    div
+      label(for="inputType") Account Type
+      input(id="inputType", type="text", name="userType", placeholder="User Type", required, autofocus)
+      p "Manager" or "Employee"
+    div
+      label(for="inputRole") Role
+      input(id="inputType", type="text", name="userRole", placeholder="Employee Role", autofocus)
+      p (Only used when creating an employee)
+    input(type="submit") Register

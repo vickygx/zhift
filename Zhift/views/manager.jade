@@ -1,0 +1,17 @@
+block head    
+  include edit-org.jade
+  include home.jade
+
+mixin manager(user)
+  input(type="submit", ng-click="goToPage('home')", value="Home", ng-show="page!=='home'")
+  input(type="submit", ng-click="goToPage('editOrg')", value="Edit Organization", ng-show="page!=='editOrg'")
+
+  div(ng-if="page=='home'")
+    hr
+    +allTemplateShifts(user.org)
+    hr
+    +allShifts(user.org)
+    hr
+
+  div(ng-if="page=='editOrg'")
+    +editOrg(user.org)
