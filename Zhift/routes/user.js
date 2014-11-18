@@ -15,7 +15,7 @@ var errorChecking = require('../errors/error-checking');
 
 /* POST request to create new manager */
 router.post('/manager', function(req, res) {
-    UserController.createUser(req.body.name, req.body.email, req.body.password, req.body.org, null, function(err, manager) {
+    UserController.createUser(req.body.username, req.body.email, req.body.password, req.body.org, null, function(err, manager) {
         if (err) {
             res.send(err);
         }
@@ -28,12 +28,13 @@ router.post('/manager', function(req, res) {
 /* POST request to create new employee */
 router.post('/employee', function(req, res) {
     // need to get the scheduleID in order to create employee
-    ScheduleController.retrieveScheduleByOrgAndRole(req.body.org, req.role, function(err, schedule) {
+    ScheduleController.retrieveScheduleByOrgAndRole(req.body.org, req.body.role, function(err, schedule) {
+        console.log(schedule);
         if (err) {
             res.send(err);
         }
         else {
-            UserController.createUser(req.body.name, req.body.email, req.body.password, req.body.org, schedule._id, function(err, employee) {
+            UserController.createUser(req.body.username, req.body.email, req.body.password, req.body.org, schedule._id, function(err, employee) {
                 if (err) {
                     res.send(err);
                 }

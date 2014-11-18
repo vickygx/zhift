@@ -73,5 +73,7 @@ module.exports.retrieveSchedulesByOrg = function(orgName, fn) {
     @return ---
 */
 module.exports.retrieveScheduleByOrgAndRole = function(orgName, roleName, fn) {
+    console.log(orgName);
+    console.log(roleName);
     Schedule.findOne({org: orgName, role: roleName}, fn);
 }
