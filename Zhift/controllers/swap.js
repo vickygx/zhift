@@ -31,7 +31,7 @@ module.exports.createSwap = function(shiftId, scheduleId, fn) {
                 return fn(err);
             }
 
-            fn(swap);
+            fn(null, swap);
         });
     });
 };
@@ -62,6 +62,7 @@ module.exports.getSwapsOnSchedule = function(scheduleId, fn) {
 
 */
 module.exports.offerShiftForSwap = function(swapId, shiftId, fn) {
+    console.log('offering shift for swap', swapId, shiftId);
     Swap.findByIdAndUpdate(swapId, {shiftOfferedInReturn: shiftId}, fn);
 };
 
@@ -96,7 +97,12 @@ module.exports.acceptSwap = function(swap_id, fn) {
             return fn(err);
         }
         else {
-            ShiftController.tradeShifts(swap.shiftUpForSwap, swap.shiftOfferedInReturn, fn);
+            ShiftController.tradeShifts(swap.shiftUpForSwap, swap.shiftOfferedInReturn, function(err) {
+                if (err) {
+                    return fn(err);
+                }
+                return fn(null, swap);
+            });
         }
     });
 }

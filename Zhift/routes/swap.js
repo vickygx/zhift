@@ -23,14 +23,16 @@ router.post('/', function(req, res, next) {
     // but there are other ways like making another DB call
 
     // TODO: modify shift to be upForSwap
+    console.log('posting to swap');
     SwapController.createSwap(req.body.shiftId, req.body.scheduleId, function(err, swap) {
         // TODO: cover all error cases / send proper error
         if (err){
             // we can send custom errors instead
-            console.log(err);
+            console.log('failed to create swap', err);
             next(err);
         } 
         else {
+            console.log('created swap');
             res.send(swap);
         }
     });
@@ -68,13 +70,16 @@ router.put('/:swap_id', function(req, res, next) {
     // TODO: make sure in same schedule
     // make sure shiftofferedinreturn is empty
     if (req.body.shiftId !== undefined) {
+        console.log('swapping shift');
         SwapController.offerShiftForSwap(req.param('swap_id'), req.body.shiftId, function(err, swap) {
             // TODO: cover all error cases / send proper error
             if (err) {
                 // we can send custom errors instead
+                console.log(err);
                 next(err);
             } 
             else {
+                console.log('swap succeeded');
                 res.send(swap);
             }
         });

@@ -19,6 +19,7 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
             $scope.swapProposals = {};
 
             ShiftService.getShiftsFor($scope.user._id.$oid, function(shifts) {
+                console.log($scope.user._id);
                 $scope.myShifts = {};
                 for (var i = 0; i < shifts.length; i++) {
                     $scope.myShifts[shifts[i]._id] = shifts[i];
@@ -35,7 +36,6 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
             });
 
             ShiftService.getShiftsUpForGrabs($scope.user.schedule.$oid, function(shifts) {
-                $scope.openShifts = {};
                 for (var i = 0; i < shifts.length; i++) {
                     $scope.openShifts[shifts[i]._id] = shifts[i];
                 }
@@ -43,20 +43,21 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
             });
 
             ShiftService.getShiftsUpForSwap($scope.user.schedule.$oid, function(shifts) {
-                shifts.forEach(function(shift) {
+                for (var i = 0; i < shifts.length; i++) {
+                    shift = shifts[i];                    
                     $scope.openShifts[shift._id] = shift;
                     $scope.$apply();
 
                     SwapService.getSwapForShift(shift._id, function(swap) {
-                        if ($scope.myShifts[shift._id] !== undefined) {
-                            $scope.myShifts[shift._id].swapId = swap._id;
-                        }
+                        $scope.openShifts[shift._id].swapId = swap._id;
+                        $scope.$apply();
+
                         if (swap.shiftOfferedInReturn) {
                             $scope.swapProposals[swap._id] = swap;
                             $scope.$apply();
                         }
                     });
-                });
+                };
             });
         });
     }
@@ -74,15 +75,15 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
         $scope.myShiftsICanSwap = $scope.myShifts;
     }
 
-    $scope.proposeSwap = function(shiftId) {
-        SwapService.proposeSwap($scope.myShifts[shiftId].swapId, shiftId, function(swap) {
+    $scope.proposeSwap = function(swapId, shiftId) {
+        console.log('proposing swap', shiftId, swapId);
+        SwapService.proposeSwap(swapId, shiftId, function(swap) {
             $scope.swapProposals[swap._id] = swap;
         });
     }
 
     $scope.putUpForGrabs = function(shiftId) {
         ShiftService.putUpForGrabs(shiftId, function(swap) {
-            // store swap id
             $scope.openShifts[shift._id] = shift;
             $scope.myShifts[shift._id] = shift;
             $scope.$apply();
@@ -99,7 +100,9 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
 
     $scope.acceptSwap = function(swapId) {
         SwapService.acceptSwap(swapId, function(swap) {
-            console.log('swap accepted');
+            delete $scope.swapProposals[swap._id];
+            $scope.myShifts[swap.shiftUpForSwap].upForSwap = false;
+            $scope.$apply();
         });
     }
 });
