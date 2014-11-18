@@ -62,9 +62,11 @@ router.get('/manager/:id', function(req, res) {
 router.get('/employee/:id', function(req, res) {
     UserController.retrieveEmployeeById(req.param('id'), function(err, employee) {
         if (err) {
+            console.log(err);
             res.send(err);
         }
         else {
+            console.log('got emp', employee);
             res.send(employee);
         }
     });

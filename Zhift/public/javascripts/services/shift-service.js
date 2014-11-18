@@ -75,11 +75,14 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
-        claim: function(shiftId, callback) {
+        claim: function(shiftId, employeeId, callback) {
             $.ajax({
                 datatype: 'json',
                 type: 'PUT',
                 url: 'shift/claim/' + shiftId,
+                data: {
+                    employeeId: employeeId,
+                }
             }).success(function(res) {
                 callback(res);
             }).error(function(res) {

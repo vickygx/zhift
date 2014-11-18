@@ -11,6 +11,7 @@ var ZhiftApp = angular.module('ZhiftApp');
 ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserService, SwapService) {
     $scope.init = function(user_id) {
         UserService.getEmployee(user_id, function(employee) {
+            console.log(employee);
             $scope.user = employee;
             $scope.myShifts = {};
             $scope.allShiftsForMyRole = {};
@@ -18,7 +19,7 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
             $scope.myShiftsICanSwap = {};
             $scope.swapProposals = {};
 
-            ShiftService.getShiftsFor($scope.user._id.$oid, function(shifts) {
+            ShiftService.getShiftsFor($scope.user._id, function(shifts) {
                 console.log($scope.user._id);
                 $scope.myShifts = {};
                 for (var i = 0; i < shifts.length; i++) {
@@ -27,7 +28,7 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
                 $scope.$apply();
             });
 
-            ShiftService.getShifts($scope.user.schedule.$oid, function(shifts) {
+            ShiftService.getShifts($scope.user.schedule, function(shifts) {
                 $scope.allShiftsForMyRole = {};
                 for (var i = 0; i < shifts.length; i++) {
                     $scope.allShiftsForMyRole[shifts[i]._id] = shifts[i];
@@ -35,14 +36,14 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
                 $scope.$apply();
             });
 
-            ShiftService.getShiftsUpForGrabs($scope.user.schedule.$oid, function(shifts) {
+            ShiftService.getShiftsUpForGrabs($scope.user.schedule, function(shifts) {
                 for (var i = 0; i < shifts.length; i++) {
                     $scope.openShifts[shifts[i]._id] = shifts[i];
                 }
                 $scope.$apply();
             });
 
-            ShiftService.getShiftsUpForSwap($scope.user.schedule.$oid, function(shifts) {
+            ShiftService.getShiftsUpForSwap($scope.user.schedule, function(shifts) {
                 for (var i = 0; i < shifts.length; i++) {
                     shift = shifts[i];                    
                     $scope.openShifts[shift._id] = shift;
@@ -91,7 +92,7 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
     }
 
     $scope.claim = function(shiftId) {
-        ShiftService.claim(shiftId, function(shift) {
+        ShiftService.claim(shiftId, $scope.user._id, function(shift) {
             delete $scope.openShifts[shift._id];
             $scope.myShifts[shift._id] = shift;
             $scope.$apply();

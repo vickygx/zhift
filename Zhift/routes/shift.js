@@ -137,9 +137,8 @@ router.get('/upForSwap/:scheduleid', function(req, res, next) {
 /*  PUT request to claim a given shift by user who is logged in */
 router.put('/claim/:id', function(req, res, next) {
     // TODO: Make sure user logged in is in same schedule as shift to claim
-    employeeId = '54695460ebfaf2f129a79db4';
 
-    ShiftController.giveShiftTo(req.param('id'), employeeId, function(err, shift) {
+    ShiftController.giveShiftTo(req.param('id'), req.body.employeeId, function(err, shift) {
         // TODO : error handling
         if (err) {
             next(err);
