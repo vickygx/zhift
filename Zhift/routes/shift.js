@@ -116,6 +116,24 @@ router.get('/upForGrabs/:scheduleid', function(req, res, next) {
     });
 });
 
+/*  GET request to get all shifts being offered for swapping */
+router.get('/upForSwap/:scheduleid', function(req, res, next) {
+    // TODO: make sure user is part of same schedule/ manger
+
+    ShiftController.getShiftsUpForSwapOnASchedule(req.param('scheduleid'), function(err, shifts) {
+        // TODO : error handling
+        if (err) {
+            next(err);
+        }
+        else if (shifts) {
+            res.send({'shifts': shifts});
+        }
+        else {
+            next(errors.schedules.invalidScheduleId);
+        }
+    });
+});
+
 /*  PUT request to claim a given shift by user who is logged in */
 router.put('/claim/:id', function(req, res, next) {
     // TODO: Make sure user logged in is in same schedule as shift to claim

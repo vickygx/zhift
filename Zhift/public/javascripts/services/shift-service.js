@@ -36,11 +36,24 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
-        getOpenShifts: function(scheduleId, callback) {
+        getShiftsUpForGrabs: function(scheduleId, callback) {
             $.ajax({
                 datatype: 'json',
                 type: 'GET',
                 url: 'shift/upForGrabs/' + scheduleId,
+            }).success(function(res) {
+                callback(res.shifts);
+            }).error(function(res){
+                // TODO: error handling
+                callback(res);
+            });
+        },
+
+        getShiftsUpForSwap: function(scheduleId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'GET',
+                url: 'shift/upForSwap/' + scheduleId,
             }).success(function(res) {
                 callback(res.shifts);
             }).error(function(res){

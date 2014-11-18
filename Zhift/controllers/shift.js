@@ -92,20 +92,30 @@ module.exports.putUpForTrade = function(shiftId, fn) {
 
     @TODO: if the 2nd fails to occur, the first still occurs
 */
-module.exports.tradeShifts = function(shiftIdA, employeeIdA, shiftIdB, employeeIdB, fn) {
+module.exports.tradeShifts = function(shiftIdA, shiftIdB, fn) {
     // Updating shiftA
-    Shift.findByIdAndUpdate(shiftIdA, 
-        {responsiblePerson: employeeIdB, upForGrabs: false}, function(err, shift){
-            // If there is an error, return the error
-            if (err) {
-                fn(err);
-            }
-            // If update worked, do the same for shiftB
-            else if (shift) { 
-                Shift.findByIdAndUpdate(shiftIdB, 
-                    {responsiblePerson: employeeIdA, upForGrabs: false}, fn);
-            }    
+    Shift.findById(shiftIdA, function(err, shiftA) {
+        Shift.findById(shiftIdB, function(err, shiftB) {
+            var temp = shiftA.responsiblePerson;
+
+            shiftA.responsiblePerson = shiftB.responsiblePerson;
+            shiftA.upForSwap = false;
+            shiftA.save(function(err, shiftA) {
+                if (err) {
+                    return fn(err);
+                }
+
+                shiftB.responsiblePerson = temp;
+                shiftB.upForSwap = false;
+                shiftB.save(function(err, shiftB) {
+                    if (err) {
+                        return fn(err);
+                    }
+                    fn(null, [shiftA, shiftB]);
+                });
+            });
         });
+    });
 }
 
 module.exports.getShift = function(shiftId, fn) {
@@ -143,4 +153,8 @@ module.exports.getAllShiftsOnASchedule = function(scheduleId, fn) {
 */
 module.exports.getOfferedShiftsOnASchedule = function(scheduleId, fn) {
     Shift.find({schedule: scheduleId, upForGrabs: true}, fn);
+}
+
+module.exports.getShiftsUpForSwapOnASchedule = function(scheduleId, fn) {
+    Shift.find({schedule: scheduleId, upForSwap: true}, fn);
 }

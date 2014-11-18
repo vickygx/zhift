@@ -1,9 +1,11 @@
 /*  All the functions related to manipulating and retrieving information 
     from the Swap database
 
-    @author: Vicky Gong
+    @author: Vicky Gong, Lily Seropian
 */
 var Swap = require('../models/swap');
+var Shift = require('../models/shift');
+var ShiftController = require('./shift');
 var errors = require('../errors/errors');
 module.exports = {};
 
@@ -23,9 +25,20 @@ module.exports.createSwap = function(shiftId, scheduleId, fn) {
     });
 
     // Add to database
-    swap.save(fn);
+    swap.save(function(err, swap) {
+        Shift.findByIdAndUpdate(shiftId, {upForSwap: true}, function(err) {
+            if (err) {
+                return fn(err);
+            }
+
+            fn(swap);
+        });
+    });
 };
 
+module.exports.getSwapForShift = function(shiftId, fn) {
+    Swap.findOne({shiftUpForSwap: shiftId}, fn);
+}
 /*  Function to get swaps associated with a schedule
     
     @param 
@@ -75,3 +88,15 @@ module.exports.resetOfferedShiftInSwap = function(swapId, fn) {
 module.exports.deleteSwap = function(swapId, fn) {
     Swap.findByIdAndRemove(swapId, fn);
 };
+
+module.exports.acceptSwap = function(swap_id, fn) {
+    Swap.findByIdAndRemove(swap_id, function(err, swap) {
+        if (err) {
+            console.log(err);
+            return fn(err);
+        }
+        else {
+            ShiftController.tradeShifts(swap.shiftUpForSwap, swap.shiftOfferedInReturn, fn);
+        }
+    });
+}

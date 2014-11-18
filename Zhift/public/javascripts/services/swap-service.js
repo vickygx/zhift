@@ -26,6 +26,51 @@ ZhiftApp.service('SwapService', ['$rootScope', function($rootScope) {
                 callback(res);
             });
         },
+
+        proposeSwap: function(swapId, shiftId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'PUT',
+                url: '/swap/' + swapId,
+                data: {
+                    shiftId: shiftId,
+                }
+            }).success(function(res) {
+                callback(res);
+            }).error(function(res){
+                // TODO: error handling
+                callback(res);
+            });
+        },
+
+        getSwapForShift: function(shiftId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'GET',
+                url: '/swap/shift/' + shiftId,
+            }).success(function(res) {
+                callback(res);
+            }).error(function(res){
+                // TODO: error handling
+                callback(res);
+            });
+        },
+
+        acceptSwap: function(swapId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'PUT',
+                url: '/swap/' + swapId,
+                data: {
+                    acceptSwap: true,
+                }
+            }).success(function(res) {
+                callback(res);
+            }).error(function(res){
+                // TODO: error handling
+                callback(res);
+            });
+        }
     };
 
     return service;

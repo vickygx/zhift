@@ -1,6 +1,6 @@
 /*  All the routes relating to swaps
     
-    @author: Vicky Gong 
+    @author: Vicky Gong, Lily Seropian
 */
 var express = require('express');
 var router = express.Router();
@@ -27,6 +27,7 @@ router.post('/', function(req, res, next) {
         // TODO: cover all error cases / send proper error
         if (err){
             // we can send custom errors instead
+            console.log(err);
             next(err);
         } 
         else {
@@ -35,8 +36,19 @@ router.post('/', function(req, res, next) {
     });
 });
 
+router.get('/shift/:shift_id', function(req, res, next) {
+    SwapController.getSwapForShift(req.param('shift_id'), function(err, swap) {
+        if (err) {
+            next(err);
+        }
+        else {
+            res.send(swap);
+        }
+    });
+});
+
 /* GET request to get all swap objects related to a schedule*/
-router.get('/:schedule_id', function(req, res, next) {
+router.get('/schedule/:schedule_id', function(req, res, next) {
     // TODO; requester must be user of schedule or manager
 
     SwapController.getSwapsOnSchedule(req.param('schedule_id'), function(err, swap) {
@@ -51,21 +63,35 @@ router.get('/:schedule_id', function(req, res, next) {
     });
 });
 
-/* PUT request to offer a shift up for swap */
-router.put('/offerSwap', function(req, res, next) {
+/* PUT request to offer a shift up for swap, accept proposed swap */
+router.put('/:swap_id', function(req, res, next) {
     // TODO: make sure in same schedule
     // make sure shiftofferedinreturn is empty
-
-    SwapController.offerShiftForSwap(req.body.swapId, req.body.shiftId, function(err, swap) {
-        // TODO: cover all error cases / send proper error
-        if (err) {
-            // we can send custom errors instead
-            next(err);
-        } 
-        else {
-            res.send(swap);
+    if (req.body.shiftId !== undefined) {
+        SwapController.offerShiftForSwap(req.param('swap_id'), req.body.shiftId, function(err, swap) {
+            // TODO: cover all error cases / send proper error
+            if (err) {
+                // we can send custom errors instead
+                next(err);
+            } 
+            else {
+                res.send(swap);
+            }
+        });
+    }
+    else {
+        if (req.body.acceptSwap === 'true') {
+            SwapController.acceptSwap(req.param('swap_id'), function(err, swap) {
+                if (err) {
+                    console.log(err);
+                    next(err);
+                }
+                else {
+                    res.send(swap);
+                }
+            });
         }
-    });
+    }
 });
 
 module.exports = router;
