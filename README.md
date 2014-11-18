@@ -1,5 +1,5 @@
 Zhift
-=========
+=====
 
 6.170 Final Team Project
 
@@ -8,6 +8,9 @@ Lily Seropian
 Dylan Joss
 Victoria Gong
 
-http://localhost:8080/ - Application homepage
+Links
+=====
 
-http://localhost:8080/api - Test page for API functionality
+[Application homepage](http://localhost:8080/)
+
+[Test page for API functionality](http://localhost:8080/api)
