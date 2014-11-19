@@ -32,7 +32,7 @@ app.use(session({
     saveUninitialized: true}));
 
 var db;
-// Connecting to OpenShift
+// Connecting to OpenShift if in openshift
 if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
     dbURL = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ':' +
           process.env.OPENSHIFT_MONGODB_DB_PASSWORD + '@' +
