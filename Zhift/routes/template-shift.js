@@ -26,6 +26,19 @@ router.post('/', function(req, res){
 	);
 });
 
+/* GET request to get all template shifts associated with a schedule */
+router.get('/all/:scheduleId', function(req, res){
+    TemplateShiftController.getAllShiftsBySchedule(req.param('scheduleId'),
+        function(err, templateShift) {
+            if (err) {
+                res.send(err);
+            } else {
+                res.send(templateShift);
+            }
+        }
+    )
+});
+
 /* GET request for a template shift */
 router.get('/:id', function(req, res){
 	TemplateShiftController.retrieveShift(req.param('id'),
@@ -64,19 +77,6 @@ router.delete('/:id', function(req, res){
 /* PUT request to reassign person responsible for existing template shift */
 router.put('/reassign/:id', function(req, res){
 	TemplateShiftController.giveShiftTo(req.param('id'), req.body.employeeId,
-		function(err, templateShift) {
-			if (err) {
-				res.send(err);
-			} else {
-				res.send(templateShift);
-			}
-		}
-	)
-});
-
-/* GET request to get all template shifts associated with a schedule */
-router.get('/all/:scheduleId', function(req, res){
-	TemplateShiftController.getAllShiftsBySchedule(req.param('scheduleId'),
 		function(err, templateShift) {
 			if (err) {
 				res.send(err);
