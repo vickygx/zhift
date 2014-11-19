@@ -24,11 +24,11 @@ module.exports = function(passport) {
 		res.render('account-management/login', { message: req.flash('message') });
 	});
 
-	/* Handle Login POST */
+	/* POST login */
 	router.post('/login', passport.authenticate('login', {
 		successRedirect: '/home',
 		failureRedirect: '/',
-		failureFlash : true  
+		failureFlash: true  
 	}));
 
 	/* GET Registration Page */

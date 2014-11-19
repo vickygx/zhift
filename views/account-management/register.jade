@@ -37,3 +37,5 @@ block content
         input(id="inputType", type="text", name="userRole", placeholder="Employee Role", autofocus)
     br      
     input(type="submit", value="Register")
+    -if(message)
+      div #{message}

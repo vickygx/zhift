@@ -123,12 +123,17 @@ module.exports = function(passport) {
         },
         function(req, email, password, done) {
         	var org = req.body.org;
+        	console.log(org);
 	  		UserController.retrieveUser(email, org, function(err, user) {
 	  			if (err) {
 	  				console.log(err);
-	  				return done(null, false, req.flash('message', err)); 
-	  				//TODO
+	  				return done(null, false, req.flash('message', err));
 	  			}
+
+	  			if (!user) {
+	  				return done(null, false, req.flash('message', 'User not found.'));
+	  			}
+
 	  			if (!isCorrectPassword(user, password)) {
 	  				console.log('Incorrect password.');
 	  				return done(null, false, req.flash('message', 'Incorrect password.'));
