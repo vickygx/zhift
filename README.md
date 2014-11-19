@@ -66,3 +66,15 @@ To claim a shift:
 - Locate the offered shift you wish to claim under 'Unclaimed Shifts'.
 - Click 'Claim'.
 - The shift should be removed from 'Unclaimed Shifts' and appear under 'My Shifts'.
+
+To say you want to swap a shift:
+- Log in to an employee account that has shifts associated with it.
+- Locate the shift you want to put up for swap under 'My Shifts'.
+- Click 'Put Up For Swap'.
+- The shift should appear under 'Unclaimed Shifts'. The buttons under the shift should be replaced by the text 'UP FOR SWAP'.
+
+To say you want to participate in a swap:
+- Log in to an employee account that has the same role as an employee that has put up a shift for swap.
+- Locate the shift that you wish to swap with under 'Unclaimed Shifts'.
+- Click 'Swap'.
+- Your shifts should appear under that shift. Choose one of your shifts to offer in return, and click 'Offer For Swap' (note that no UI changes happen now).
