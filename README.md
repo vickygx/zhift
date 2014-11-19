@@ -78,3 +78,10 @@ To say you want to participate in a swap:
 - Locate the shift that you wish to swap with under 'Unclaimed Shifts'.
 - Click 'Swap'.
 - Your shifts should appear under that shift. Choose one of your shifts to offer in return, and click 'Offer For Swap' (note that no UI changes happen now).
+- Once the other employee accepts the swap, if you refresh the page you should see that you no longer have your original shift and you now have their shift.
+
+To accept a swap:
+- Log in to an employee account that had offered a ship up for swap and received a return offer.
+- Locate said return offer.
+- Click 'Accept'.
+- The shift should disappear from 'Swap Proposals'. If you refresh the page, you should see that the swap took place.
