@@ -17,6 +17,18 @@ Links
 
 Instructions
 =====
+Note: [if you want to see what a populated account looks like]
+Pre-populated manager:
+- Name: TestManager
+- Password: manager
+- Email: manager@mit.edu
+- Organization: ZhiftTest
+Pre-populated employee:
+- Name: ta
+- Password: ta
+- Email: ta@mit.edu
+- Organization: ZhiftTest
+- Role: Cook
 
 To create an organization/manager:
 - Navigate to /.
