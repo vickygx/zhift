@@ -45,11 +45,14 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
      * Create a new schedule, save it to the database, and display it in the frontend.
      */
     $scope.createSchedule = function(roleName) {
-        ScheduleService.createSchedule($scope.org, roleName, function(newSchedule) {
-            newSchedule.shifts = [];
-            newSchedule.templateShifts = [];
-            $scope.roles.push(newSchedule);
-            $scope.$apply();
+        ScheduleService.createSchedule($scope.org, roleName, function(err,newSchedule) {
+            // TODO: if err, do something
+            if (!err){
+                newSchedule.shifts = [];
+                newSchedule.templateShifts = [];
+                $scope.roles.push(newSchedule);
+                $scope.$apply();
+            }
         });
     };
 });

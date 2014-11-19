@@ -23,9 +23,10 @@ module.exports.createSchedule = function(orgName, role, fn) {
         if (err){
             fn(err);
         }
-        // If schedule exists, just return existing schedule
+        // If schedule exists, just return error
         else if (schedule){
-            fn(null, schedule);
+            // TODO: change error later
+            fn({message: 'cannot create schedule, role exists'});
         }
         // If schedule doesn't exist, create schedule
         else {
