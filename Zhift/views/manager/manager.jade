@@ -2,17 +2,20 @@ block head
   include edit-org.jade
   include home.jade
 
+  script(type="text/javascript", src="/javascripts/controllers/manager-controller.js")
+  script(type="text/javascript", src="/javascripts/services/schedule-service.js")
+
 mixin manager(user)
-  div(ng-init="page = 'home'")
-    input(type="submit", ng-click="page = 'home'", value="Home", ng-show="page !== 'home'")
-    input(type="submit", ng-click="page = 'editOrg'", value="Edit Organization", ng-show="page !== 'editOrg'")
+  div(ng-controller="ManagerController" ng-init="init('#{org}')")
+    input(type="submit", ng-click="currentPage = 'Home'", ng-show="currentPage !== 'Home'", value="Home")
+    input(type="submit", ng-click="currentPage = 'Edit'", ng-show="currentPage !== 'Edit'", value="Edit Organization")
 
-    div(ng-if="page=='home'")
-      hr
-      +allTemplateShifts(user.org)
-      hr
-      +allShifts(user.org)
-      hr
-
-    div(ng-if="page=='editOrg'")
-      +editOrg(user.org)
+    div(ng-switch on="currentPage")
+      div(ng-switch-when="Home")
+        hr
+        +allTemplateShifts(user.org)
+        hr
+        +allShifts(user.org)
+        hr
+      div(ng-switch-when="Edit")
+        +editOrg(user.org)
