@@ -127,7 +127,7 @@ module.exports.retrieveManagerById = function(id, callback) {
  * @param {function} callback:    callback function - called with employees, if
  *                                found, otherwise with error
  */
- module.exports.retrieveEmployeesByOrgId = function(id, callback) {
+module.exports.retrieveEmployeesByOrgId = function(id, callback) {
     EmployeeUser.find({org: id}, function(err, employeeUsers) {
         if (err) {
             return callback(err);
@@ -137,7 +137,7 @@ module.exports.retrieveManagerById = function(id, callback) {
         } 
         callback(null, employeeUsers);
     });
- };
+};
 
  /** 
  * Function to retrieve all managers associated with the org with the id
@@ -145,7 +145,7 @@ module.exports.retrieveManagerById = function(id, callback) {
  * @param {function} callback:    callback function - called with managers, if
  *                                found, otherwise with error
  */
- module.exports.retrieveManagersByOrgId = function(id, callback) {
+module.exports.retrieveManagersByOrgId = function(id, callback) {
     ManagerUser.find({org: id}, function(err, managerUsers) {
         if (err) {
             return callback(err);
@@ -155,7 +155,7 @@ module.exports.retrieveManagerById = function(id, callback) {
         } 
         callback(null, managerUsers);
     });
- };
+};
 
  /** 
  * Function to retrieve all employees associated with the schedule with the id
@@ -163,7 +163,7 @@ module.exports.retrieveManagerById = function(id, callback) {
  * @param {function} callback:    callback function - called with employees, if
  *                                found, otherwise with error
  */
- module.exports.retrieveEmployeesByScheduleId = function(id, callback) {
+module.exports.retrieveEmployeesByScheduleId = function(id, callback) {
     EmployeeUser.find({schedule: id}, function(err, employeeUsers) {
         if (err) {
             return callback(err);
@@ -173,4 +173,45 @@ module.exports.retrieveManagerById = function(id, callback) {
         } 
         callback(null, employeeUsers);
     });
- };
+};
+
+ /** 
+ * Function that checks if given user is in the organization
+ *
+ * @param {ObjectId} userEmail:       user email
+ * @param {String} orgName:           name of organization
+ */
+module.exports.isUserOfOrganization = function(userEmail, orgName){
+    User.findOne({email: userEmail, org: orgName}, 
+        function(err, user){
+            return !err && user;
+        });
+}
+
+ /** 
+ * Function that checks if given user is a manager of the organization
+ *
+ * @param {ObjectId} userEmail:       userEmail
+ * @param {String} orgName:           name of organization
+ * @param {Function} fn:              callback function
+ */
+module.exports.isManagerOfOrganization = function(userEmail, orgName, fn){
+    ManagerUser.findOne({email: userEmail, org: orgName}, 
+        function(err, manager){
+            fn(err, !err && manager);
+        });
+}
+
+ /** 
+ * Function that checks if given user is a member of the schedule
+ *
+ * @param {ObjectId} userEmail:       userEmail
+ * @param {String} scheduleId:        id of schedule
+ */
+module.exports.isEmployeeOfRole = function(userEmail, scheduleId){
+    EmployeeUser.findOne({email: userEmail, schedule: scheduleId}, 
+        function(err, employee){
+            return !err && employee;
+        });
+}
+

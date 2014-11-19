@@ -17,8 +17,6 @@ router.get('/', function(req, res, next) {
 
 /* POST request to create org */
 router.post('/', function(req, res, next) {
-    // TODO : any permissions
-
     // TODO: error handling
     OrgController.createOrg(req.body.name, function(err, org) {
         if (err) {
@@ -32,8 +30,6 @@ router.post('/', function(req, res, next) {
 
 /* GET request to get org with name */
 router.get('/:name', function(req, res, next) {
-    // TODO : any permissions
-
     // TODO: error handling
     OrgController.retrieveOrg(req.param('name'), function(err, org) {
         if (err) {
