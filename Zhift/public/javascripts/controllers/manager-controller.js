@@ -12,7 +12,7 @@
 
 var ZhiftApp = angular.module('ZhiftApp');
 
-ZhiftApp.controller('ManagerController', function($scope, ScheduleService) {
+ZhiftApp.controller('ManagerController', function($scope, ScheduleService, ShiftService, TemplateShiftService) {
     $scope.currentPage = 'Home';
     
     /**
@@ -21,7 +21,6 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService) {
      */
     $scope.init = function(org) {
         $scope.org = org;
-        $scope.roleName = '';
         $scope.roles = [];
 
         ScheduleService.getSchedules($scope.org, function(schedules) {
@@ -45,10 +44,11 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService) {
     /**
      * Create a new schedule, save it to the database, and display it in the frontend.
      */
-    $scope.createSchedule = function() {
-        ScheduleService.createSchedule($scope.org, $scope.roleName, function(newSchedule) {
+    $scope.createSchedule = function(roleName) {
+        ScheduleService.createSchedule($scope.org, roleName, function(newSchedule) {
+            newSchedule.shifts = [];
+            newSchedule.templateShifts = [];
             $scope.roles.push(newSchedule);
-            $scope.roleName = '';
             $scope.$apply();
         });
     };

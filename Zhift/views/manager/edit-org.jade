@@ -8,5 +8,5 @@ mixin editOrg(org)
     li {{role.role}}
   h3 Add Role
   input(type="text", placeholder="Role Name", ng-model="roleName")
-  input(type="submit", ng-click="createSchedule('#{org}')")
+  input(type="submit", ng-click="createSchedule(roleName)")
   hr

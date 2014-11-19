@@ -9,7 +9,7 @@ block head
   script(type="text/javascript", src="/javascripts/services/schedule-service.js")
 
 mixin manager(user)
-  div(ng-controller="ManagerController" ng-init="init('#{org}')")
+  div(ng-controller="ManagerController" ng-init="init('#{user.org}')")
     input(type="submit", ng-click="currentPage = 'Home'", ng-show="currentPage !== 'Home'", value="Home")
     input(type="submit", ng-click="currentPage = 'Edit'", ng-show="currentPage !== 'Edit'", value="Edit Organization")
 

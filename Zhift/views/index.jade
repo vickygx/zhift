@@ -7,6 +7,9 @@ block head
   include manager/manager.jade
   include employee/employee.jade
 
+  script(type="text/javascript", src="/javascripts/services/shift-service.js")
+  script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
+
 block content
   a(href="/signout", class="text-center") Sign Out
 

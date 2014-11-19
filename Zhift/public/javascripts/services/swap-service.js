@@ -37,11 +37,9 @@ ZhiftApp.service('SwapService', ['$rootScope', function($rootScope) {
                     shiftId: shiftId,
                 }
             }).success(function(res) {
-                console.log('swap happened');
                 callback(res);
             }).error(function(res){
                 // TODO: error handling
-                console.log('swap failed');
                 callback(res);
             });
         },
