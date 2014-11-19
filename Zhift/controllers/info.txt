@@ -1,6 +1,6 @@
-Folder containing files that are the controllers for the databases.
+Files that are the controllers for the databases.
 
-These functions directly interact with mutating the database.
+These functions directly query and/or manipulate the database.
 Examples:
 
     - find
