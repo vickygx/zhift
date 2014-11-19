@@ -31,15 +31,28 @@ app.use(session({
     resave: true,
     saveUninitialized: true}));
 
+var db;
+// Connecting to OpenShift
+if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
+    dbURL = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ':' +
+          process.env.OPENSHIFT_MONGODB_DB_PASSWORD + '@' +
+          process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+          process.env.OPENSHIFT_MONGODB_DB_PORT + '/zhift';
+    db = require('mongoose').connect(dbURL, function() {
+        console.log("Successfully connected to MongoDB at: \n", dbURL);
+    });
+}
 // Mongoose connection to MongoLab DB.
-var MONGOLAB_CONNECTION_STRING = 'zhifty:6170@ds051110.mongolab.com:51110/zhift';
-mongoose.connect('mongodb://' + MONGOLAB_CONNECTION_STRING);
+else {
+    var MONGOLAB_CONNECTION_STRING = 'zhifty:6170@ds051110.mongolab.com:51110/zhift';
+    mongoose.connect('mongodb://' + MONGOLAB_CONNECTION_STRING);
 
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback () {
-    console.log("Database ready.");
-});
+    db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function callback () {
+        console.log("Database ready.");
+    });
+}
 
 // Configure passport
 app.use(passport.initialize());
