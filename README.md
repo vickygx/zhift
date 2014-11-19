@@ -11,9 +11,9 @@ Victoria Gong
 Links
 =====
 
-[Application homepage](http://localhost:8080/)
+[Application homepage](http://zhift-vickyg.rhcloud.com/)
 
-[Test page for API functionality](http://localhost:8080/api)
+[Test page for API functionality](http://zhift-vickyg.rhcloud.com/api)
 
 Instructions
 =====
