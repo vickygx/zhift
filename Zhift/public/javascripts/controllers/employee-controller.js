@@ -88,8 +88,8 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
 
     $scope.putUpForGrabs = function(shiftId) {
         ShiftService.putUpForGrabs(shiftId, function(swap) {
-            $scope.availableShifts[shift._id] = shift;
-            $scope.myShifts[shift._id] = shift;
+            $scope.myShifts[shiftId].upForGrabs = true;
+            $scope.availableShifts[shiftId] = $scope.myShifts[shiftId];
             $scope.$apply();
         });
     }
