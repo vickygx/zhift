@@ -20,7 +20,7 @@ Instructions
 
 To create an organization/manager:
 - Navigate to /.
-- Click 'Create an account'
+- Click 'Create an account'.
 - Fill out the form, and put 'manager' for Account Type. Leave the 'Role' box empty.
 - Click 'Register'.
 
@@ -31,3 +31,9 @@ To create a role/schedule:
 - The role should appear under 'Existing Roles', and if you navigate to 'Home', there should be spaces for the Template Shifts and Shifts for that role.
 - You may add as many roles as you like (within reason) in this manner.
 - When you're done, click 'Sign Out' to sign out and return to home.
+
+To create an employee:
+- Navigate to '/'.
+- Click 'Create an account'.
+- Fill out the form, and put 'employee' for Account Type. Put a role you created in the previous step in the 'Role' box.
+- Click 'Register'.
