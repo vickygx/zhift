@@ -17,14 +17,30 @@ module.exports = {};
     @return ---
 */
 module.exports.createSchedule = function(orgName, role, fn) {
-    // Create new Schedule
-    var schedule = new Schedule({
-       org: orgName,
-       role: role
-    });
+    // Make sure role doesn't exist for given organization
+    Schedule.findOne({org: orgName, role: role}, function(err, schedule){
+        // If error occured
+        if (err){
+            fn(err);
+        }
+        // If schedule exists, just return existing schedule
+        else if (schedule){
+            fn(null, schedule);
+        }
+        // If schedule doesn't exist, create schedule
+        else {
+            // Create new Schedule
+            var schedule = new Schedule({
+               org: orgName,
+               role: role
+            });
 
-    // Add to database
-    schedule.save(fn);
+            // Add to database
+            schedule.save(fn);
+        }
+
+    });
+    
 };
 
 /*  Function to retrieve a schedule
