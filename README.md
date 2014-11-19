@@ -23,12 +23,21 @@ Pre-populated manager:
 - Password: manager
 - Email: manager@mit.edu
 - Organization: ZhiftTest
+
+Pre-poulated employee:
+- Name: TestEmployee
+- Password: employee
+- Email: employee@mit.edu
+- Organization: ZhiftTest
+
 Pre-populated employee:
 - Name: ta
 - Password: ta
 - Email: ta@mit.edu
 - Organization: ZhiftTest
 - Role: Cook
+ 
+
 
 To create an organization/manager:
 - Navigate to /.
