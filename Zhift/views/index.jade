@@ -1,25 +1,22 @@
 extends layout
 
 block head
-  script(type="text/javascript", src="javascripts/controllers/home-controller.js")
-
   include manager/manager.jade
   include employee/employee.jade
 
 block content
-  div(ng-controller="HomeController")
-    a(href="/signout", class="text-center") Sign Out
+  a(href="/signout", class="text-center") Sign Out
 
-    h1 Welcome, #{user.name}!
-    h2 Check your details below:
-    ul
-      li Name: #{user.name}
-      li Email: #{user.email}
-      li Organization: #{user.org}
-      if user.schedule
-        li Schedule ID: #{user.schedule}
-
+  h1 Welcome, #{user.name}!
+  h2 Check your details below:
+  ul
+    li Name: #{user.name}
+    li Email: #{user.email}
+    li Organization: #{user.org}
     if user.schedule
-      +employee(user)
-    else
-      +manager(user)
+      li Schedule ID: #{user.schedule}
+
+  if user.schedule
+    +employee(user)
+  else
+    +manager(user)

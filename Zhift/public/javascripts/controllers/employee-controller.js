@@ -11,7 +11,6 @@ var ZhiftApp = angular.module('ZhiftApp');
 ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserService, SwapService) {
     $scope.init = function(user_id) {
         UserService.getEmployee(user_id, function(employee) {
-            console.log(employee);
             $scope.user = employee;
             $scope.myShifts = {};
             $scope.allShiftsForMyRole = {};
@@ -20,7 +19,6 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
             $scope.swapProposals = {};
 
             ShiftService.getShiftsFor($scope.user._id, function(shifts) {
-                console.log($scope.user._id);
                 $scope.myShifts = {};
                 for (var i = 0; i < shifts.length; i++) {
                     $scope.myShifts[shifts[i]._id] = shifts[i];
@@ -77,7 +75,6 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
     }
 
     $scope.proposeSwap = function(swapId, shiftId) {
-        console.log('proposing swap', shiftId, swapId);
         SwapService.proposeSwap(swapId, shiftId, function(swap) {
             $scope.swapProposals[swap._id] = swap;
         });
