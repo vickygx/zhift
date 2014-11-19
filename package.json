@@ -22,5 +22,6 @@
     "express-session": "~1.9.1",
     "bcrypt-nodejs" : "*",
     "connect-flash" : "*"
-  }
+  },
+  "main": "app.js"
 }
