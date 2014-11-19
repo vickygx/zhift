@@ -60,3 +60,9 @@ To offer a shift:
 - Log in to an employee account that has shifts associated with it.
 - Click 'Put Up For Grabs' next to the shift you want to offer.
 - The shift should appear under 'Unclaimed Shifts'. The buttons under the shift should be replaced by the text 'UP FOR GRABS'.
+
+To claim a shift:
+- Log in to an employee account that has the same role as an employee that has offered a shift.
+- Locate the offered shift you wish to claim under 'Unclaimed Shifts'.
+- Click 'Claim'.
+- The shift should be removed from 'Unclaimed Shifts' and appear under 'My Shifts'.
