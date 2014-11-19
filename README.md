@@ -55,3 +55,8 @@ To delete a template shift (and all shifts generated from it):
 - Navigate to '/api'.
 - Under Template Shift > Delete, enter the id of the template shift you wish to delete.
 - You can test whether the deletion was successful by trying to get the deleted template shift and shifts generated from it (all shifts are available at '/shift/all/[scheduleId]').
+
+To offer a shift:
+- Log in to an employee account that has shifts associated with it.
+- Click 'Put Up For Grabs' next to the shift you want to offer.
+- The shift should appear under 'Unclaimed Shifts'. The buttons under the shift should be replaced by the text 'UP FOR GRABS'.
