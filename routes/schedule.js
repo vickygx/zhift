@@ -14,7 +14,6 @@ var errorChecking = require('../errors/error-checking');
 
 /* POST request to create schedule */
 router.post('/', function(req, res) {
-    
     // Checking if permissions are correct
     UserController.isManagerOfOrganization(req.user.email, req.body.orgName, 
         function(err, isManager){
@@ -41,44 +40,92 @@ router.post('/', function(req, res) {
 
 /* POST request to delete existing schedule */
 router.put('/delete/:id', function(req, res) {
-    // TODO: Only managers can delete schedules
 
-    ScheduleController.deleteSchedule(req.param('id'), function(err, schedule) {
-        if (err) {
-            res.send(err);
-        } 
-        else {
-            res.send(schedule);
-        }
-    });
+    // Checking if permissions are correct
+    UserController.isManagerOfOrganization(req.user.email, req.user.org, 
+        function(err, isManager){
+
+            // If the user is a manager, delete the schedule
+            if (isManager){
+
+                ScheduleController.deleteSchedule(req.param('id'), req.user.org, function(err, schedule) {
+                    if (err) {
+                        //TODO: temp error
+                        res.send(err);
+                    } 
+                    else {
+                        res.send(schedule);
+                    }
+                });
+            }
+            // Else, send error message
+            else {
+                // TODO: temporary json, replace with proper error
+                res.send({message: 'error: you are not a manager. cannot delete'});
+            }
+        });
+    
 });
 
 /* GET request to get schedule */
 router.get('/:id', function(req, res) {
-    // TODO: Only user of organization can get schedule
 
-    ScheduleController.retrieveSchedule(req.param('id'), function(err, schedule) {
-        if (err) {
-            res.send(err);
-        } 
-        else {
-            res.send(schedule);
-        }
-    });
+    // Checking if permissions are correct
+    UserController.isUserOfOrganization(req.user.email, req.user.org, 
+        function(err, isUser){
+            console.log("req.user:", req.user);
+            console.log("isUser:", isUser);
+            // If the user is in organization, get the schedule
+            if (isUser){
+                console.log("Getting schedule");
+                ScheduleController.retrieveSchedule(req.param('id'), function(err, schedule) {
+                    if (err) {
+                        // TODO: fix error
+                        res.send(err);
+                    } 
+                    else {
+                        res.send(schedule);
+                    }
+                });
+            }
+            // Else, send error message
+            else {
+                // TODO: temporary json, replace with proper error
+                res.send({message: 'error: you are not a user. cannot get schedule'});
+            }
+        });
+
+   
 });
 
 /* GET request to get all schedules associated with an organization */
 router.get('/all/:orgName', function(req, res) {
-    // TODO: Only user of organization can get schedule 
+    console.log("req.user:", req.user);
+           
+    // Checking if permissions are correct
+    UserController.isUserOfOrganization(req.user.email, req.param('orgName'), 
+        function(err, isUser){
+            console.log("req.user:", req.user);
+            console.log("isUser:", isUser);
+            
+            // If the user is in organization, get the schedule
+            if (isUser){
+                ScheduleController.retrieveSchedulesByOrg(req.param('orgName'), function(err, schedules) {
+                    if (err) {
+                        res.send(err);
+                    } 
+                    else {
+                        res.send(schedules);
+                    }
+                });
+            }
+            // Else, send error message
+            else {
+                // TODO: temporary json, replace with proper error
+                res.send({message: 'error: you are not a user. cannot get schedule'});
+            }
+        });
 
-    ScheduleController.retrieveSchedulesByOrg(req.param('orgName'), function(err, schedules) {
-        if (err) {
-            res.send(err);
-        } 
-        else {
-            res.send(schedules);
-        }
-    });
 });
 
 module.exports = router;

@@ -180,11 +180,12 @@ module.exports.retrieveEmployeesByScheduleId = function(id, callback) {
  *
  * @param {ObjectId} userEmail:       user email
  * @param {String} orgName:           name of organization
+ * @param {Function} fn:              callback function
  */
-module.exports.isUserOfOrganization = function(userEmail, orgName){
+module.exports.isUserOfOrganization = function(userEmail, orgName, fn){
     User.findOne({email: userEmail, org: orgName}, 
         function(err, user){
-            return !err && user;
+            fn(err, !err && user);
         });
 }
 
@@ -207,11 +208,12 @@ module.exports.isManagerOfOrganization = function(userEmail, orgName, fn){
  *
  * @param {ObjectId} userEmail:       userEmail
  * @param {String} scheduleId:        id of schedule
+ * @param {Function} fn:              callback function
  */
-module.exports.isEmployeeOfRole = function(userEmail, scheduleId){
+module.exports.isEmployeeOfRole = function(userEmail, scheduleId, fn){
     EmployeeUser.findOne({email: userEmail, schedule: scheduleId}, 
         function(err, employee){
-            return !err && employee;
+            fn(err, !err && employee);
         });
 }
 
