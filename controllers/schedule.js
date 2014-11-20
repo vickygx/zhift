@@ -56,16 +56,17 @@ module.exports.retrieveSchedule = function(scheduleId, fn) {
     Schedule.findById(scheduleId, fn);
 }
 
-/*  Function to delete a schedule
+/*  Function to delete a schedule from a given org
     
     @param 
         {ObjectId} scheduleId:  id of the schedule to be deleted
+        {String} orgName:       name of the organization
         {function} fn:          callback function
 
     @return ---
 */
-module.exports.deleteSchedule = function(scheduleId, fn) {
-    Schedule.findByIdAndRemove(scheduleId, fn);
+module.exports.deleteSchedule = function(scheduleId, orgName, fn) {
+    Schedule.findOneAndRemove({_id: scheduleId, org: orgName}, fn);
 }
 
 /*  Function to retrieve all schedules associated with an organization
