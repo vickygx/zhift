@@ -1,4 +1,4 @@
-/*  All the routes relating to shifts
+/*  All the routes relating to organizations
     
     @author: Vicky Gong 
 */
@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express through org for now' });
 });
 
-/* POST request to create org */
+/* POST request to create organization */
 router.post('/', function(req, res, next) {
     // TODO: error handling
     OrgController.createOrg(req.body.name, function(err, org) {

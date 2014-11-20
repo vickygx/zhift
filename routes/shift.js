@@ -12,11 +12,6 @@ var ShiftController = require('../controllers/shift');
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Express through shift for now' });
-});
-
 /*  POST request to create shift */
 router.post('/', function(req, res, next) {
     // TODO: check user logged in is a manager of schedule given
@@ -44,22 +39,14 @@ router.post('/', function(req, res, next) {
     });
 });
 
-/*  POST request to put shift up for grabs */
-router.put('/putUpForGrabs/:id', function(req, res, next) {
-    // TODO: make sure user logged in is owner of shift
-
-    ShiftController.putUpForGrabs(req.param('id'), function(err, shift) {
-        // TODO : error handling
+router.get('/:id', function(req, res, next) {
+    ShiftController.getShift(req.param('id'), function(err, shift) {
         if (err) {
             next(err);
-        } 
-        else if (shift){
+        } else {
             res.send(shift);
-        } 
-        else {
-            next(errors.shifts.invalidShiftId);
         }
-    });
+    })
 });
 
 /*  GET request to get all shifts associated with a user*/
@@ -80,6 +67,7 @@ router.get('/user/:userid', function(req, res, next) {
     });
 });
 
+
 /*  GET request to get all shifts associated with a schedule */
 router.get('/all/:scheduleid', function(req, res, next) {
     //TODO: make sure user is part of schedule / manager
@@ -97,6 +85,26 @@ router.get('/all/:scheduleid', function(req, res, next) {
         }
     });
 });
+
+
+/*  POST request to put shift up for grabs */
+router.put('/putUpForGrabs/:id', function(req, res, next) {
+    // TODO: make sure user logged in is owner of shift
+
+    ShiftController.putUpForGrabs(req.param('id'), function(err, shift) {
+        // TODO : error handling
+        if (err) {
+            next(err);
+        } 
+        else if (shift){
+            res.send(shift);
+        } 
+        else {
+            next(errors.shifts.invalidShiftId);
+        }
+    });
+});
+
 
 /*  GET request to get all shifts being offered associated with a schedule */
 router.get('/upForGrabs/:scheduleid', function(req, res, next) {
@@ -150,16 +158,6 @@ router.put('/claim/:id', function(req, res, next) {
             next(errors.schedules.invalidShiftId);
         }
     });
-});
-
-router.get('/:id', function(req, res, next) {
-    ShiftController.getShift(req.param('id'), function(err, shift) {
-        if (err) {
-            next(err);
-        } else {
-            res.send(shift);
-        }
-    })
 });
 
 module.exports = router;
