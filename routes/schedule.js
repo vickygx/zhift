@@ -69,13 +69,15 @@ router.put('/delete/:id', function(req, res) {
 
 /* GET request to get schedule */
 router.get('/:id', function(req, res) {
-    
+
     // Checking if permissions are correct
     UserController.isUserOfOrganization(req.user.email, req.user.org, 
         function(err, isUser){
-            
+            console.log("req.user:", req.user);
+            console.log("isUser:", isUser);
             // If the user is in organization, get the schedule
             if (isUser){
+                console.log("Getting schedule");
                 ScheduleController.retrieveSchedule(req.param('id'), function(err, schedule) {
                     if (err) {
                         // TODO: fix error
@@ -98,10 +100,13 @@ router.get('/:id', function(req, res) {
 
 /* GET request to get all schedules associated with an organization */
 router.get('/all/:orgName', function(req, res) {
-
+    console.log("req.user:", req.user);
+           
     // Checking if permissions are correct
     UserController.isUserOfOrganization(req.user.email, req.param('orgName'), 
         function(err, isUser){
+            console.log("req.user:", req.user);
+            console.log("isUser:", isUser);
             
             // If the user is in organization, get the schedule
             if (isUser){
