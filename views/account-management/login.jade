@@ -1,29 +1,29 @@
-//- Login Page, with link to create a new account
-//- @author Lily Seropian, Anji Ren
+//- Login page, with link to create a new account
+//- @author Anji Ren
 
 extends ../layout
 
 block content
+  - if(message)
+    div.message-container #{message}
   div.form-container
-    form.form-horizontal(class="form-signin", action="/login", method="POST")
+    form.form-horizontal(action="/login", method="POST")
       fieldset
         h2 Sign in
         div.form-group
-          label.col-lg-2.control-label(for="inputEmail") Email
+          label.col-lg-2.control-label Email
           div.col-lg-10
-            input#inputEmail(type="text", name="email", placeholder='"name@email.com"', required, autofocus)
+            input.form-control(type="text", name="email", placeholder='"jane@applebees.com"', required, autofocus)
         div.form-group
           label.col-lg-2.control-label Organization
           div.col-lg-10
-            input(type="text", name="org" placeholder='"MIT"', required, autofocus)
+            input.form-control(type="text", name="org" placeholder='"Applebee\'s"', required, autofocus)
         div.form-group
           label.col-lg-2.control-label Password
           div.col-lg-10
-            input(type="password", name="password" placeholder="Password", required)
+            input.form-control(type="password", name="password", required)
         div.form-group
           div.col-lg-10.col-lg-offset-2
             input.btn.btn-primary.yellow-button(type="submit", value="Sign in")
     br
-    -if(message)
-      div #{message}
     a(href="/signup") Create an account

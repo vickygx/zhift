@@ -1,11 +1,12 @@
 //- General layout for main pages of app
-//- @author Vicky Gong, Lily Seropian
+//- @author Anji, Vicky Gong, Lily Seropian
 
 doctype
 html
   head
   title= title
-  link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,200italic,300italic,400italic,600italic,700italic")
+  // Google fonts
+  link(rel='stylesheet', type='text/css', href='http://fonts.googleapis.com/css?family=Bitter:400,700|Oxygen:400,300')
 
   // jQuery
   script(type="text/javascript", src="http://code.jquery.com/jquery-1.10.1.min.js")
@@ -31,7 +32,7 @@ html
   div#nav
     div.navbar.navbar-inverse.navbar-static-top
       div.container
-        a.navbar-brand(href="#") Zhift
+        a.navbar-brand(href="/") ZHIFT
   block head
   
   body(data-ng-app="ZhiftApp")
