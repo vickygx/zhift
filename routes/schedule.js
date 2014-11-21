@@ -73,11 +73,9 @@ router.get('/:id', function(req, res) {
     // Checking if permissions are correct
     UserController.isUserOfOrganization(req.user.email, req.user.org, 
         function(err, isUser){
-            console.log("req.user:", req.user);
-            console.log("isUser:", isUser);
             // If the user is in organization, get the schedule
             if (isUser){
-                console.log("Getting schedule");
+
                 ScheduleController.retrieveSchedule(req.param('id'), function(err, schedule) {
                     if (err) {
                         // TODO: fix error
