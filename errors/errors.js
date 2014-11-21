@@ -41,7 +41,7 @@ module.exports.shifts.invalidShiftId = {
     message: "The given shift id doesn't exist"
 };
 
-module.exports.shifts.notOwnerOfShift {
+module.exports.shifts.notOwnerOfShift = {
     status: 400,
     name: "Bad permissions",
     message: "User is not owner of shift. Cannot put up for grabs."
