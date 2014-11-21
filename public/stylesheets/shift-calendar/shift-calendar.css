@@ -1,6 +1,17 @@
 #shift-calendar{
-    border: 1px solid gray;
+    border: none;
     text-align: center;
+}
+
+#shift-calendar .heading {
+    font-family: 'Bitter';
+    font-family: 'Bitter';
+    font-weight: 700;
+}
+
+#shift-calendar .time-label {
+    color: #ffb500;
+    text-align: right;
 }
 
 #shift-calendar .cal-col-title {
@@ -13,8 +24,8 @@
     padding: 10px;
     max-width:150px;
     min-width: 100px;
-    margin: 0 auto;
-    border: 1px solid orange;
+    margin: 0 1px;
+    border: 1px solid #ffc40f;
 }
 
 #shift-calendar .event-box {
@@ -22,5 +33,11 @@
     max-width: 100px;
     min-height: 30px;
     max-height: 50px;
-    border: 1px solid black;
+    margin-bottom: 1px;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+#shift-calendar .event-box.open-event-slot:hover {
+    background: #b1c0bc;
 }
