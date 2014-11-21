@@ -7,12 +7,14 @@ head
     //- TODO: move this to layout?
 
 mixin shift-calendar()
+    div.btn-group
+        button.btn.btn-default.switch.load-schedule(type="button" data-ng-repeat="role in ['Cashier', 'Chef']" id={{role}}) {{role}}
     div(id="shift-calendar" ng-controller="ManagerScheduleController")
         div.cal-column
             div.cal-col-title 
             div.events
                 div.event-box.heading.time-label(data-ng-repeat="hour in ['6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 AM']") {{hour}}
-        div.cal-column(data-ng-repeat="day in ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY']")
+        div.cal-column(data-ng-repeat="day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']")
             div.cal-col-title.heading {{day}}
             div.events
                 div.event-box.open-event-slot(data-toggle="modal" data-target="#editShiftModal"

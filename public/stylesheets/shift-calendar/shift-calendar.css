@@ -16,6 +16,7 @@
 
 #shift-calendar .cal-col-title {
     min-height: 20px;
+    text-transform: uppercase;
 }
 
 #shift-calendar .cal-column{
