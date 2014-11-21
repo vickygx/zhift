@@ -1,0 +1,8 @@
+#shift-calendar{
+
+}
+
+#shift-calendar .cal-column{
+    display: inline-block;
+    padding: 10px;
+}
