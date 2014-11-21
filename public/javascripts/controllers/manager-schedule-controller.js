@@ -30,7 +30,8 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
      * @param  {String} org The name of the organization from which to get data.
      */
     $scope.init = function(org) {
-        $scope.schedules = {};
+        $scope.currentSchedule = 1;
+        $scope.scheduleIds = [];
         $scope.employeesBySchedule = {};
         $scope.templateShiftsByDay = 
             {'Monday': {},
@@ -40,7 +41,9 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             'Friday': {},
             'Saturday': {},
             'Sunday': {}};
-
+        getAllSchedules();
+        setCurrentSchedule($scope.schedules[0]);
+        //getAllEmployees
 
     };
 
@@ -68,6 +71,16 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
     /*  Turns "HH:MM" into hour */
     var getHour = function(string){
         return 1;
+    }
+
+    $scope.getAllSchedules = function(orgId) {
+
+    }
+
+    $scope.setCurrentSchedule = function(scheduleId) {
+        $scope.currentSchedule = scheduleId;
+        getTemplateShifts(scheduleId);
+        $scope.apply();
     }
 
     $scope.createTemplateShift = function(day, startTime, endTime, employeeId, scheduleId){

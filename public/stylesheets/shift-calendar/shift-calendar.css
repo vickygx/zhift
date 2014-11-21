@@ -1,25 +1,25 @@
-#shift-calendar{
+#shift-schedule{
     border: none;
     text-align: center;
 }
 
-#shift-calendar .heading {
+#shift-schedule .heading {
     font-family: 'Bitter';
     font-family: 'Bitter';
     font-weight: 700;
 }
 
-#shift-calendar .time-label {
+#shift-schedule .time-label {
     color: #ffb500;
     text-align: right;
 }
 
-#shift-calendar .cal-col-title {
+#shift-schedule .cal-col-title {
     min-height: 20px;
     text-transform: uppercase;
 }
 
-#shift-calendar .cal-column{
+#shift-schedule .cal-column{
     vertical-align: top;
     display: inline-block;
     padding: 10px;
@@ -29,7 +29,7 @@
     border: 1px solid #ffc40f;
 }
 
-#shift-calendar .event-box {
+#shift-schedule .event-box {
     min-width: 100px;
     max-width: 100px;
     min-height: 30px;
@@ -39,6 +39,6 @@
     border-bottom: 2px solid black;
 }
 
-#shift-calendar .event-box.open-event-slot:hover {
+#shift-schedule .event-box.open-event-slot:hover {
     background: #b1c0bc;
 }
