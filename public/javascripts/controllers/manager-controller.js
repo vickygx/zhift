@@ -62,7 +62,7 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
             if (!err){
                 newSchedule.shifts = [];
                 newSchedule.templateShifts = [];
-                $scope.schedules.push(newSchedule);
+                $scope.schedules[newSchedule._id] = newSchedule;
                 $scope.$apply();
             }
         });
