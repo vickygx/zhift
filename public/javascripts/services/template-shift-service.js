@@ -23,6 +23,27 @@ ZhiftApp.service('TemplateShiftService', ['$rootScope', function($rootScope) {
                 callback(res.responseText);
             });
         },
+
+        createTemplateShift: function(day, startTime, endTime, employeeId, scheduleId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'POST',
+                url: '/shift/template/',
+                data: {
+                    day: day,
+                    startTime: startTime,
+                    endTime: endTime,
+                    employeeId: employeeId,
+                    scheduleId: scheduleId,
+                },
+            }).success(function(res) {
+                callback(res);
+            }).error(function(res) {
+                // TODO: error handling
+                console.log(res.responseText);
+                callback(res.responseText);
+            });
+        }
     };
   
     return service;

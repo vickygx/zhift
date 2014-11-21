@@ -12,7 +12,7 @@
 
 var ZhiftApp = angular.module('ZhiftApp');
 
-ZhiftApp.controller('ManagerController', function($scope, ScheduleService, ShiftService, TemplateShiftService) {
+ZhiftApp.controller('ManagerController', function($scope, ScheduleService, ShiftService, TemplateShiftService, UserService) {
     $scope.currentPage = 'Home';
     
     /**
@@ -23,8 +23,15 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
         $scope.org = org;
         $scope.roles = [];
 
+        $scope.day = 'Monday';
+        $scope.startTime = '00:00';
+        $scope.endTime = '00:00';
+        $scope.employees = {};
+        $scope.employeeId = {};
+
         ScheduleService.getSchedules($scope.org, function(schedules) {
             $scope.roles = schedules;
+            $scope.scheduleId = $scope.roles[0]._id;
 
             // For each role, get template shifts and shifts
             $scope.roles.forEach(function(role) {
@@ -37,6 +44,14 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
                     role.templateShifts = templateShifts;
                     $scope.$apply();
                 });
+
+                UserService.getEmployeesForSchedule(role._id, function(employees) {
+                    $scope.employees[role._id] = employees;
+                    if (employees.length === 0) {
+                        $scope.employees[role._id] = [{name: 'None', _id: 'None'}];   
+                    }
+                    $scope.employeeId[role._id] = $scope.employees[role._id][0]._id;
+                });
             });
         });
     };
@@ -45,7 +60,7 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
      * Create a new schedule, save it to the database, and display it in the frontend.
      */
     $scope.createSchedule = function(roleName) {
-        ScheduleService.createSchedule($scope.org, roleName, function(err,newSchedule) {
+        ScheduleService.createSchedule($scope.org, roleName, function(err, newSchedule) {
             // TODO: if err, do something
             if (!err){
                 newSchedule.shifts = [];
@@ -53,6 +68,17 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
                 $scope.roles.push(newSchedule);
                 $scope.$apply();
             }
+        });
+    };
+
+    /**
+     * Create a new template shift, save it to the database, and display it in the frontend.
+     */
+    $scope.createTemplateShift = function(day, startTime, endTime, scheduleId, employeeId) {
+        console.log($scope);
+        TemplateShiftService.createTemplateShift(day, startTime, endTime, 
+            employeeId, scheduleId, function(templateShift) {
+            console.log(templateShift);
         });
     };
 });

@@ -3,6 +3,32 @@
 
 mixin allTemplateShifts(org)
   h2.title Template Shifts
+
+  div
+    h4 Add a new template shift
+    form
+      input(type="radio", ng-model="day", value="Monday")
+      span M 
+      input(type="radio", ng-model="day", value="Tuesday")
+      span T 
+      input(type="radio", ng-model="day", value="Wednesday")
+      span W 
+      input(type="radio", ng-model="day", value="Thursday")
+      span R 
+      input(type="radio", ng-model="day", value="Friday")
+      span F 
+      input(type="radio", ng-model="day", value="Saturday")
+      span S 
+      input(type="radio", ng-model="day", value="Sunday")
+      span Su
+      input(type="text", placeholder="Start Time", ng-model="startTime")
+      input(type="text", placeholder="End Time", ng-model="endTime")
+      select(ng-model="scheduleId")
+        option(value="{{role._id}}", ng-repeat="role in roles") {{role.role}}
+      select(ng-model="employeeId[scheduleId]")
+        option(value="{{employee._id}}", ng-repeat="employee in employees[scheduleId]") {{employee.name}}
+      input(type="submit", value="Add", ng-click="createTemplateShift(day, startTime, endTime, scheduleId, employeeId[scheduleId])")
+
   ul(ng-repeat="role in roles")
     li {{role.role}}
       ul(ng-repeat="templateShift in role.templateShifts")
