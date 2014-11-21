@@ -40,7 +40,6 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: '/user/org/' + id + '/employee/',
             }).success(function(res) {
-                console.log('yay got employees', res);
                 callback(res);
             }).error(function(res) {
                 // TODO: error handling
@@ -60,7 +59,6 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: '/user/sched/' + id,
             }).success(function(res) {
-                console.log('yay got employees', res);
                 callback(res);
             }).error(function(res) {
                 // TODO: error handling
