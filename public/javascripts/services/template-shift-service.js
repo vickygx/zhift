@@ -16,7 +16,7 @@ ZhiftApp.service('TemplateShiftService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: '/shift/template/all/' + scheduleId,
             }).success(function(res) {
-                callback(res);
+                callback(res.shifts);
             }).error(function(res) {
                 // TODO: error handling
                 console.log(res.responseText);
