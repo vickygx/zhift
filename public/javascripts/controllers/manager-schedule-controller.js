@@ -12,49 +12,69 @@ var ZhiftApp = angular.module('ZhiftApp');
 
 ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleService, TemplateShiftService, UserService) {
     
+    // $scope.templateShiftsByDay = {
+    //     'Monday': {
+    //         1: [{}, {}], 
+    //         2: [] // shift object
+    //     }
+        
+    //     'Tuesday': {
+
+    //     }
+    // }
+
+
+
     /**
      * Get roles, shifts, and template shifts from database.
      * @param  {String} org The name of the organization from which to get data.
      */
     $scope.init = function(org) {
-        $scope.org = org;
         $scope.schedules = {};
-        $scope.employees = {};
-        $scope.employeeId = {};
-
-        ScheduleService.getSchedules($scope.org, function(schedules) {
-            $scope.scheduleId = schedules[0]._id;
-
-            schedules.forEach(function(schedule) {
-                $scope.schedules[schedule._id] = schedule;
-
-                ShiftService.getShifts(schedule._id, function(shifts) {
-                    schedule.shifts = shifts;
-                    $scope.$apply();
-                });
-
-                TemplateShiftService.getTemplateShifts(schedule._id, function(templateShifts) {
-                    schedule.templateShifts = templateShifts;
-                    $scope.$apply();
-                });
+        $scope.employeesBySchedule = {};
+        $scope.templateShiftsByDay = 
+            {'Monday': {},
+            'Tuesday': {},
+            'Wednesday': {},
+            'Thursday': {},
+            'Friday': {},
+            'Saturday': {},
+            'Sunday': {}};
 
 
-                UserService.getEmployeesForSchedule(schedule._id, function(employees) {
-                    $scope.employees[schedule._id] = employees;
-                    if (employees.length === 0) {
-                        $scope.employees[schedule._id] = [{name: 'None', _id: 'None'}];   
-                    }
-                    $scope.employeeId[schedule._id] = $scope.employees[schedule._id][0]._id;
-                });
-            });
-        });
     };
+
+    var getTemplateShifts = function(scheduleId){
+        TemplateShiftService.getTemplateShifts(scheduleId, function(err, templateShifts){
+            if (!err){
+                // Go through template shifts
+                for (var i; i < templateShifts.length; i++){
+                    var templateDay = templateShifts[i].dayOfWeek;
+                    var templateHour = getHour(templateShifts[i].start);
+
+                    var scopeDayHour = $scope.templateShiftsByDay[templateDay];
+                    
+                    // Append templateshift to proper day and hour
+                    if (!scopeDayHour[templateHour]){
+                        scopeDayHour[templateHour] = [];
+                    }
+
+                    scopeDayHour[templateHour].append(templateShifts[i]);
+                }
+            }
+        });
+    }
+
+    /*  Turns "HH:MM" into hour */
+    var getHour = function(string){
+        return 1;
+    }
 
     $scope.createTemplateShift = function(day, startTime, endTime, employeeId, scheduleId){
         TemplateShiftService.createTemplateShift(day, startTime, endTime, employeeId, scheduleId, 
             function(err, newTemplateShift){
                 if (!err){
-                    
+
                 }
             });
     }
