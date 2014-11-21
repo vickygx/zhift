@@ -21,36 +21,33 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
      */
     $scope.init = function(org) {
         $scope.org = org;
-        $scope.roles = [];
-
-        $scope.day = 'Monday';
-        $scope.startTime = '00:00';
-        $scope.endTime = '00:00';
+        $scope.schedules = {};
         $scope.employees = {};
         $scope.employeeId = {};
 
         ScheduleService.getSchedules($scope.org, function(schedules) {
-            $scope.roles = schedules;
-            $scope.scheduleId = $scope.roles[0]._id;
+            $scope.scheduleId = schedules[0]._id;
 
-            // For each role, get template shifts and shifts
-            $scope.roles.forEach(function(role) {
-                ShiftService.getShifts(role._id, function(shifts) {
-                    role.shifts = shifts;
+            schedules.forEach(function(schedule) {
+                $scope.schedules[schedule._id] = schedule;
+
+                ShiftService.getShifts(schedule._id, function(shifts) {
+                    schedule.shifts = shifts;
                     $scope.$apply();
                 });
 
-                TemplateShiftService.getTemplateShifts(role._id, function(templateShifts) {
-                    role.templateShifts = templateShifts;
+                TemplateShiftService.getTemplateShifts(schedule._id, function(templateShifts) {
+                    schedule.templateShifts = templateShifts;
                     $scope.$apply();
                 });
 
-                UserService.getEmployeesForSchedule(role._id, function(employees) {
-                    $scope.employees[role._id] = employees;
+
+                UserService.getEmployeesForSchedule(schedule._id, function(employees) {
+                    $scope.employees[schedule._id] = employees;
                     if (employees.length === 0) {
-                        $scope.employees[role._id] = [{name: 'None', _id: 'None'}];   
+                        $scope.employees[schedule._id] = [{name: 'None', _id: 'None'}];   
                     }
-                    $scope.employeeId[role._id] = $scope.employees[role._id][0]._id;
+                    $scope.employeeId[schedule._id] = $scope.employees[schedule._id][0]._id;
                 });
             });
         });
@@ -59,13 +56,13 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
     /**
      * Create a new schedule, save it to the database, and display it in the frontend.
      */
-    $scope.createSchedule = function(roleName) {
-        ScheduleService.createSchedule($scope.org, roleName, function(err, newSchedule) {
+    $scope.createSchedule = function(scheduleName) {
+        ScheduleService.createSchedule($scope.org, scheduleName, function(err, newSchedule) {
             // TODO: if err, do something
             if (!err){
                 newSchedule.shifts = [];
                 newSchedule.templateShifts = [];
-                $scope.roles.push(newSchedule);
+                $scope.schedules.push(newSchedule);
                 $scope.$apply();
             }
         });
@@ -75,10 +72,9 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
      * Create a new template shift, save it to the database, and display it in the frontend.
      */
     $scope.createTemplateShift = function(day, startTime, endTime, scheduleId, employeeId) {
-        console.log($scope);
-        TemplateShiftService.createTemplateShift(day, startTime, endTime, 
-            employeeId, scheduleId, function(templateShift) {
-            console.log(templateShift);
+        TemplateShiftService.createTemplateShift(day, startTime, endTime, employeeId, scheduleId, function(templateShift) {
+            $scope.schedules[scheduleId].templateShifts.push(templateShift);
+            $scope.$apply();
         });
     };
 });

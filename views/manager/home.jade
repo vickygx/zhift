@@ -1,4 +1,4 @@
-//- Shift display: show all shifts for each role (shifts and template shifts)
+//- Shift display: show all shifts for each schedule (shifts and template shifts)
 //- author: @Lily Seropian
 
 mixin allTemplateShifts(org)
@@ -6,7 +6,7 @@ mixin allTemplateShifts(org)
 
   div
     h4 Add a new template shift
-    form
+    form(ng-init="day='Monday'; startTime='00:00'; endTime='00:00'")
       input(type="radio", ng-model="day", value="Monday")
       span M 
       input(type="radio", ng-model="day", value="Tuesday")
@@ -24,27 +24,27 @@ mixin allTemplateShifts(org)
       input(type="text", placeholder="Start Time", ng-model="startTime")
       input(type="text", placeholder="End Time", ng-model="endTime")
       select(ng-model="scheduleId")
-        option(value="{{role._id}}", ng-repeat="role in roles") {{role.role}}
+        option(value="{{schedule._id}}", ng-repeat="schedule in schedules") {{schedule.role}}
       select(ng-model="employeeId[scheduleId]")
         option(value="{{employee._id}}", ng-repeat="employee in employees[scheduleId]") {{employee.name}}
       input(type="submit", value="Add", ng-click="createTemplateShift(day, startTime, endTime, scheduleId, employeeId[scheduleId])")
 
-  ul(ng-repeat="role in roles")
-    li {{role.role}}
-      ul(ng-repeat="templateShift in role.templateShifts")
+  ul(ng-repeat="schedule in schedules")
+    li {{schedule.role}}
+      ul(ng-repeat="templateShift in schedule.templateShifts")
         li {{templateShift.dayOfWeek}}: {{templateShift.start}} - {{templateShift.end}} (employee {{templateShift.responsiblePerson}})
-      div(ng-if="role.templateShifts.length === 0") 
+      div(ng-if="schedule.templateShifts.length === 0") 
         i None
-  div(ng-if="roles.length === 0")
+  div(ng-if="schedules.length === 0")
     i None
 
 mixin allShifts(org)
   h2.title Shifts
-  ul(ng-repeat="role in roles")
-    li {{role.role}}
-      ul(ng-repeat="shift in role.shifts")
+  ul(ng-repeat="schedule in schedules")
+    li {{schedule.role}}
+      ul(ng-repeat="shift in schedule.shifts")
         li {{shift.dayOfWeek}}: {{shift.start}} - {{shift.end}} (employee {{shift.responsiblePerson}})
-      div(ng-if="role.shifts.length === 0") 
+      div(ng-if="schedule.shifts.length === 0") 
         i None
-  div(ng-if="roles.length === 0")
+  div(ng-if="schedules.length === 0")
     i None
