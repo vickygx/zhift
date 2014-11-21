@@ -1,7 +1,26 @@
 #shift-calendar{
+    border: 1px solid gray;
+    text-align: center;
+}
 
+#shift-calendar .cal-col-title {
+    min-height: 20px;
 }
 
 #shift-calendar .cal-column{
+    vertical-align: top;
     display: inline-block;
+    padding: 10px;
+    max-width:150px;
+    min-width: 100px;
+    margin: 0 auto;
+    border: 1px solid orange;
+}
+
+#shift-calendar .event-box {
+    min-width: 100px;
+    max-width: 100px;
+    min-height: 30px;
+    max-height: 50px;
+    border: 1px solid black;
 }

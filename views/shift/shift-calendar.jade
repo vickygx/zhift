@@ -4,23 +4,14 @@ head
 mixin shift-calendar()
     div(id="shift-calendar")
         div.cal-column
-            div.title Sunday
+            div.cal-col-title 
             div.events
-        div.cal-column
-            div.title Monday
+                div.event-box(data-ng-repeat="hour in ['8am', '9am', '10am', '11am', '12pm']") {{hour}}
+        div.cal-column(data-ng-repeat="day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']")
+            div.cal-col-title {{day}}
             div.events
-        div.cal-column
-            div.title Tuesday
-            div.events
-        div.cal-column
-            div.title Wednesday
-            div.events
-        div.cal-column
-            div.title Thursday
-            div.events
-        div.cal-column
-            div.title Friday
-            div.events
-        div.cal-column
-            div.title Saturday
-            div.events
+                div.event-box(data-ng-repeat="i in [1,2,3,4,5]")
+                        
+
+
+       
