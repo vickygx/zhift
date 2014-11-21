@@ -4,8 +4,8 @@
 mixin editOrg(org)
   hr
   h3 Existing Roles
-  div(ng-repeat="role in roles")
-    li {{role.role}}
+  div(ng-repeat="schedule in schedules")
+    li {{schedule.role}}
   h3 Add Role
   input(type="text", placeholder="Role Name", ng-model="roleName")
   input(type="submit", ng-click="createSchedule(roleName)")
