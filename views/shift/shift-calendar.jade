@@ -1,6 +1,10 @@
 head
     link(rel="stylesheet", href="stylesheets/shift-calendar/shift-calendar.css")
     script(type="text/javascript", src="/javascripts/controllers/manager-schedule-controller.js")
+    script(type="text/javascript", src="/javascripts/services/schedule-service.js")
+    script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
+    script(type="text/javascript", src="/javascripts/services/user-service.js")
+    //- TODO: move this to layout?
 
 mixin shift-calendar()
     div(id="shift-calendar" ng-controller="ManagerScheduleController")
