@@ -74,7 +74,19 @@ module.exports.putUpForGrabs = function(shiftId, employeeId, fn) {
  * @return ---
  */
 module.exports.giveShiftTo = function(shiftId, employeeId, fn) {
-    Shift.findByIdAndUpdate(shiftId, {responsiblePerson: employeeId, upForGrabs: false}, fn);
+    Shift.findById(shiftId).populate('responsiblePerson').exec(function(err, shift) {
+        // TODO: error handling
+        if (err || !shift) {
+            return fn(err);
+        }
+
+        var originalOwner = shift.responsiblePerson;
+        shift.responsiblePerson = employeeId;
+        shift.upForGrabs = false;
+        shift.save(function(err, shift) {
+            return fn(err, shift, originalOwner);
+        });
+    });
 };
 
 /**

@@ -21,7 +21,7 @@ var ShiftSchema = new mongoose.Schema({
     dayOfWeek: {type: String, required: true},
     start: {type: String, required: true},
     end: {type: String, required: true},
-    responsiblePerson: {type: ObjectId, ref: 'Employee', required: true},
+    responsiblePerson: {type: ObjectId, ref: 'EmployeeUser', required: true},
     schedule: {type: ObjectId, ref: 'Schedule', required: true},
     dateScheduled: {type: Date, required: true},
     upForGrabs: {type: Boolean, required: true},

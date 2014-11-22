@@ -40,7 +40,7 @@ module.exports.notifyShiftClaim = function(to, originalOwner, newOwner, shift) {
         to: to,
         from: FROM,
         subject: 'Shift Claimed',
-        text: originalOwner + '\'s ' + shift.dateScheduled.toLocaleDateString() + ' shift from ' + shift.start + ' to ' + shift.end + ' has been claimed by ' + newOwner,
+        text: originalOwner + '\'s ' + shift.dateScheduled.toLocaleDateString() + ' shift from ' + shift.start + ' to ' + shift.end + ' has been claimed by ' + newOwner + '.',
     };
     console.log(email);
 }

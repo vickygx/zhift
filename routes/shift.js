@@ -191,20 +191,18 @@ router.get('/upForSwap/:scheduleid', function(req, res, next) {
 router.put('/claim/:id', function(req, res, next) {
     // TODO: Make sure user logged in is in same schedule as shift to claim
 
-    ShiftController.giveShiftTo(req.param('id'), req.body.employeeId, function(err, shift) {
+    ShiftController.giveShiftTo(req.param('id'), req.body.employeeId, function(err, shift, originalOwner) {
         // TODO : error handling
         if (err) {
             next(err);
         }
         else if (shift) {
-            UserController.retrieveEmployeeById(req.body.employeeId, function(err, employee) {
-                UserController.retrieveManagersByOrgId(req.org._id, function(err, managers) {
-                    var emails = managers.map(function(manager) {
-                        return manager.email;
-                    });
-                    emails.push(req.user.email, employee.email);
-                    EmailController.notifyShiftClaim(emails, req.user.name, employee.name, shift);
+            UserController.retrieveManagersByOrgId(req.user.org, function(err, managers) {
+                var emails = managers.map(function(manager) {
+                    return manager.email;
                 });
+                emails.push(originalOwner.email, req.user.email);
+                EmailController.notifyShiftClaim(emails, originalOwner.name, req.user.name,shift);
             });
 
             res.send(shift);
