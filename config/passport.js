@@ -1,5 +1,7 @@
 /**
  * @author Anji Ren, Lily Seropian, Dylan Joss
+ * TODO: when creating a new manager, add their email to req.session.managerEmails
+ * TODO: when deleting a manager, remove their email from req.session.managerEmails
  */
 
 var mongoose 		   = require('mongoose');
@@ -138,7 +140,13 @@ module.exports = function(passport) {
 	  				console.log('Incorrect password.');
 	  				return done(null, false, req.flash('message', 'Incorrect password.'));
 	  			}
-	  			return done(null, user);
+
+                UserController.retrieveManagersByOrgId(org, function(err, managers) {
+                    req.session.managerEmails = managers.map(function(manager) {
+                        return manager.email;
+                    });
+                    return done(null, user);
+                });
 	  		});
 
 	}));

@@ -108,4 +108,11 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
             $scope.$apply();
         });
     }
+
+    $scope.rejectSwap = function(swapId) {
+        SwapService.rejectSwap(swapId, function(swap) {
+            delete $scope.swapProposals[swap._id];
+            $scope.$apply();
+        });
+    }
 });

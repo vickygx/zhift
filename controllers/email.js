@@ -56,6 +56,7 @@ module.exports.notifyShiftClaim = function(to, originalOwner, newOwner, shift) {
         text: originalOwner + '\'s ' + shiftToString(shift) + ' has been claimed by ' + newOwner + '.',
     };
     console.log(email);
+    // sendgrid.send(email, console.log);
 }
 
 /**
@@ -73,38 +74,49 @@ module.exports.notifyShiftUpForSwap = function(to, owner, shift) {
         text: owner + '\'s ' + shiftToString(shift) + ' is up for swap.',
     };
     console.log(email);
+    // sendgrid.send(email, console.log);
 }
 
 /**
  * Inform the manager(s) and the employee that put a shift up for swap that there's an offer for that swap.
- * @param {Array.<string>} to            A list of all email addresses to which to send the notification.
- * @param {String}         proposer      The name of the person proposing a shift in exchange.
- * @param {Shift}          proposedShift The shift proposed in exchange.
- * @param {Shift}          originalShift The shift proposedShift would exchange with. responsiblePerson must be populated.
+ * @param {Array.<string>} to   A list of all email addresses to which to send the notification.
+ * @param {Swap}           swap The swap affected.
  */
-module.exports.notifySwapProposal = function(to, proposer, proposedShift, originalShift) {
+module.exports.notifySwapProposal = function(to, swap) {
+    var proposedShift = swap.shiftOfferedInReturn;
+    var proposer = proposedShift.responsiblePerson.name;
+    var originalShift = swap.shiftUpForSwap;
+    var owner = originalShift.responsiblePerson.name;
+
     var email = {
         to: to,
         from: FROM,
         subject: 'Swap Proposed',
-        text: proposer + ' has offered their ' + shiftToString(proposedShift) + ' in exchange for ' + originalShift.responsiblePerson.name + '\'s ' + shiftToString(originalShift) + '.',
+        text: proposer + ' has offered their ' + shiftToString(proposedShift) + ' in exchange for ' + owner + '\'s ' + shiftToString(originalShift) + '.',
     };
     console.log(email);
+    // sendgrid.send(email, console.log);
 }
 
 /**
  * Inform the manager(s) and the employee that made an offer for a swap that the offer was rejected.
- * @param  {Array.<string>} to A list of all email addresses to which to send the notification.
- * @param  {Swap} swap The swap that is in progress.
+ * @param {Array.<string>} to   A list of all email addresses to which to send the notification.
+ * @param {Swap}           swap The swap affected.
  */
 module.exports.notifySwapRejected = function(to, swap) {
+    var proposedShift = swap.shiftOfferedInReturn;
+    var proposer = proposedShift.responsiblePerson.name;
+    var originalShift = swap.shiftUpForSwap;
+    var owner = originalShift.responsiblePerson.name;
+
     var email = {
         to: to,
         from: FROM,
         subject: 'Swap Proposal Rejected',
-        text: 'Swap proposal rejected.' + swap,
+        text: owner + ' has rejected ' + proposer + '\'s proposal to swap their ' + shiftToString(proposedShift) + ' with ' + owner + '\'s ' + shiftToString(originalShift) + '.',
     };
     console.log(email);
+    // sendgrid.send(email, console.log);
 }
 
 /**
@@ -113,11 +125,16 @@ module.exports.notifySwapRejected = function(to, swap) {
  * @param  {Swap} swap The swap that occurred.
  */
 module.exports.notifySwapAccepted = function(to, swap) {
+    var proposedShift = swap.shiftOfferedInReturn;
+    var proposer = proposedShift.responsiblePerson.name;
+    var originalShift = swap.shiftUpForSwap;
+    var owner = originalShift.responsiblePerson.name;
+
     var email = {
         to: to,
         from: FROM,
         subject: 'Swap Occurred',
-        text: 'Swap occurred.' + swap,
+        text: owner + ' has accepted ' + proposer + '\'s proposal to swap their ' + shiftToString(proposedShift) + ' with ' + owner + '\'s ' + shiftToString(originalShift) + '.',
     };
     console.log(email);
     // sendgrid.send(email, console.log);

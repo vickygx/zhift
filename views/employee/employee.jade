@@ -37,4 +37,5 @@ mixin employee(user)
     div(ng-repeat="swap in swapProposals")
       div Shift Offered In Return: {{swap.shiftOfferedInReturn}}
       input(type="submit", value="Accept", ng-click="acceptSwap(swap._id)")
+      input(type="submit", value="Reject", ng-click="rejectSwap(swap._id)")
     i(ng-show="!swapProposals") None

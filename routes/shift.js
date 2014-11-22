@@ -141,13 +141,7 @@ router.put('/upForGrabs/:id', function(req, res, next) {
             next(err);
         }
         else if (shift) {
-            UserController.retrieveManagersByOrgId(req.user.org, function(err, managers) {
-                var emails = managers.map(function(manager) {
-                    return manager.email;
-                });
-                EmailController.notifyShiftUpForGrabs(emails, req.user.name, shift);
-            });
-
+            EmailController.notifyShiftUpForGrabs(req.session.managerEmails, req.user.name, shift);
             res.send(shift);
         }
         else {
@@ -203,13 +197,9 @@ router.put('/claim/:id', function(req, res, next) {
             next(err);
         }
         else if (shift) {
-            UserController.retrieveManagersByOrgId(req.user.org, function(err, managers) {
-                var emails = managers.map(function(manager) {
-                    return manager.email;
-                });
-                emails.push(originalOwner.email, req.user.email);
-                EmailController.notifyShiftClaim(emails, originalOwner.name, req.user.name,shift);
-            });
+            var emails = req.session.managerEmails.slice(0);
+            emails.push(originalOwner.email, req.user.email);
+            EmailController.notifyShiftClaim(emails, originalOwner.name, req.user.name,shift);
 
             res.send(shift);
         }

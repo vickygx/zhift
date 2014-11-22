@@ -63,7 +63,7 @@ module.exports.getSwapsOnSchedule = function(scheduleId, fn) {
  */
 module.exports.offerShiftForSwap = function(swapId, shiftId, fn) {
     Swap.findByIdAndUpdate(swapId, {shiftOfferedInReturn: shiftId}).populate('shiftUpForSwap').populate('shiftOfferedInReturn').exec(function(err, swap) {
-        swap.shiftUpForSwap.populate('responsiblePerson', function(err, shift) {
+        swap.shiftUpForSwap.populate('responsiblePerson', function(err) {
             return fn(err, swap);
         });
     });
@@ -75,7 +75,16 @@ module.exports.offerShiftForSwap = function(swapId, shiftId, fn) {
  * @param {function} fn     Callback that takes (err, swap).
  */
 module.exports.resetOfferedShiftInSwap = function(swapId, fn) {
-    Swap.findByIdAndUpdate(swapId, {shiftOfferedInReturn: null}, fn);
+    Swap.findById(swapId).populate('shiftOfferedInReturn').populate('shiftUpForSwap').exec(function(err, swap) {
+        var shiftOfferedInReturn = swap.shiftOfferedInReturn;
+        swap.shiftOfferedInReturn = null;
+        swap.save(function(err, swap) {
+            shiftOfferedInReturn.populate('responsiblePerson', function(err) {
+                swap.shiftOfferedInReturn = shiftOfferedInReturn;
+                return fn(err, swap);
+            });
+        });
+    });
 };
 
 /**
@@ -89,22 +98,21 @@ module.exports.deleteSwap = function(swapId, fn) {
 
 /**
  * Accept a swap. Deletes the swap object and changes responsibility of the shift.
- * @param {ObjectId} swap_id The id of the swap to resolve.
+ * @param {ObjectId} swapId The id of the swap to resolve.
  * @param {Function} fn      Callback that takes (err, swap).
  */
-module.exports.acceptSwap = function(swap_id, fn) {
-    Swap.findByIdAndRemove(swap_id, function(err, swap) {
+module.exports.acceptSwap = function(swapId, fn) {
+    Swap.findByIdAndRemove(swapId).populate('shiftUpForSwap').populate('shiftOfferedInReturn').exec(function(err, swap) {
         if (err) {
-            console.log(err);
             return fn(err);
         }
-        else {
+        swap.shiftOfferedInReturn.populate('responsiblePerson', function(err) {
             ShiftController.tradeShifts(swap.shiftUpForSwap, swap.shiftOfferedInReturn, function(err) {
                 if (err) {
                     return fn(err);
                 }
                 return fn(null, swap);
             });
-        }
+        });
     });
 }
