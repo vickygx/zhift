@@ -1,0 +1,66 @@
+block head
+    link(rel="stylesheet", href="stylesheets/shift-calendar/shift-calendar.css")
+    script(type="text/javascript", src="/javascripts/controllers/manager-schedule-controller.js")
+    script(type="text/javascript", src="/javascripts/services/schedule-service.js")
+    script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
+    script(type="text/javascript", src="/javascripts/services/user-service.js")
+    //- TODO: move this to layout?
+
+mixin shift-calendar(org)
+    div(id="shift-calendar" ng-controller="ManagerScheduleController" ng-init="init('#{org}')")
+        div.schedule-tabs-container
+            div.btn-group(id="schedule-tabs")
+                button.btn.btn-default.switch.load-schedule(type="button" 
+                    data-ng-repeat="schedule in schedules" 
+                    id="{{schedule._id}}"  
+                    class="set-current-schedule") {{schedule.role}}
+        div(id="shift-schedule")
+            div.cal-column
+                div.cal-col-title 
+                div.events
+                    div.event-box.heading.time-label(data-ng-repeat="hour in ['6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 AM']") {{hour}}
+            div.cal-column(data-ng-repeat="day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']")
+                div.cal-col-title.heading {{day}}
+                div.events
+                    div.event-box.open-event-slot(data-toggle="modal" data-target="#reassignShiftModal"
+                        data-start-time="{{hour}}" 
+                        data-end-time="{{hour+1}}" 
+                        data-day-week="{{day}}"
+                        data-ng-repeat="hour in [6,7,8,9,10,11,12]")
+
+        div.modal.fade#reassignShiftModal
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button(type="button" class="close" data-dismiss="modal")
+                            span(aria-hidden="true") &times;
+                            span.sr-only Close 
+                        h4.modal-title Reassign shift to:
+                    div.modal-body
+                        form.form-horizontal
+                            div.form-group
+                                div.col-lg-10
+                                    select.form-control
+                                        option(data-ng-repeat="employee in ['Mary', 'Mark', 'Rachel']") {{employee}}
+                    div.modal-footer
+                        button.btn.btn-default(type="button" data-dismiss="modal") Close
+
+        div.modal.fade#addShiftModal
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button(type="button" class="close" data-dismiss="modal")
+                            span(aria-hidden="true") &times;
+                            span.sr-only Close 
+                        h4.modal-title Add new shift:
+                    div.modal-body
+                        form.form-horizontal
+                            div.form-group
+                                div.col-lg-10
+                                    select.form-control
+                                        option(data-ng-repeat="employee in ['Mary', 'Mark', 'Rachel']") {{employee}}
+                    div.modal-footer
+                        button.btn.btn-default(type="button" data-dismiss="modal") Close                 
+
+
+       

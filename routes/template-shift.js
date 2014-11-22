@@ -33,7 +33,7 @@ router.get('/all/:scheduleId', function(req, res){
             if (err) {
                 res.send(err);
             } else {
-                res.send(templateShift);
+                res.send({'shifts': templateShift});
             }
         }
     )

@@ -40,11 +40,11 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: '/user/org/' + id + '/employee/',
             }).success(function(res) {
-                callback(res);
+                callback(null, res);
             }).error(function(res) {
                 // TODO: error handling
                 console.log(res.responseText);
-                callback(res.responseText);
+                callback(res.responseText, null);
             });
         },
 

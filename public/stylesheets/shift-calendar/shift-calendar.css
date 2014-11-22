@@ -1,0 +1,49 @@
+#shift-schedule{
+    border: none;
+    text-align: center;
+}
+
+#shift-schedule .heading {
+    font-family: 'Bitter';
+    font-family: 'Bitter';
+    font-weight: 700;
+}
+
+#shift-schedule .time-label {
+    color: #ffb500;
+    text-align: right;
+}
+
+.schedule-tabs-container {
+    text-align: center;
+    margin-bottom:10px;
+}
+
+#shift-schedule .cal-col-title {
+    min-height: 20px;
+    text-transform: uppercase;
+}
+
+#shift-schedule .cal-column{
+    vertical-align: top;
+    display: inline-block;
+    padding: 10px;
+    max-width:150px;
+    min-width: 100px;
+    margin: 0 1px;
+    border: 1px solid #ffc40f;
+}
+
+#shift-schedule .event-box {
+    min-width: 100px;
+    max-width: 100px;
+    min-height: 30px;
+    max-height: 50px;
+    margin-bottom: 1px;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+#shift-schedule .event-box.open-event-slot:hover {
+    background: #b1c0bc;
+}
