@@ -10,7 +10,7 @@ var router = express.Router();
 // Controllers
 var ShiftController = require('../controllers/shift');
 var UserController = require('../controllers/user');
-var EmailController = require('../controllers/email');
+var RecordController = require('../controllers/record');
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
 
@@ -142,7 +142,7 @@ router.put('/upForGrabs/:id', function(req, res, next) {
         if (!shift) {
             return next(errors.shifts.invalidShiftId);
         }
-        EmailController.notifyShiftUpForGrabs(req.session.managerEmails, req.user.name, shift);
+        RecordController.recordShiftUpForGrabs(req.session.managerEmails, req.user.name, shift);
         res.send(shift);
     });
 });
@@ -200,7 +200,7 @@ router.put('/claim/:id', function(req, res, next) {
         }
         var emails = req.session.managerEmails.slice(0);
         emails.push(originalOwner.email, req.user.email);
-        EmailController.notifyShiftClaim(emails, originalOwner.name, req.user.name, shift);
+        RecordController.recordShiftClaim(emails, originalOwner.name, req.user.name, shift);
 
         res.send(shift);
     });

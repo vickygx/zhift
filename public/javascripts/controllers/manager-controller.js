@@ -24,6 +24,8 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
         $scope.schedules = {};
         $scope.employees = {};
         $scope.employeeId = {};
+        $scope.templateShifts = {};
+        $scope.templateShiftId = {};
 
         ScheduleService.getSchedules($scope.org, function(schedules) {
             $scope.scheduleId = schedules[0]._id;
@@ -36,8 +38,13 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
                     $scope.$apply();
                 });
 
-                TemplateShiftService.getTemplateShifts(schedule._id, function(err,templateShifts) {
+                TemplateShiftService.getTemplateShifts(schedule._id, function(err, templateShifts) {
                     schedule.templateShifts = templateShifts;
+                    $scope.templateShifts[schedule._id] = templateShifts.map(function(s) { return s._id; });
+                    if (templateShifts.length === 0) {
+                        $scope.templateShifts[schedule._id] = ['None'];
+                    }
+                    $scope.templateShiftId[schedule._id] = $scope.templateShifts[schedule._id][0];
                     $scope.$apply();
                 });
 
@@ -45,7 +52,7 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
                 UserService.getEmployeesForSchedule(schedule._id, function(employees) {
                     $scope.employees[schedule._id] = employees;
                     if (employees.length === 0) {
-                        $scope.employees[schedule._id] = [{name: 'None', _id: 'None'}];   
+                        $scope.employees[schedule._id] = [{name: 'None', _id: 'None'}];
                     }
                     $scope.employeeId[schedule._id] = $scope.employees[schedule._id][0]._id;
                 });
@@ -74,6 +81,16 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
     $scope.createTemplateShift = function(day, startTime, endTime, scheduleId, employeeId) {
         TemplateShiftService.createTemplateShift(day, startTime, endTime, employeeId, scheduleId, function(templateShift) {
             $scope.schedules[scheduleId].templateShifts.push(templateShift);
+            $scope.$apply();
+        });
+    };
+
+    /**
+     * Create a new shift, save it to the database, and display it in the frontend.
+     */
+    $scope.createShift = function(day, startTime, endTime, scheduleId, employeeId, date, templateShiftId) {
+        ShiftService.createShift(day, startTime, endTime, employeeId, scheduleId, date, templateShiftId, function(shift) {
+            $scope.schedules[scheduleId].shifts.push(shift);
             $scope.$apply();
         });
     };

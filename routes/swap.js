@@ -8,7 +8,7 @@ var express = require('express');
 var router = express.Router();
 
 var SwapController = require('../controllers/swap');
-var EmailController = require('../controllers/email');
+var RecordController = require('../controllers/record');
 
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
@@ -29,7 +29,7 @@ router.post('/', function(req, res, next) {
             return next(err);
         } 
 
-        EmailController.notifyShiftUpForSwap(req.session.managerEmails, req.user.name, swap.shiftUpForSwap);
+        RecordController.recordShiftUpForSwap(req.session.managerEmails, req.user.name, swap.shiftUpForSwap);
 
         res.send(swap);
     });
@@ -82,7 +82,7 @@ router.put('/:id', function(req, res, next) {
             } 
 
             swap.shiftOfferedInReturn.responsiblePerson.name = req.user.name;
-            EmailController.notifySwapProposal(req.session.managerEmails, swap);
+            RecordController.recordSwapProposal(req.session.managerEmails, swap);
 
             res.send(swap);
         });
@@ -97,7 +97,7 @@ router.put('/:id', function(req, res, next) {
                 }
                 emails.push(swap.shiftOfferedInReturn.responsiblePerson.email);
                 swap.shiftUpForSwap.responsiblePerson.name = req.user.name;
-                EmailController.notifySwapAccepted(emails, swap);
+                RecordController.recordSwapAccepted(emails, swap);
 
                 res.send(swap);
             });
@@ -109,7 +109,7 @@ router.put('/:id', function(req, res, next) {
                 }
                 emails.push(swap.shiftOfferedInReturn.responsiblePerson.email);
                 swap.shiftUpForSwap.responsiblePerson.name = req.user.name;
-                EmailController.notifySwapRejected(emails, swap);
+                RecordController.recordSwapRejected(emails, swap);
 
                 res.send(swap);
             });
