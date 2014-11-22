@@ -36,7 +36,7 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
                     $scope.$apply();
                 });
 
-                TemplateShiftService.getTemplateShifts(schedule._id, function(templateShifts) {
+                TemplateShiftService.getTemplateShifts(schedule._id, function(err,templateShifts) {
                     schedule.templateShifts = templateShifts;
                     $scope.$apply();
                 });
