@@ -43,6 +43,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
 
         getAllEmployees($scope.org, function(err) {
             $scope.$apply();
+            console.log("hi " +$scope.employeesBySchedule);
             console.log($scope.employeesBySchedule);
         });
 
@@ -98,22 +99,21 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
 
     var getAllEmployees = function(orgId, callback) {
         // Get list of employees (User objects)
-        UserService.getEmployees($scope.org, function(err, employees) {
+        UserService.getEmployees(orgId, function(err, employees) {
             if (!err) {
                 // Go through employees and organize by role.
-                for (var i; i < employees.size; i++) {
+                for (var i = 0; i < employees.length; i++) {
                     var employee = employees[i];
                     var role = employees[i].schedule;
-
-                    if (!scope.employeesBySchedule[role]) {
-                        scope.employeesBySchedule[role] = [];
+                    if (!$scope.employeesBySchedule[role]) {
+                        $scope.employeesBySchedule[role] = [];
                     }
 
-                    scope.employeesBySchedule[role].push(employee);
+                    $scope.employeesBySchedule[role].push(employee);
                 }
-                callback();
+                return callback();
             }
-            callback(err);
+            return callback(err);
         });
     }
 
