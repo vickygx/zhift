@@ -66,7 +66,6 @@ router.get('/employee/:id', function(req, res) {
             res.send(err);
         }
         else {
-            console.log('got emp', employee);
             res.send(employee);
         }
     });
