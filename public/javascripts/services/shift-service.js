@@ -17,7 +17,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: 'shift/all/' + scheduleId,
             }).success(function(res) {
-                callback(res);
+                callback(null,res);
             }).error(function(res){
                 callback(res);
             });

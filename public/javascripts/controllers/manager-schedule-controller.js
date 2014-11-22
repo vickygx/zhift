@@ -6,7 +6,6 @@
  *     See all template shifts for a schedule
  *
  * @author: Vicky Gong, Anji Ren
- * TODO: commments
  */
 
 var ZhiftApp = angular.module('ZhiftApp');
@@ -22,7 +21,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         $scope.currentScheduleId = 1;
         $scope.schedules = [];
         $scope.employeesBySchedule = {};
-        resetTemplateShifts;
+        resetTemplateShifts();
 
         // Populating schedules + setting current schedule
         getAllSchedules($scope.org, function() {
