@@ -22,14 +22,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         $scope.currentScheduleId = 1;
         $scope.schedules = [];
         $scope.employeesBySchedule = {};
-        $scope.templateShiftsByDay = 
-            {'Monday': {},
-            'Tuesday': {},
-            'Wednesday': {},
-            'Thursday': {},
-            'Friday': {},
-            'Saturday': {},
-            'Sunday': {}};
+        resetTemplateShifts;
 
         // Populating schedules + setting current schedule
         getAllSchedules($scope.org, function() {
@@ -72,6 +65,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
     var getTemplateShifts = function(scheduleId, callback){
         TemplateShiftService.getTemplateShifts(scheduleId, function(err, templateShifts){
             if (!err){
+                resetTemplateShifts();
                 // Go through template shifts
                 for (var i = 0; i < templateShifts.length; i++){
                     var templateDay = templateShifts[i].dayOfWeek;
@@ -94,6 +88,16 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         });
     }
 
+    var resetTemplateShifts = function(){
+        $scope.templateShiftsByDay = 
+            {'Monday': {},
+            'Tuesday': {},
+            'Wednesday': {},
+            'Thursday': {},
+            'Friday': {},
+            'Saturday': {},
+            'Sunday': {}};
+    }
     /*  Returns the hour of "HH:MM" */
     var getHour = function(string){
         return parseInt(string.split(":")[0]);
