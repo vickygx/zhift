@@ -30,7 +30,7 @@ var shiftToString = function(shift) {
  * @param {String}         owner The name of the owner of the shift.
  * @param {Shift}          shift The shift that was offered.
  */
-module.exports.notifyShiftUpForGrabs = function(to, owner, shift) {
+module.exports.recordShiftUpForGrabs = function(to, owner, shift) {
     var email = {
         to: to,
         from: FROM,
@@ -48,7 +48,7 @@ module.exports.notifyShiftUpForGrabs = function(to, owner, shift) {
  * @param {String}         newOwner      The name of the new owner of the shift.
  * @param {Shift}          shift         The shift that was claimed.
  */
-module.exports.notifyShiftClaim = function(to, originalOwner, newOwner, shift) {
+module.exports.recordShiftClaim = function(to, originalOwner, newOwner, shift) {
     var email = {
         to: to,
         from: FROM,
@@ -65,7 +65,7 @@ module.exports.notifyShiftClaim = function(to, originalOwner, newOwner, shift) {
  * @param {String}         owner The name of the owner of the shift.
  * @param {Shift}          shift The shift that was offered.
  */
-module.exports.notifyShiftUpForSwap = function(to, owner, shift) {
+module.exports.recordShiftUpForSwap = function(to, owner, shift) {
     var email = {
         to: to,
         from: FROM,
@@ -82,7 +82,7 @@ module.exports.notifyShiftUpForSwap = function(to, owner, shift) {
  * @param {Array.<string>} to   A list of all email addresses to which to send the notification.
  * @param {Swap}           swap The swap affected.
  */
-module.exports.notifySwapProposal = function(to, swap) {
+module.exports.recordSwapProposal = function(to, swap) {
     var proposedShift = swap.shiftOfferedInReturn;
     var proposer = proposedShift.responsiblePerson.name;
     var originalShift = swap.shiftUpForSwap;
@@ -103,7 +103,7 @@ module.exports.notifySwapProposal = function(to, swap) {
  * @param {Array.<string>} to   A list of all email addresses to which to send the notification.
  * @param {Swap}           swap The swap affected.
  */
-module.exports.notifySwapRejected = function(to, swap) {
+module.exports.recordSwapRejected = function(to, swap) {
     var proposedShift = swap.shiftOfferedInReturn;
     var proposer = proposedShift.responsiblePerson.name;
     var originalShift = swap.shiftUpForSwap;
@@ -124,7 +124,7 @@ module.exports.notifySwapRejected = function(to, swap) {
  * @param  {Array.<string>} to A list of all email addresses to which to send the notification.
  * @param  {Swap} swap The swap that occurred.
  */
-module.exports.notifySwapAccepted = function(to, swap) {
+module.exports.recordSwapAccepted = function(to, swap) {
     var proposedShift = swap.shiftOfferedInReturn;
     var proposer = proposedShift.responsiblePerson.name;
     var originalShift = swap.shiftUpForSwap;
