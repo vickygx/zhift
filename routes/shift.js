@@ -9,6 +9,8 @@ var router = express.Router();
 
 // Controllers
 var ShiftController = require('../controllers/shift');
+var UserController = require('../controllers/user');
+var EmailController = require('../controllers/email');
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
 
@@ -86,20 +88,20 @@ router.get('/:id', function(req, res, next) {
 /*  GET request to get all shifts associated with a user*/
 router.get('/user/:userid', function(req, res, next) {
     // Checking if logged in user is userid
-    var isOwner = req.param('userid') === req.user._id;
+    var isOwner = req.param('userid') === req.user._id.toString();
 
     // Checking if permissions are correct
     UserController.isManagerOfOrganization(req.user.email, req.user.org, 
-        function(err, isManager){
+        function(err, isManager) {
 
             // If the user is a manager, delete the schedule
-            if (isManager || isOwner){
+            if (isManager || isOwner) {
                 ShiftController.getAllUserShifts(req.param('userid'), function(err, shifts) {
                     // TODO: error handling
                     if (err) {
                         next(err);
                     } 
-                    else if (shifts){
+                    else if (shifts) {
                         res.send({'shifts': shifts});
                     } 
                     else {
@@ -108,10 +110,9 @@ router.get('/user/:userid', function(req, res, next) {
                 });
                 
             }
-            // Else, send error message
             else {
                 // TODO: temporary json, replace with proper error
-                res.send({message: 'error: you are not a manager. cannot delete'});
+                res.status(403).send({message: 'error: you are not a manager or the owner of this shift. cannot get'});
             }
         });
     
@@ -145,7 +146,8 @@ router.put('/putUpForGrabs/:id', function(req, res, next) {
             if (err) {
                 next(err);
             } 
-            else if (shift){
+            else if (shift) {
+                email.sendShiftUpForGrabsNotification(req.user.email, shift);
                 res.send(shift);
             } 
             else {

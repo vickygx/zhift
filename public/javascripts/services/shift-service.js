@@ -29,7 +29,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: 'shift/user/' + employeeId,
             }).success(function(res) {
-                callback(res.shifts);
+                callback(res);
             }).error(function(res){
                 // TODO: error handling
                 callback(res);
