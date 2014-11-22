@@ -56,7 +56,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             console.log($scope.schedules);
         });
         //setCurrentSchedule($scope.schedules[0]);
-        //getAllEmployees($scope.org);
+        getAllEmployees($scope.org);
 
     };
 
