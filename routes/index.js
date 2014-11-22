@@ -55,8 +55,11 @@ module.exports = function(passport) {
 	});
 
 	router.get('/shifts', isAuthenticated, function(req, res) {
-		console.log(req.user);
     	res.render('shift/test_shift', {title: 'shift calendar testing', user: req.user});
+	});
+
+	router.get('/dashboard', isAuthenticated, function(req, res) {
+		res.render('dashboard/dash', {user: req.user});
 	});
 
 	return router;
