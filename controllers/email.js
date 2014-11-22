@@ -50,12 +50,13 @@ module.exports.notifyShiftClaim = function(to, originalOwner, newOwner, shift) {
  * @param  {Array.<string>} to A list of all email addresses to which to send the notification.
  * @param  {Shift} shift The shift that was offered.
  */
-module.exports.notifyShiftUpForSwap = function(to, shift) {
+module.exports.notifyShiftUpForSwap = function(to, owner, shift) {
     var email = {
         to: to,
         from: FROM,
         subject: 'Shift Up For Swap',
         text: 'Shift up for swap.' + shift,
+        text: owner + '\'s ' + shift.dateScheduled.toLocaleDateString() + ' shift from ' + shift.start + ' to ' + shift.end + ' is up for swap.',
     };
     console.log(email);
 }

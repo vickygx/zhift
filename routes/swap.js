@@ -7,6 +7,8 @@ var router = express.Router();
 
 // Controllers
 var SwapController = require('../controllers/swap');
+var EmailController = require('../controllers/email');
+var UserController = require('../controllers/user');
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
 
@@ -17,22 +19,20 @@ router.get('/', function(req, res, next) {
 
 /* POST request to create swap object */
 router.post('/', function(req, res, next) {
-    // TODO: requester must be owner of shiftId, check
-    // TODO: one way to do this is pass bth owner and shiftId to createSwap function
-    // and do Swap.find({_id: shiftId, originalOwner: userId}) and add originalOwner to schema
-    // but there are other ways like making another DB call
-
-    // TODO: modify shift to be upForSwap
-    console.log('posting to swap');
-    SwapController.createSwap(req.body.shiftId, req.body.scheduleId, function(err, swap) {
+    // createSwap checks that the current user owns the shift for which to create a swap
+    SwapController.createSwap(req.body.shiftId, req.user._id, req.body.scheduleId, function(err, swap) {
         // TODO: cover all error cases / send proper error
-        if (err){
-            // we can send custom errors instead
-            console.log('failed to create swap', err);
+        if (err) {
             next(err);
         } 
         else {
-            console.log('created swap');
+            UserController.retrieveManagersByOrgId(req.user.org, function(err, managers) {
+                var emails = managers.map(function(manager) {
+                    return manager.email;
+                });
+                EmailController.notifyShiftUpForSwap(emails, req.user.name, swap.shiftUpForSwap);
+            });
+
             res.send(swap);
         }
     });

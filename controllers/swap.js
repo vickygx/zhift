@@ -32,7 +32,7 @@ module.exports.createSwap = function(shiftId, employeeId, scheduleId, fn) {
             if (err) {
                 return fn(err);
             }
-            fn(null, swap);
+            swap.populate('shiftUpForSwap', fn);
         });
     });
 };

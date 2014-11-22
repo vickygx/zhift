@@ -141,7 +141,13 @@ router.put('/upForGrabs/:id', function(req, res, next) {
             next(err);
         }
         else if (shift) {
-            EmailController.notifyShiftUpForGrabs(req.user.email, req.user.name, shift);
+            UserController.retrieveManagersByOrgId(req.user.org, function(err, managers) {
+                var emails = managers.map(function(manager) {
+                    return manager.email;
+                });
+                EmailController.notifyShiftUpForGrabs(emails, req.user.name, shift);
+            });
+
             res.send(shift);
         }
         else {
