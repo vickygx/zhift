@@ -6,6 +6,7 @@
  *     See all template shifts for a schedule
  *
  * @author: Vicky Gong, Anji Ren
+ * TODO: commments
  */
 
 var ZhiftApp = angular.module('ZhiftApp');
@@ -47,7 +48,6 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
 
     var getTemplateShifts = function(scheduleId, callback){
         TemplateShiftService.getTemplateShifts(scheduleId, function(err, templateShifts){
-            console.log("getTemplateShifts err, templateShifts", err, templateShifts);
             if (!err){
                 // Go through template shifts
                 for (var i = 0; i < templateShifts.length; i++){
@@ -79,7 +79,6 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
     var getAllSchedules = function(orgId, callback) {
         ScheduleService.getSchedules(orgId, function(schedules) {
             $scope.schedules = schedules;
-
             callback();
         })
     }
@@ -120,30 +119,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
                 }
             });
     }
-    /**
-     * Create a new schedule, save it to the database, and display it in the frontend.
-     */
-    $scope.createSchedule = function(scheduleName) {
-        ScheduleService.createSchedule($scope.org, scheduleName, function(err, newSchedule) {
-            // TODO: if err, do something
-            if (!err){
-                newSchedule.shifts = [];
-                newSchedule.templateShifts = [];
-                $scope.schedules[newSchedule._id] = newSchedule;
-                $scope.$apply();
-            }
-        });
-    };
-
-    /**
-     * Create a new template shift, save it to the database, and display it in the frontend.
-     */
-    $scope.createTemplateShift = function(day, startTime, endTime, scheduleId, employeeId) {
-        TemplateShiftService.createTemplateShift(day, startTime, endTime, employeeId, scheduleId, function(templateShift) {
-            $scope.schedules[scheduleId].templateShifts.push(templateShift);
-            $scope.$apply();
-        });
-    };
+   
 })
 .directive('setCurrentSchedule', function(){
     return {
