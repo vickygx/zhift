@@ -6,7 +6,9 @@
  */
 
 var Shift = require('../models/shift');
+var TemplateShift = require('../models/template-shift');
 var errors = require('../errors/errors');
+var datejs = require('../public/javascripts/libraries/date');
 module.exports = {};
 
 /**
@@ -39,16 +41,57 @@ module.exports.createShift = function(day, startTime, endTime, employeeId, sched
 };
 
 /**
- * Delete all shifts based on the same template shift
- *
- * @param {ObjectId} templateShiftId: id of the template shift
- * @param {function} fn: callback function
- *
- * @return ---
- */
+* Delete all shifts based on the same template shift
+*
+* @param {ObjectId} templateShiftId: id of the template shift
+* @param {function} fn: callback function
+*
+* @return ---
+*/
 module.exports.deleteShiftsGeneratedFromTemplateShift = function(templateShiftId, fn) {
     Shift.remove({templateShift: templateShiftId}, fn);
 };
+
+/**
+* Creates a shift from the template shift for the next <day of week>
+* since the given date
+*
+*   Ex. TemplateShift occurs on Tuesday 5 PM - 6 PM
+*       next = 1
+*       dateFrom: Today
+*       Creates a shift for the next Tuesday that occurs after today
+*       
+*   Ex. next = 2
+        Creates a shift for the next next Tuesday that occurs after today
+*       
+* @param {ObjectId} templateShiftId     template shift id to copy from
+* @param {int} next:                    times to skip to the next day
+* @param {Date} dateFrom:               date calculated from or Date.now() if none
+* @param {function} fn:                 callback function
+*
+* @return ---
+*/
+module.exports.createShiftFromTemplateShift = function(templateShiftId, next, dateFrom, fn){
+    TemplateShift.findById(templateShiftId, function(err, templateShift){
+        if (err){
+            fn(err);
+        }
+        else if (templateShift){
+            var day = templateShift.dayOfWeek;
+            var startTime = templateShift.start;
+            var endTime = templateShift.end;
+            var employeeId = templateShift.responsiblePerson;
+            var scheduleId = templateShift.schedule;
+            var date = eval('dateFrom.next().' + day.toLowerCase() + '().addDays(' + (next-1)*7 + ')');
+
+            module.exports.createShift(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn);
+        }
+        // templateshift with given id doesn't exist, return error
+        else {
+            fn(); //TODO
+        }
+    });
+}
 
 /**
  * Put a shift up for grabs
@@ -166,7 +209,9 @@ module.exports.getAllUserShifts = function(employeeId, fn) {
  * @return ---
  */
 module.exports.getAllShiftsOnASchedule = function(scheduleId, fn) {
-    Shift.find({schedule: scheduleId}, fn);
+    Shift.find({schedule: scheduleId})
+        .populate('responsiblePerson', 'name')
+        .exec(fn);
 }
 
 /**
