@@ -11,19 +11,6 @@
 var ZhiftApp = angular.module('ZhiftApp');
 
 ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleService, TemplateShiftService, UserService) {
-    
-    // $scope.templateShiftsByDay = {
-    //     'Monday': {
-    //         1: [{}, {}], 
-    //         2: [] // shift object
-    //     }
-        
-    //     'Tuesday': {
-
-    //     }
-    // }
-
-
 
     /**
      * Get roles, shifts, and template shifts from database.
@@ -43,28 +30,30 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             'Saturday': {},
             'Sunday': {}};
 
-        ScheduleService.getSchedules($scope.org, function(schedules) {
-            $scope.currentScheduleId = schedules[0]._id;
+        getAllSchedules($scope.org, function() {
+            $scope.currentScheduleId = $scope.schedules[0]._id;
+            $scope.$apply();
+            console.log($scope.schedules);
 
-            getTemplateShifts($scope.currentScheduleId, function() {
+            getTemplateShifts($scope.currentScheduleId, function(err) {
                 $scope.$apply();
                 console.log($scope.templateShiftsByDay);
             })
-        })
-        getAllSchedules($scope.org, function() {
-            $scope.$apply();
-            console.log($scope.schedules);
         });
-        //setCurrentSchedule($scope.schedules[0]);
-        getAllEmployees($scope.org);
+
+        getAllEmployees($scope.org, function(err) {
+            $scope.$apply();
+            console.log($scope.employeesBySchedule);
+        });
 
     };
 
     var getTemplateShifts = function(scheduleId, callback){
         TemplateShiftService.getTemplateShifts(scheduleId, function(err, templateShifts){
+            console.log("getTemplateShifts err, templateShifts", err, templateShifts);
             if (!err){
                 // Go through template shifts
-                for (var i; i < templateShifts.length; i++){
+                for (var i = 0; i < templateShifts.length; i++){
                     var templateDay = templateShifts[i].dayOfWeek;
                     var templateHour = getHour(templateShifts[i].start);
 
@@ -79,6 +68,9 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
                 }
                 callback();
             }
+            else {
+                callback(err);
+            }
         });
     }
 
@@ -89,9 +81,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
 
     var getAllSchedules = function(orgId, callback) {
         ScheduleService.getSchedules(orgId, function(schedules) {
-            schedules.forEach(function(schedule) {
-                $scope.schedules.push(schedule);
-            })
+            $scope.schedules = schedules;
 
             callback();
         })
@@ -99,11 +89,14 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
 
     $scope.setCurrentSchedule = function(scheduleId) {
         $scope.currentSchedule = scheduleId;
-        getTemplateShifts(scheduleId);
-        $scope.apply();
+        getTemplateShifts(scheduleId, function(err){
+            if (!err)
+                $scope.$apply();
+        });
+        
     }
 
-    var getAllEmployees = function(orgId) {
+    var getAllEmployees = function(orgId, callback) {
         // Get list of employees (User objects)
         UserService.getEmployees($scope.org, function(err, employees) {
             if (!err) {
@@ -118,7 +111,9 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
 
                     scope.employeesBySchedule[role].push(employee);
                 }
+                callback();
             }
+            callback(err);
         });
     }
 
@@ -153,5 +148,18 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             $scope.schedules[scheduleId].templateShifts.push(templateShift);
             $scope.$apply();
         });
+    };
+})
+.directive('setCurrentSchedule', function(){
+    return {
+        restrict: 'C', 
+        link: function(scope, element, attrs) {
+            element.unbind('click');
+            element.bind('click', function(evt) {
+                evt.stopPropagation();
+                var scheduleId = evt.currentTarget.id;
+                scope.setCurrentSchedule(scheduleId);
+            });
+        }
     };
 });
