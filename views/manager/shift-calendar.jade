@@ -8,11 +8,12 @@ block head
 
 mixin shift-calendar(org)
     div(id="shift-calendar" ng-controller="ManagerScheduleController" ng-init="init('#{org}')")
-        div.btn-group(id="schedule-tabs")
-            button.btn.btn-default.switch.load-schedule(type="button" 
-                data-ng-repeat="schedule in schedules" 
-                id="{{schedule._id}}"  
-                class="set-current-schedule") {{schedule.role}}
+        div.schedule-tabs-container
+            div.btn-group(id="schedule-tabs")
+                button.btn.btn-default.switch.load-schedule(type="button" 
+                    data-ng-repeat="schedule in schedules" 
+                    id="{{schedule._id}}"  
+                    class="set-current-schedule") {{schedule.role}}
         div(id="shift-schedule")
             div.cal-column
                 div.cal-col-title 
