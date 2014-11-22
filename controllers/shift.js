@@ -25,17 +25,16 @@ module.exports = {};
  */
 module.exports.createShift = function(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn) {
     var shift = new Shift({
-       dayOfWeek: day,
-       start: startTime,
-       end: endTime,
-       responsiblePerson: employeeId,
-       schedule: scheduleId,
-       templateShift: templateShiftId,
-       dateScheduled: date,
-       upForGrabs: false,
-       upForSwap: false
+        dayOfWeek: day,
+        start: startTime,
+        end: endTime,
+        responsiblePerson: employeeId,
+        schedule: scheduleId,
+        templateShift: templateShiftId,
+        dateScheduled: date,
+        upForGrabs: false,
+        upForSwap: false
     });
-
     shift.save(fn);
 };
 
@@ -125,13 +124,13 @@ module.exports.tradeShifts = function(shiftIdA, shiftIdB, fn) {
             shiftA.responsiblePerson = shiftB.responsiblePerson;
             shiftA.upForSwap = false;
             shiftA.save(function(err, shiftA) {
-                if (err) {
-                    return fn(err);
-                }
+            if (err) {
+                return fn(err);
+            }
 
-                shiftB.responsiblePerson = temp;
-                shiftB.upForSwap = false;
-                shiftB.save(function(err, shiftB) {
+            shiftB.responsiblePerson = temp;
+            shiftB.upForSwap = false;
+            shiftB.save(function(err, shiftB) {
                     if (err) {
                         return fn(err);
                     }
