@@ -132,9 +132,9 @@ router.get('/all/:scheduleid', function(req, res, next) {
 
 
 /**
- * POST request to put shift up for grabs
+ * PUT request to put shift up for grabs
  */
-router.put('/putUpForGrabs/:id', function(req, res, next) {
+router.put('/upForGrabs/:id', function(req, res, next) {
     // putUpForGrabs checks that current user is owner of the shift
     ShiftController.putUpForGrabs(req.param('id'), req.user._id.toString(), function(err, shift) {
         if (err) {

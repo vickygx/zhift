@@ -66,7 +66,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             $.ajax({
                 datatype: 'json',
                 type: 'PUT',
-                url: 'shift/putUpForGrabs/' + shiftId,
+                url: 'shift/upForGrabs/' + shiftId,
             }).success(function(res) {
                 callback(res);
             }).error(function(res) {
