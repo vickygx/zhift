@@ -13,9 +13,14 @@ var UserController = require('../controllers/user');
 var RecordController = require('../controllers/record');
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
+var datejs = require('../public/javascripts/libraries/date');
 
 router.get('/', function(req, res, next) {
-    res.render('shift/test_shift', {title: 'shift calendar testing'});
+    res.render('shift/test_shift', {title: 'shift calendar testing', user: req.user});
+    console.log("in test shift");
+    console.log(Date.today());
+    console.log(Date.today().is().friday());
+    console.log(Date.today().next().wednesday());
 });
 
 /**

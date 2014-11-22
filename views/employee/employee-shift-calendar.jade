@@ -1,13 +1,12 @@
 block head
     link(rel="stylesheet", href="stylesheets/shift-calendar/shift-calendar.css")
-    script(type="text/javascript", src="/javascripts/controllers/manager-schedule-controller.js")
+    script(type="text/javascript", src="/javascripts/controllers/employee-schedule-controller.js")
     script(type="text/javascript", src="/javascripts/services/schedule-service.js")
-    script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
-    script(type="text/javascript", src="/javascripts/services/user-service.js")
+    script(type="text/javascript", src="/javascripts/services/shift-service.js")
     //- TODO: move this to layout?
 
-mixin shift-calendar(org)
-    div(id="shift-calendar" ng-controller="EmployeeScheduleController" ng-init="init('#{org}')")
+mixin employee-shift-calendar(org, scheduleId)
+    div(id="shift-calendar" ng-controller="EmployeeScheduleController" ng-init="init('#{org}', '#{scheduleId}')")
         div.date-tabs-container
             //- should be a tab to change date range
         div(id="shift-schedule")

@@ -16,22 +16,17 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
      * Get roles, shifts, and template shifts from database.
      * @param  {String} org The name of the organization from which to get data.
      */
-    $scope.init = function(org) {
+    $scope.init = function(org, scheduleId) {
         $scope.org = org;
-        $scope.currentScheduleId = 1;
+        $scope.currentScheduleId = scheduleId;
         resetShifts();
 
-        // Populating schedules + setting current schedule
-        getAllSchedules($scope.org, function() {
-            $scope.currentScheduleId = $scope.schedules[0]._id;
+        // Populating templates based on current schedule
+        getShifts($scope.currentScheduleId, function(err) {
             $scope.$apply();
-
-            // Populating templates based on current schedule
-            getShifts($scope.currentScheduleId, function(err) {
-                $scope.$apply();
-                console.log($scope.shiftsByDay);
-            })
+            console.log($scope.shiftsByDay);
         });
+       
 
     };
 

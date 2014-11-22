@@ -1,5 +1,7 @@
+extends ../layout
+
 block head
-    include shift-calendar.jade
+    include ../employee/employee-shift-calendar.jade
 
 block content
-    +shift-calendar()
+    +employee-shift-calendar(user.org, '546c20dfc29249000002a2ed')
