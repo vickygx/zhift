@@ -1,4 +1,4 @@
-head
+block head
     link(rel="stylesheet", href="stylesheets/shift-calendar/shift-calendar.css")
     script(type="text/javascript", src="/javascripts/controllers/manager-schedule-controller.js")
     script(type="text/javascript", src="/javascripts/services/schedule-service.js")
@@ -6,10 +6,10 @@ head
     script(type="text/javascript", src="/javascripts/services/user-service.js")
     //- TODO: move this to layout?
 
-mixin shift-calendar()
-    div(id="shift-calendar" ng-controller="ManagerScheduleController")
+mixin shift-calendar(org)
+    div(id="shift-calendar" ng-controller="ManagerScheduleController" ng-init="init('#{org}')")
         div.btn-group(id="schedule-tabs")
-            button.btn.btn-default.switch.load-schedule(type="button" data-ng-repeat="scheduleId in scheduleIds" id="{{role}}") {{role}}
+            button.btn.btn-default.switch.load-schedule(type="button" data-ng-repeat="schedule in schedules" id="{{schedule._id}}" ng-click="setCurrentSchedule(schedule._id)") {{schedule.role}}
         div(id="shift-schedule")
             div.cal-column
                 div.cal-col-title 

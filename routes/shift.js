@@ -12,10 +12,6 @@ var ShiftController = require('../controllers/shift');
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
 
-router.get('/', function(req, res, next) {
-    res.render('shift/test_shift', {title: 'shift calendar testing'});
-});
-
 /*  POST request to create shift */
 router.post('/', function(req, res, next) {
     // Checking if permissions are correct

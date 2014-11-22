@@ -30,8 +30,9 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
      * @param  {String} org The name of the organization from which to get data.
      */
     $scope.init = function(org) {
-        $scope.currentSchedule = 1;
-        $scope.scheduleIds = [];
+        $scope.org = org;
+        $scope.currentScheduleId = 1;
+        $scope.schedules = [];
         $scope.employeesBySchedule = {};
         $scope.templateShiftsByDay = 
             {'Monday': {},
@@ -41,13 +42,25 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             'Friday': {},
             'Saturday': {},
             'Sunday': {}};
-        getAllSchedules();
-        setCurrentSchedule($scope.schedules[0]);
-        //getAllEmployees
+
+        ScheduleService.getSchedules($scope.org, function(schedules) {
+            $scope.currentScheduleId = schedules[0]._id;
+
+            getTemplateShifts($scope.currentScheduleId, function() {
+                $scope.$apply();
+                console.log($scope.templateShiftsByDay);
+            })
+        })
+        getAllSchedules($scope.org, function() {
+            $scope.$apply();
+            console.log($scope.schedules);
+        });
+        //setCurrentSchedule($scope.schedules[0]);
+        //getAllEmployees($scope.org);
 
     };
 
-    var getTemplateShifts = function(scheduleId){
+    var getTemplateShifts = function(scheduleId, callback){
         TemplateShiftService.getTemplateShifts(scheduleId, function(err, templateShifts){
             if (!err){
                 // Go through template shifts
@@ -62,25 +75,51 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
                         scopeDayHour[templateHour] = [];
                     }
 
-                    scopeDayHour[templateHour].append(templateShifts[i]);
+                    scopeDayHour[templateHour].push(templateShifts[i]);
                 }
+                callback();
             }
         });
     }
 
     /*  Turns "HH:MM" into hour */
     var getHour = function(string){
-        return 1;
+        return parseInt(string.split(":")[0]);
     }
 
-    $scope.getAllSchedules = function(orgId) {
+    var getAllSchedules = function(orgId, callback) {
+        ScheduleService.getSchedules(orgId, function(schedules) {
+            schedules.forEach(function(schedule) {
+                $scope.schedules.push(schedule);
+            })
 
+            callback();
+        })
     }
 
     $scope.setCurrentSchedule = function(scheduleId) {
         $scope.currentSchedule = scheduleId;
         getTemplateShifts(scheduleId);
         $scope.apply();
+    }
+
+    var getAllEmployees = function(orgId) {
+        // Get list of employees (User objects)
+        UserService.getEmployees($scope.org, function(err, employees) {
+            if (!err) {
+                // Go through employees and organize by role.
+                for (var i; i < employees.size; i++) {
+                    var employee = employees[i];
+                    var role = employees[i].schedule;
+
+                    if (!scope.employeesBySchedule[role]) {
+                        scope.employeesBySchedule[role] = [];
+                    }
+
+                    scope.employeesBySchedule[role].push(employee);
+                }
+            }
+        });
     }
 
     $scope.createTemplateShift = function(day, startTime, endTime, employeeId, scheduleId){
