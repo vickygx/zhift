@@ -19,12 +19,12 @@ var FROM = '6170-zhift@mit.edu';
  * @param  {Array.<string>} to A list of all email addresses to which to send the notification.
  * @param  {Shift} shift The shift that was offered.
  */
-module.exports.notifyShiftUpForGrabs = function(to, shift) {
+module.exports.notifyShiftUpForGrabs = function(to, owner, shift) {
     var email = {
         to: to,
         from: FROM,
         subject: 'Shift Up For Grabs',
-        text: 'Shift up for grabs.' + shift,
+        text: owner + '\'s ' + shift.dateScheduled.toLocaleDateString() + ' shift from ' + shift.start + ' to ' + shift.end + ' is up for grabs.',
     };
     console.log(email);
     // sendgrid.send(email, console.log);
@@ -35,12 +35,12 @@ module.exports.notifyShiftUpForGrabs = function(to, shift) {
  * @param  {Array.<string>} to A list of all email addresses to which to send the notification.
  * @param  {Shift} shift The shift that was claimed.
  */
-module.exports.notifyClaim = function(to, shift) {
+module.exports.notifyShiftClaim = function(to, originalOwner, newOwner, shift) {
     var email = {
         to: to,
         from: FROM,
         subject: 'Shift Claimed',
-        text: 'Shift claimed.' + shift,
+        text: originalOwner + '\'s ' + shift.dateScheduled.toLocaleDateString() + ' shift from ' + shift.start + ' to ' + shift.end + ' has been claimed by ' + newOwner,
     };
     console.log(email);
 }

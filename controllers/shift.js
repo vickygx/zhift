@@ -59,8 +59,8 @@ module.exports.deleteShiftsGeneratedFromTemplateShift = function(templateShiftId
  * 
  * @return ---
  */
-module.exports.putUpForGrabs = function(shiftId, fn) {
-    Shift.findByIdAndUpdate(shiftId, {upForGrabs: true}, fn);
+module.exports.putUpForGrabs = function(shiftId, employeeId, fn) {
+    Shift.findOneAndUpdate({_id: shiftId, responsiblePerson: employeeId}, {upForGrabs: true}, fn);
 };
 
 /**

@@ -38,7 +38,7 @@ module.exports.users.invalidUserId = {
 module.exports.shifts.invalidShiftId = {
     status: 400,
     name: "Bad Input",
-    message: "The given shift id doesn't exist"
+    message: "The given shift id doesn't exist for the current user."
 };
 
 module.exports.shifts.notOwnerOfShift = {
