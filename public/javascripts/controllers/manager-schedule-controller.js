@@ -32,15 +32,12 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             // Populating templates based on current schedule
             getTemplateShifts($scope.currentScheduleId, function(err) {
                 $scope.$apply();
-                console.log($scope.templateShiftsByDay);
             })
         });
 
         // Populating employees of the organization
         getAllEmployees($scope.org, function(err) {
             $scope.$apply();
-            console.log("hi " +$scope.employeesBySchedule);
-            console.log($scope.employeesBySchedule);
         });
 
     };
