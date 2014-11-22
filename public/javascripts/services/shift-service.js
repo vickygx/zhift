@@ -2,6 +2,7 @@
  * ShiftsService
  *
  * Angular Service for shifts mixin.
+ * TODO: Error handling
  * 
  * @author: Lily Seropian, Vicky Gong
  */
@@ -18,7 +19,6 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(res);
             }).error(function(res){
-                // TODO: error handling
                 callback(res);
             });
         },
@@ -29,9 +29,8 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: 'shift/user/' + employeeId,
             }).success(function(res) {
-                callback(res.shifts);
+                callback(res);
             }).error(function(res){
-                // TODO: error handling
                 callback(res);
             });
         },
@@ -42,9 +41,8 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: 'shift/upForGrabs/' + scheduleId,
             }).success(function(res) {
-                callback(res.shifts);
+                callback(res);
             }).error(function(res){
-                // TODO: error handling
                 callback(res);
             });
         },
@@ -55,9 +53,8 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: 'shift/upForSwap/' + scheduleId,
             }).success(function(res) {
-                callback(res.shifts);
+                callback(res);
             }).error(function(res){
-                // TODO: error handling
                 callback(res);
             });
         },
@@ -70,7 +67,6 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(res);
             }).error(function(res) {
-                // TODO: error handling
                 callback(res);
             });
         },
@@ -86,7 +82,6 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(res);
             }).error(function(res) {
-                // TODO: error handling
                 callback(res);
             });
         }
