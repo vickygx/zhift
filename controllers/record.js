@@ -38,21 +38,12 @@ var logErrors = function(err) {
 };
 
 /**
- * Get all records about an organization.
- * @param {ObjectId} orgId The id of the organization to get records for.
- * @param {Function} fn    Callback that takes (err, record[])
- */
-module.exports.getRecordsForOrganization = function(orgId, fn) {
-    Record.find({org: orgId}, fn);
-};
-
-/**
  * Get all records about a schedule.
  * @param {ObjectId} scheduleId The id of the schedule to get records for.
  * @param {Function} fn         Callback that takes (err, record[])
  */
 module.exports.getRecordsForSchedule = function(scheduleId, fn) {
-    Record.find({schedule: scheduleId}, fn);
+    Record.find({schedule: scheduleId}).sort([['_id', -1]]).exec(fn);
 };
 
 /**
