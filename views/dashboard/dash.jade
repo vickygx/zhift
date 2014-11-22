@@ -11,7 +11,7 @@ block content
   div
     a(href="/home", class="text-center") Home
 
-  div(ng-controller="RecordController", ng-init="init('#{user.schedule}')")
+  div(ng-controller="RecordController", ng-init="init('#{user.org}', '#{user.schedule}')")
     div(ng-repeat="record in records") {{record.role}}
       ul
         li(ng-repeat="r in record.records") {{r.content}}
