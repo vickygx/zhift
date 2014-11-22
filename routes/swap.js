@@ -103,7 +103,6 @@ router.put('/:id', function(req, res, next) {
             });
         }
         else if (req.body.acceptSwap === 'false') {
-            console.log('rejecting', req.param('id'));
             SwapController.resetOfferedShiftInSwap(req.param('id'), function(err, swap) {
                 if (err) {
                     return next(err);
