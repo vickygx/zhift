@@ -70,16 +70,21 @@ router.put('/:swap_id', function(req, res, next) {
     // TODO: make sure in same schedule
     // make sure shiftofferedinreturn is empty
     if (req.body.shiftId !== undefined) {
-        console.log('swapping shift');
         SwapController.offerShiftForSwap(req.param('swap_id'), req.body.shiftId, function(err, swap) {
             // TODO: cover all error cases / send proper error
             if (err) {
-                // we can send custom errors instead
-                console.log(err);
                 next(err);
             } 
             else {
-                console.log('swap succeeded');
+                UserController.retrieveManagersByOrgId(req.user.org, function(err, managers) {
+                    var emails = managers.map(function(manager) {
+                        return manager.email;
+                    });
+                    emails.push(swap.shiftUpForSwap.responsiblePerson.email);
+                    emails.push(req.user.email);
+                    EmailController.notifySwapProposal(emails, req.user.name, swap.shiftOfferedInReturn, swap.shiftUpForSwap);
+                });
+
                 res.send(swap);
             }
         });

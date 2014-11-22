@@ -62,8 +62,11 @@ module.exports.getSwapsOnSchedule = function(scheduleId, fn) {
  * @param {function} fn      Callback that takes (err, swap).
  */
 module.exports.offerShiftForSwap = function(swapId, shiftId, fn) {
-    console.log('offering shift for swap', swapId, shiftId);
-    Swap.findByIdAndUpdate(swapId, {shiftOfferedInReturn: shiftId}, fn);
+    Swap.findByIdAndUpdate(swapId, {shiftOfferedInReturn: shiftId}).populate('shiftUpForSwap').populate('shiftOfferedInReturn').exec(function(err, swap) {
+        swap.shiftUpForSwap.populate('responsiblePerson', function(err, shift) {
+            return fn(err, swap);
+        });
+    });
 };
 
 /**
