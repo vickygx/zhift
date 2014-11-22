@@ -81,5 +81,7 @@ module.exports.giveShiftTo = function(shiftId, employeeId, fn) {
     @return ---
 */
 module.exports.getAllShiftsBySchedule = function(scheduleId, fn) {
-    TemplateShift.find({schedule: scheduleId}, fn);
+    TemplateShift.find({schedule: scheduleId})
+        .populate('responsiblePerson', 'name')
+        .exec(fn);
 };
