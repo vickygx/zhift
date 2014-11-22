@@ -35,7 +35,7 @@ module.exports.notifyShiftUpForGrabs = function(to, owner, shift) {
         to: to,
         from: FROM,
         subject: 'Shift Up For Grabs',
-        text: owner + '\'s ' + shiftToString(shift) + ' is up for grabs.',
+        text: owner + ' put their ' + shiftToString(shift) + ' up for grabs.',
     };
     console.log(email);
     // sendgrid.send(email, console.log);
@@ -53,7 +53,7 @@ module.exports.notifyShiftClaim = function(to, originalOwner, newOwner, shift) {
         to: to,
         from: FROM,
         subject: 'Shift Claimed',
-        text: originalOwner + '\'s ' + shiftToString(shift) + ' has been claimed by ' + newOwner + '.',
+        text: newOwner + ' has claimed ' + originalOwner + '\'s ' + shiftToString(shift) + '.',
     };
     console.log(email);
     // sendgrid.send(email, console.log);
