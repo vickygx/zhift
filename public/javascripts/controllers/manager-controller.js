@@ -33,7 +33,7 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
             schedules.forEach(function(schedule) {
                 $scope.schedules[schedule._id] = schedule;
 
-                ShiftService.getShifts(schedule._id, function(shifts) {
+                ShiftService.getShifts(schedule._id, function(err,shifts) {
                     schedule.shifts = shifts;
                     $scope.$apply();
                 });

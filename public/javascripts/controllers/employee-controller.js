@@ -32,7 +32,7 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
                 $scope.$apply();
             });
 
-            ShiftService.getShifts($scope.user.schedule, function(shifts) {
+            ShiftService.getShifts($scope.user.schedule, function(err,shifts) {
                 $scope.allShiftsForMyRole = {};
                 for (var i = 0; i < shifts.length; i++) {
                     $scope.allShiftsForMyRole[shifts[i]._id] = shifts[i];
