@@ -44,12 +44,20 @@
     overflow: scroll;
 }
 
-#shift-schedule .event-box.open-event-slot:hover {
-    background: #b1c0bc;
+.shift {
+    border-bottom: 1px solid gray;
 }
 
-.shift {
-    border: 1px solid gray;
-    padding: 2px;
-    border-radius: 3px;
+.shift:hover {
+    background: #b1c0bc;
 }
+.add-shift {
+    width: 100%;
+    background: #fead77;
+    color: white;
+    font-size: 0.8em;
+}
+
+.add-shift:hover {
+    background: #ffcd88;
+};

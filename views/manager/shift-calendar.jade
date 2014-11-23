@@ -22,15 +22,20 @@ mixin shift-calendar(org)
             div.cal-column(data-ng-repeat="day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']")
                 div.cal-col-title.heading {{day}}
                 div.events
-                    div.event-box.open-event-slot(data-toggle="modal" data-target="#reassignShiftModal"
-                        data-start-time="{{hour}}" 
-                        data-end-time="{{hour+1}}" 
-                        data-day-week="{{day}}"
+                    div.event-box.open-event-slot(
                         data-ng-repeat="hour in [12,1,2,3,4,5]")
-                        div.shift(data-ng-repeat="shift in templateShiftsByDay[day][hour]")
-                            //- TODO: add shift ID to shift. Add person id somewhere too
-                            p End: {{shift.end}}
-                            p Responsible: {{shift.responsiblePerson.name}}
+                            div.add-shift(
+                                data-toggle="modal"
+                                data-target="#addShiftModal"
+                                data-day-week="{{day}}"
+                                data-start-time="{{hour}}" 
+                                data-end-time="{{hour+1}}"
+                                class="set-active-shift-info")
+                                i.fa.fa-plus.add-shift-button
+                            div.shift(data-ng-model="templateShiftsByDay" data-ng-repeat="shift in templateShiftsByDay[day][hour]"
+                                data-toggle="modal" data-target="#reassignShiftModal")
+                                //- TODO: add shift ID to shift. Add person id somewhere too
+                                p {{shift.responsiblePerson.name}}
 
         div.modal.fade#reassignShiftModal
             div.modal-dialog
@@ -45,7 +50,7 @@ mixin shift-calendar(org)
                             div.form-group
                                 div.col-lg-10
                                     select.form-control
-                                        option(data-ng-repeat="employee in ['Mary', 'Mark', 'Rachel']") {{employee}}
+                                        option(data-ng-repeat="employee in employeesOfCurrentSchedule" id="{{employee._id}}") {{employee.name}}
                     div.modal-footer
                         button.btn.btn-default(type="button" data-dismiss="modal") Close
 
@@ -56,14 +61,15 @@ mixin shift-calendar(org)
                         button(type="button" class="close" data-dismiss="modal")
                             span(aria-hidden="true") &times;
                             span.sr-only Close 
-                        h4.modal-title Add new shift:
+                        h4.modal-title Add new shift for:
                     div.modal-body
                         form.form-horizontal
                             div.form-group
                                 div.col-lg-10
-                                    select.form-control
-                                        option(data-ng-repeat="employee in ['Mary', 'Mark', 'Rachel']") {{employee}}
+                                    select.form-control(name="addShiftEmployee")
+                                        option(data-ng-repeat="employee in employeesOfCurrentSchedule" id="{{employee._id}}" val="{{employee._id}}") {{employee.name}}
                     div.modal-footer
+                        button.btn.btn-default(type="button" class="create-template-shift" data-dismiss="modal") Add
                         button.btn.btn-default(type="button" data-dismiss="modal") Close                 
 
 

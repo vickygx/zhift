@@ -21,6 +21,8 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         $scope.currentScheduleId = 1;
         $scope.schedules = [];
         $scope.employeesBySchedule = {};
+        $scope.employeesOfCurrentSchedule = [];
+        $scope.activeShift = {}
         resetTemplateShifts();
 
         // Populating schedules + setting current schedule
@@ -32,13 +34,13 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             getTemplateShifts($scope.currentScheduleId, function(err) {
                 $scope.$apply();
             })
-        });
 
-        // Populating employees of the organization
-        getAllEmployees($scope.org, function(err) {
-            $scope.$apply();
+            // Populating employees of the organization
+            getAllEmployees($scope.org, function(err) {
+                $scope.employeesOfCurrentSchedule = $scope.employeesBySchedule[$scope.currentScheduleId]
+                $scope.$apply();
         });
-
+        });
     };
 
     /*  Gets template shifts associated with the scheduleId and 
@@ -84,6 +86,14 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         });
     }
 
+    $scope.getTemplateShifts = function(scheduleId) {
+        getTemplateShifts(scheduleId, function(err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+
     var resetTemplateShifts = function(){
         $scope.templateShiftsByDay = 
             {'Monday': {},
@@ -116,7 +126,9 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         getTemplateShifts(scheduleId, function(err){
             if (!err)
                 $scope.$apply();
-        });   
+        });
+        resetEmployeesOfCurrentSchedule();
+        $scope.employeesOfCurrentSchedule = $scope.employeesBySchedule[scheduleId];   
     }
 
     /*  Gets all the employees assocaited with the organization
@@ -142,6 +154,20 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         });
     }
 
+    /* Function to reset list employees of current schedule.
+    */
+    var resetEmployeesOfCurrentSchedule = function() {
+        $scope.employeesOfCurrentSchedule = [];
+    }
+
+    $scope.setActiveShiftInfo = function(day, startTime, endTime) {
+        $scope.activeShift = {
+            day: day,
+            startTime: hourToHHMM(startTime),
+            endTime: hourToHHMM(endTime)
+        }
+        $scope.$apply();
+    }
     /*  Function to create a template shift 
     */
     $scope.createTemplateShift = function(day, startTime, endTime, employeeId, scheduleId){
@@ -150,11 +176,21 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
                 if (!err){
 
                 }
+                console.log(err);
             });
     }
-   
+    
+    var hourToHHMM = function(hour) {
+        // If hour is single digit
+        var hourString = String(hour);
+        if (hour < 10 && hour >= 0) {
+            hourString = "0" + hourString;
+        }
+        return hourString+":00"
+    }
 })
-.directive('setCurrentSchedule', function(){
+
+.directive('setCurrentSchedule', function() {
     return {
         restrict: 'C', 
         link: function(scope, element, attrs) {
@@ -166,4 +202,38 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             });
         }
     };
-});
+})
+
+.directive('setActiveShiftInfo', function() {
+    return {
+        restrict: 'C', 
+        link: function(scope, element, attrs) {
+            element.unbind('click');
+            element.bind('click', function(evt) {
+                // Store information of clicked shift
+                scope.setActiveShiftInfo(evt.currentTarget.dataset.dayWeek, evt.currentTarget.dataset.startTime,
+                    evt.currentTarget.dataset.endTime);
+                console.log(scope.activeShift);
+            });
+        }
+    };
+})
+
+.directive('createTemplateShift', function() {
+    return {
+        restrict: 'C', 
+        link: function(scope, element, attrs) {
+            element.unbind('click');
+            element.bind('click', function(evt) {
+                var employeeId = $('select[name="addShiftEmployee"]').children(":selected").attr("id");
+                console.log(employeeId);
+                console.log(scope.activeShift);
+                scope.createTemplateShift(scope.activeShift["day"], scope.activeShift["startTime"], 
+                scope.activeShift["endTime"], employeeId, scope.currentScheduleId);
+                console.log(scope.activeShift["day"], scope.activeShift["startTime"], 
+                scope.activeShift["endTime"], employeeId, scope.currentScheduleId);
+                location.reload();
+            });
+        }
+    };
+})
