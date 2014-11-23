@@ -1,7 +1,5 @@
 /**
- * All the functions related to manipulating and retrieving information
- * from the Shift database
- *
+ * All the functions related to manipulating and retrieving information from the Shift database.
  * @author: Vicky Gong, Lily Seropian
  */
 
@@ -12,18 +10,15 @@ var datejs = require('../public/javascripts/libraries/date');
 module.exports = {};
 
 /**
- * Create a shift 
- *
- * @param {String} day: what day of the week the shift is on
- * @param {String} startTime: time the shift starts
- * @param {String} endTime: time the shift ends
- * @param {ObjectId} employeeId: id of the employee responsible for the shift
- * @param {ObjectId} scheduleId: id of the schedule with which the shift is associated
- * @param {ObjectId} templateShiftId: id of the template from which the shift is generated
- * @param {Date} date: date of shift
- * @param {function} fn: callback function
- * 
- * @return ---
+ * Create a shift.
+ * @param {String}   day             What day of the week the shift is on.
+ * @param {String}   startTime       Time the shift starts.
+ * @param {String}   endTime         Time the shift ends.
+ * @param {ObjectId} employeeId      The id of the employee responsible for the shift.
+ * @param {ObjectId} scheduleId      The id of the schedule with which the shift is associated.
+ * @param {ObjectId} templateShiftId The id of the template from which the shift is generated.
+ * @param {Date}     date            Date of shift.
+ * @param {Function} fn              Callback that takes (err, shift).
  */
 module.exports.createShift = function(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn) {
     var shift = new Shift({
@@ -41,20 +36,16 @@ module.exports.createShift = function(day, startTime, endTime, employeeId, sched
 };
 
 /**
-* Delete all shifts based on the same template shift
-*
-* @param {ObjectId} templateShiftId: id of the template shift
-* @param {function} fn: callback function
-*
-* @return ---
+* Delete all shifts based on the same template shift.
+* @param {ObjectId} templateShiftId The id of the template shift.
+* @param {Function} fn              Callback that takes (err, shift).
 */
 module.exports.deleteShiftsGeneratedFromTemplateShift = function(templateShiftId, fn) {
     Shift.remove({templateShift: templateShiftId}, fn);
 };
 
 /**
-* Creates a shift from the template shift for the next <day of week>
-* since the given date
+* Creates a shift from the template shift for the next <day of week> since the given date.
 *
 *   Ex. TemplateShift occurs on Tuesday 5 PM - 6 PM
 *       next = 1
@@ -64,12 +55,10 @@ module.exports.deleteShiftsGeneratedFromTemplateShift = function(templateShiftId
 *   Ex. next = 2
         Creates a shift for the next next Tuesday that occurs after today
 *       
-* @param {ObjectId} templateShiftId     template shift id to copy from
-* @param {int} next:                    times to skip to the next day
-* @param {Date} dateFrom:               date calculated from or Date.now() if none
-* @param {function} fn:                 callback function
-*
-* @return ---
+* @param {ObjectId} templateShiftId Template shift id to copy from.
+* @param {int}      next            Times to skip to the next day.
+* @param {Date}     dateFrom        Date calculated from or Date.now() if none.
+* @param {Function} fn              Callback that takes (err, shift).
 */
 module.exports.createShiftFromTemplateShift = function(templateShiftId, next, dateFrom, fn){
     TemplateShift.findById(templateShiftId, function(err, templateShift){
@@ -94,26 +83,20 @@ module.exports.createShiftFromTemplateShift = function(templateShiftId, next, da
 }
 
 /**
- * Put a shift up for grabs
- *
- * @param {ObjectId} shiftId: id of the shift to be put up for grabs
- * @param {function} fn: callback function
- * 
- * @return ---
+ * Put a shift up for grabs.
+ * @param {ObjectId} shiftId The id of the shift to be put up for grabs.
+ * @param {ObjectId} employeeId The id of the employee that is putting the shift up for grabs.
+ * @param {Function} fn      Callback that takes (err, shift).
  */
 module.exports.putUpForGrabs = function(shiftId, employeeId, fn) {
     Shift.findOneAndUpdate({_id: shiftId, responsiblePerson: employeeId}, {upForGrabs: true}, fn);
 };
 
 /**
- * Grab a shift and give the shift's responbility to another
- * employee
- * 
- * @param {ObjectId} shiftId: id of the shift 
- * @param {ObjectId} employeeId: id of the employee that will take the shift 
- * @param {function} fn: callback function
- *
- * @return ---
+ * Grab a shift and give the shift's responbility to another employee.
+ * @param {ObjectId} shiftId    The id of the shift.
+ * @param {ObjectId} employeeId The id of the employee that will take the shift.
+ * @param {Function} fn         Callback that takes (err, shift).
  */
 module.exports.giveShiftTo = function(shiftId, employeeId, fn) {
     Shift.findById(shiftId).populate('responsiblePerson').exec(function(err, shift) {
@@ -132,12 +115,9 @@ module.exports.giveShiftTo = function(shiftId, employeeId, fn) {
 };
 
 /**
- * Mark a shift is up for swap
- *
- * @param {ObjectId} shiftId: id of the shift to be put up for swap
- * @param {function} fn: callback function
- *
- * @return ---
+ * Mark a shift is up for swap.
+ * @param {ObjectId} shiftId The id of the shift to be put up for swap.
+ * @param {Function} fn      Callback that takes (err, shift).
  */
 module.exports.putUpForTrade = function(shiftId, fn) {
     Shift.findByIdAndUpdate(shiftId, {upForSwap: true}, fn);
@@ -146,17 +126,13 @@ module.exports.putUpForTrade = function(shiftId, fn) {
 
 
 /**
- * Switch the people responsible for the two given shifts
- *
- * @param {ObjectId} shiftIdA: id of the first shift
- * @param {ObjectId} shiftIdB: id of the second shift
- * @param {ObjectId} employeeIdA: id of the employee that is the owner of ShiftA
- * @param {ObjectId} employeeIdB: id of the employee that is the owner of ShiftB
- * @param {function} fn: callback function
- *   
- * @return ---
+ * Switch the people responsible for the two given shifts.
  * 
- * TODO: if the 2nd fails to occur, the first still occurs
+ * TODO: if the 2nd fails to occur, the first still occurs.
+ * 
+ * @param {ObjectId} shiftIdA The id of the first shift.
+ * @param {ObjectId} shiftIdB The id of the second shift.
+ * @param {Function} fn       Callback that takes (err, shift[]).
  */
 module.exports.tradeShifts = function(shiftIdA, shiftIdB, fn) {
     // Updating shiftA
@@ -184,29 +160,19 @@ module.exports.tradeShifts = function(shiftIdA, shiftIdB, fn) {
     });
 }
 
-module.exports.getShift = function(shiftId, fn) {
-    Shift.findOne({_id: '5467d03e11f40ea52059c6ae'}, fn);
-}
-
 /**
- * Get all shifts associated with a user
- *
- * @param {ObjectId} employeeId: id of the employee
- * @param {function} fn: callback function
- *
- * @return ---
+ * Get all shifts associated with a user.
+ * @param {ObjectId} employeeId The id of the employee to get shifts for.
+ * @param {Function} fn         Callback that takes (err, shift[]).
  */
 module.exports.getAllUserShifts = function(employeeId, fn) {
     Shift.find({responsiblePerson: employeeId}, fn);
 }
 
 /**
- * Get all shifts associated with a schedule
- *
- * @param {ObjectId} scheduleId: id of the schedule
- * @param {function} fn: callback function
- *
- * @return ---
+ * Get all shifts associated with a schedule to get shifts for.
+ * @param {ObjectId} scheduleId The id of the schedule.
+ * @param {Function} fn         Callback that takes (err, shift[]).
  */
 module.exports.getAllShiftsOnASchedule = function(scheduleId, fn) {
     Shift.find({schedule: scheduleId})
@@ -215,24 +181,18 @@ module.exports.getAllShiftsOnASchedule = function(scheduleId, fn) {
 }
 
 /**
- * Get all shifts currently on open offer
- * 
- * @param {ObjectId} scheduleId: id of the schedule
- * @param {function} fn: callback function
- *
- * @return ---
+ * Get all shifts currently on open offer.
+ * @param {ObjectId} scheduleId The id of the schedule to get shifts for.
+ * @param {Function} fn         Callback that takes (err, shift[]).
  */
 module.exports.getOfferedShiftsOnASchedule = function(scheduleId, fn) {
     Shift.find({schedule: scheduleId, upForGrabs: true}, fn);
 }
 
 /**
- * Get all shifts currently up for grabs
- * 
- * @param {ObjectId} scheduleId: id of the schedule
- * @param {function} fn: callback function
- *
- * @return ---
+ * Get all shifts currently up for grabs.
+ * @param {ObjectId} scheduleId The id of the schedule to get shifts for.
+ * @param {Function} fn         Callback that takes (err, shift[]).
  */
 module.exports.getShiftsUpForSwapOnASchedule = function(scheduleId, fn) {
     Shift.find({schedule: scheduleId, upForSwap: true}, fn);

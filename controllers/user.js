@@ -1,9 +1,11 @@
 /**
- * All the functions related to manipulating and retrieving information
- * from the User database
+ * All the functions related to manipulating and retrieving information from the User database.
  *
+ * TODO: fix error handling
+ * 
  * @author: Anji Ren, Lily Seropian, Dylan Joss
  */
+
 var User = require('../models/user');
 var ManagerUser = require('../models/manager-user');
 var EmployeeUser = require('../models/employee-user');
@@ -11,24 +13,14 @@ var OrgController   = require('../controllers/organization');
 var errors = require('../errors/errors');
 module.exports = {};
 
-var getUserModel = module.exports.getUserModel = function(type) {
-    if (type.toLowerCase() == 'manager') {
-        return ManagerUser;
-    } 
-    else if (type.toLowerCase() == 'employee') {
-        return EmployeeUser;
-    }
-    throw new Error('Unknown account type:', type);
-}
-
 /**
- * Function to create a user
- * @param {String} name:          user full name
- * @param {String} email:         user email
- * @param {String} password:      user password
- * @param {String} org:           organization user is part of
- * @param {Number} scheduleID:    a user's scheduleID (null if the user is a manager)
- * @param {function} callback:    callback function
+ * Create a user.
+ * @param {String}   name       User full name.
+ * @param {String}   email      User email.
+ * @param {String}   password   User password.
+ * @param {String}   org        Organization user is part of.
+ * @param {Number}   scheduleID A user's scheduleID (null if the user is a manager).
+ * @param {Function} callback   Callback that takes (err, user).
  */
 module.exports.createUser = function(name, email, password, org, scheduleID, callback) {    
     var userModel;
@@ -67,11 +59,10 @@ module.exports.createUser = function(name, email, password, org, scheduleID, cal
 };
 
 /**
- * Function to retrieve existing user
- * @param {String} email:         user email
- * @param {String} org:           organization user is part of
- * @param {function} callback:    callback function - called with user, if
- *                                found, otherwise with error
+ * Retrieve existing user.
+ * @param {String}   email    User email.
+ * @param {String}   org      Organization user is part of.
+ * @param {Function} callback Callback that takes (err, user).
  */
 module.exports.retrieveUser = function(email, org, callback) {
     User.findOne({email: email, org: org}, function(err, user) {
@@ -86,10 +77,9 @@ module.exports.retrieveUser = function(email, org, callback) {
 };
 
 /**
- * Function to retrieve existing employee by id
- * @param {ObjectId} id:          employee id
- * @param {function} callback:    callback function - called with employee, if
- *                                found, otherwise with error
+ * Retrieve existing employee by id.
+ * @param {ObjectId} id       Employee id.
+ * @param {Function} callback Callback that takes (err, user).
  */
 module.exports.retrieveEmployeeById = function(id, callback) {
     EmployeeUser.findById(id, function(err, employeeUser) {
@@ -104,10 +94,9 @@ module.exports.retrieveEmployeeById = function(id, callback) {
 };
 
 /**
- * Function to retrieve existing manager by id
- * @param {ObjectId} id:          manager id
- * @param {function} callback:    callback function - called with manager, if
- *                                found, otherwise with error
+ * Retrieve existing manager by id.
+ * @param {ObjectId} id       Manager id.
+ * @param {Function} callback Callback that takes (err, user).
  */
 module.exports.retrieveManagerById = function(id, callback) {
     ManagerUser.findById(id, function(err, managerUser) {
@@ -122,10 +111,9 @@ module.exports.retrieveManagerById = function(id, callback) {
 };
 
 /** 
- * Function to retrieve all employees associated with the org with the id
- * @param {ObjectId} id:          org id
- * @param {function} callback:    callback function - called with employees, if
- *                                found, otherwise with error
+ * Retrieve all employees associated with the org with the id.
+ * @param {ObjectId} id       Org id.
+ * @param {Function} callback Callback that takes (err, user).
  */
 module.exports.retrieveEmployeesByOrgId = function(id, callback) {
     EmployeeUser.find({org: id}, function(err, employeeUsers) {
@@ -139,11 +127,10 @@ module.exports.retrieveEmployeesByOrgId = function(id, callback) {
     });
 };
 
- /** 
- * Function to retrieve all managers associated with the org with the id
- * @param {ObjectId} id:          org id
- * @param {function} callback:    callback function - called with managers, if
- *                                found, otherwise with error
+/** 
+ * Retrieve all managers associated with the org with the id.
+ * @param {ObjectId} id       Org id.
+ * @param {Function} callback Callback that takes (err, user).
  */
 module.exports.retrieveManagersByOrgId = function(id, callback) {
     ManagerUser.find({org: id}, function(err, managerUsers) {
@@ -157,11 +144,10 @@ module.exports.retrieveManagersByOrgId = function(id, callback) {
     });
 };
 
- /** 
- * Function to retrieve all employees associated with the schedule with the id
- * @param {ObjectId} id:          org id
- * @param {function} callback:    callback function - called with employees, if
- *                                found, otherwise with error
+/** 
+ * Retrieve all employees associated with the schedule with the id.
+ * @param {ObjectId} id       Org id.
+ * @param {Function} callback Callback that takes (err, user).
  */
 module.exports.retrieveEmployeesByScheduleId = function(id, callback) {
     EmployeeUser.find({schedule: id}, function(err, employeeUsers) {
@@ -175,45 +161,38 @@ module.exports.retrieveEmployeesByScheduleId = function(id, callback) {
     });
 };
 
- /** 
- * Function that checks if given user is in the organization
- *
- * @param {ObjectId} userEmail:       user email
- * @param {String} orgName:           name of organization
- * @param {Function} fn:              callback function
+/** 
+ * Check if given user is in the organization.
+ * @param {ObjectId} userEmail User email.
+ * @param {String}   orgName   Name of organization.
+ * @param {Function} callback  Callback that takes (err, user).
  */
 module.exports.isUserOfOrganization = function(userEmail, orgName, fn){
-    User.findOne({email: userEmail, org: orgName}, 
-        function(err, user){
-            fn(err, !err && user);
-        });
+    User.findOne({email: userEmail, org: orgName}, function(err, user) {
+        fn(err, !err && user);
+    });
 }
 
- /** 
- * Function that checks if given user is a manager of the organization
- *
- * @param {ObjectId} userEmail:       userEmail
- * @param {String} orgName:           name of organization
- * @param {Function} fn:              callback function
+/** 
+ * Check if given user is a manager of the organization.
+ * @param {ObjectId} userEmail User email.
+ * @param {String}   orgName   Name of organization.
+ * @param {Function} callback  Callback that takes (err, user).
  */
 module.exports.isManagerOfOrganization = function(userEmail, orgName, fn){
-    ManagerUser.findOne({email: userEmail, org: orgName}, 
-        function(err, manager){
-            fn(err, !err && manager);
-        });
+    ManagerUser.findOne({email: userEmail, org: orgName}, function(err, manager) {
+        fn(err, !err && manager);
+    });
 }
 
- /** 
- * Function that checks if given user is a member of the schedule
- *
- * @param {ObjectId} userEmail:       userEmail
- * @param {String} scheduleId:        id of schedule
- * @param {Function} fn:              callback function
+/** 
+ * Check if given user is a member of the schedule.
+ * @param {ObjectId} userEmail  User email.
+ * @param {String}   scheduleId The id of schedule.
+ * @param {Function} callback   Callback that takes (err, user).
  */
 module.exports.isEmployeeOfRole = function(userEmail, scheduleId, fn){
-    EmployeeUser.findOne({email: userEmail, schedule: scheduleId}, 
-        function(err, employee){
-            fn(err, !err && employee);
-        });
+    EmployeeUser.findOne({email: userEmail, schedule: scheduleId}, function(err, employee) {
+        fn(err, !err && employee);
+    });
 }
-
