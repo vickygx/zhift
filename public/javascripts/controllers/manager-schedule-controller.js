@@ -164,7 +164,8 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         $scope.activeShift = {
             day: day,
             startTime: hourToHHMM(startTime),
-            endTime: hourToHHMM(endTime)
+            endTime: hourToHHMM(endTime),
+            scheduleId: $scope.currentScheduleId
         }
         $scope.$apply();
     }
@@ -229,9 +230,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
                 console.log(employeeId);
                 console.log(scope.activeShift);
                 scope.createTemplateShift(scope.activeShift["day"], scope.activeShift["startTime"], 
-                scope.activeShift["endTime"], employeeId, scope.currentScheduleId);
-                console.log(scope.activeShift["day"], scope.activeShift["startTime"], 
-                scope.activeShift["endTime"], employeeId, scope.currentScheduleId);
+                scope.activeShift["endTime"], employeeId, scope.activeShfit["scheduleId"]);
                 location.reload();
             });
         }
