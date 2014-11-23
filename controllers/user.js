@@ -19,10 +19,12 @@ module.exports = {};
  * @param {String}   email      User email.
  * @param {String}   password   User password.
  * @param {String}   org        Organization user is part of.
- * @param {Number}   scheduleID A user's scheduleID (null if the user is a manager).
+ * @param {Number}   scheduleID A user's scheduleID (not set if the user is a manager).
  * @param {Function} callback   Callback that takes (err, user).
  */
 module.exports.createUser = function(name, email, password, org, scheduleID, callback) {    
+    console.log('scheduleID:', scheduleID);
+
     var userModel;
 
     var userData = {
@@ -40,6 +42,8 @@ module.exports.createUser = function(name, email, password, org, scheduleID, cal
     else {
         userModel = ManagerUser;
     }
+
+    console.log(userData);
 
     var newUser = new userModel(userData);
     var newUserCopy = new User(userData);
