@@ -24,7 +24,6 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
         // Populating templates based on current schedule
         getShifts($scope.currentScheduleId, function(err) {
             $scope.$apply();
-            console.log($scope.shiftsByDay);
         });
        
 
