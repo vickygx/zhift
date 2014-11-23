@@ -1,7 +1,11 @@
-/*  All the routes relating to organizations
-    
-    @author: Vicky Gong 
-*/
+/**
+ * All the routes relating to organizations.
+ *
+ * TODO: error handling, permissions
+ * 
+ * @author: Vicky Gong 
+ */
+
 var express = require('express');
 var router = express.Router();
 
@@ -10,34 +14,34 @@ var OrgController = require('../controllers/organization');
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express through org for now' });
-});
-
-/* POST request to create organization */
+/**
+ * POST to create a new organization.
+ * Request body should contain:
+ *     {String} name The name of the organization to create.
+ * Response body contains:
+ *     {Organization} The created organization.
+ */
 router.post('/', function(req, res, next) {
-    // TODO: error handling
     OrgController.createOrg(req.body.name, function(err, org) {
         if (err) {
-            next(err);
-        } 
-        else {
-            res.send(org);
+            return next(err);
         }
+        res.send(org);
     });
 });
 
-/* GET request to get org with name */
-router.get('/:name', function(req, res, next) {
-    // TODO: error handling
-    OrgController.retrieveOrg(req.param('name'), function(err, org) {
+/**
+ * GET org by name.
+ * No request body parameters required.
+ * Response body contains:
+ *     {Organization} The retrieved organization.
+ */
+router.get('/:id', function(req, res, next) {
+    OrgController.retrieveOrg(req.param('id'), function(err, org) {
         if (err) {
-            next(err);
+            return next(err);
         } 
-        else {
-            res.send(org);
-        }
+        res.send(org);
     });
 });
 

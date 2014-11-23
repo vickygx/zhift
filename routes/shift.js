@@ -1,7 +1,9 @@
 /**
- * All the routes relating to shifts
+ * All the routes relating to shifts.
  * 
- * @author: Vicky Gong, Lily Seropian
+ * TODO: error handling, permissions.
+ * 
+ * @author: Lily Seropian, Vicky Gong
  */
 
 var express = require('express');
@@ -9,204 +11,201 @@ var router = express.Router();
 
 // Controllers
 var ShiftController = require('../controllers/shift');
+var UserController = require('../controllers/user');
+var RecordController = require('../controllers/record');
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
+var datejs = require('../public/javascripts/libraries/date');
 
 router.get('/', function(req, res, next) {
-    res.render('shift/test_shift', {title: 'shift calendar testing'});
+    res.render('shift/test_shift', {title: 'shift calendar testing', user: req.user});
 });
 
-/*  POST request to create shift */
+/**
+ * POST to create a new shift.
+ * Request body should contain:
+ *     {String}   day             [REMOVE]
+ *     {String}   startTime       [REMOVE]
+ *     {String}   endTime         [REMOVE]
+ *     {ObjectId} employeeId      [REMOVE]
+ *     {ObjectId} scheduleId      [REMOVE]
+ *     {ObjectId} templateShiftId The id of the template shift from which to generate the shift.
+ *     {Date}     date            The date on which the shift occurs.
+ * Response body contains:
+ *     {Shift} The created shift.
+ */
 router.post('/', function(req, res, next) {
     // Checking if permissions are correct
-    UserController.isManagerOfOrganization(req.user.email, req.user.org, 
-        function(err, isManager){
+    // TODO: replace with req.session.isManager
+    UserController.isManagerOfOrganization(req.user.email, req.user.org, function(err, isManager) {
+        if (isManager) {
+            // TODO: generate from template shift, don't require day/startTime/endTime/employeeId/schedulEid
+            day = req.body.day;
+            startTime = req.body.startTime;
+            endTime = req.body.endTime;
+            employee = req.body.employeeId;
+            schedule = req.body.scheduleId;
+            templateShift = req.body.templateShiftId;
+            date = req.body.date;
 
-            // If the user is a manager, create the shift
-            if (isManager){
-
-                // Getting parameters
-                day = req.body.day;
-                startTime = req.body.startTime;
-                endTime = req.body.endTime;
-                employee = req.body.employeeId;
-                schedule = req.body.scheduleId;
-                templateShift = req.body.templateShiftId;
-                date = req.body.date;
-
-                // TODO sanitize parameters? / make sure they exist?
-
-                ShiftController.createShift(day, startTime, endTime, employee, schedule, templateShift, date, function(err, shift) {
-                    // TODO: cover all error cases / send proper error
-                    if (err) {
-                        // we can send custom errors instead
-                        next(err);
-                    } 
-                    else {
-                        res.send(shift);
-                    }
-                });
-                
-            }
-            // Else, send error message
-            else {
-                // TODO: temporary json, replace with proper error
-                res.send({message: 'error: you are not a manager. cannot create shift'});
-            }
-        });
-
-});
-
-/*  GET request to get a shift given an id */
-router.get('/:id', function(req, res, next) {
-    
-    // Checking if permissions are correct
-    UserController.isUserOfOrganization(req.user.email, req.user.org, 
-        function(err, isUser){   
-
-            // If the user is in organization, get the shift
-            if (isUser){
-                ShiftController.getShift(req.param('id'), function(err, shift) {
-                    if (err) {
-                        next(err);
-                    } else {
-                        res.send(shift);
-                    }
-                })
-            }
-            // Else, send error message
-            else {
-                // TODO: temporary json, replace with proper error
-                res.send({message: 'error: you are not a user. cannot get shift'});
-            }
-        });
-
-});
-
-/*  GET request to get all shifts associated with a user*/
-router.get('/user/:userid', function(req, res, next) {
-    // Checking if logged in user is userid
-    var isOwner = req.param('userid') === req.user._id;
-
-    // Checking if permissions are correct
-    UserController.isManagerOfOrganization(req.user.email, req.user.org, 
-        function(err, isManager){
-
-            // If the user is a manager, delete the schedule
-            if (isManager || isOwner){
-                ShiftController.getAllUserShifts(req.param('userid'), function(err, shifts) {
-                    // TODO: error handling
-                    if (err) {
-                        next(err);
-                    } 
-                    else if (shifts){
-                        res.send({'shifts': shifts});
-                    } 
-                    else {
-                        next(errors.users.invalidUserId);
-                    }
-                });
-                
-            }
-            // Else, send error message
-            else {
-                // TODO: temporary json, replace with proper error
-                res.send({message: 'error: you are not a manager. cannot delete'});
-            }
-        });
-    
-});
-
-
-/*  GET request to get all shifts associated with a schedule */
-router.get('/all/:scheduleid', function(req, res, next) {
-    
-    ShiftController.getAllShiftsOnASchedule(req.param('scheduleid'), function(err, shifts) {
-        if (err) {
-            next(err);
-        } 
-        else if (shifts) {
-            res.send(shifts);
-        } 
+            ShiftController.createShift(day, startTime, endTime, employee, schedule, templateShift, date, function(err, shift) {
+                if (err) {
+                    return next(err);
+                }
+                res.send(shift);
+            });
+        }
         else {
-            next(errors.schedules.invalidScheduleId);
+            res.status(403).send({message: 'error: you are not a manager. cannot create shift'});
         }
     });
 });
 
+/**
+ * GET a shift.
+ * No request body parameters required.
+ * Response body contains:
+ *     {Shift} The retrieved shift.
+ */
+router.get('/:id', function(req, res, next) {
+    ShiftController.getShift(req.param('id'), function(err, shift) {
+        if (err) {
+            return next(err);
+        }
+        if (shift.responsiblePerson.org !== req.user.org) {
+            return res.status(403).send({message: 'error: you are not a user of this org. cannot get shift'});
+        }
+        res.send(shift);
+    });
+});
 
-/*  POST request to put shift up for grabs */
-router.put('/putUpForGrabs/:id', function(req, res, next) {
-    // Only owner of shift can put a shift up for grabs
-    var isOwner = req.param('userid') === req.user._id;
+/**
+ * GET all shifts associated with an employee.
+ * No request body parameters required.
+ * Response body contains:
+ *     {Shift[]} The retrieved shifts.
+ */
+router.get('/user/:id', function(req, res, next) {
+    // Checking if logged in user is userid
+    if(req.param('id') !== req.user._id.toString() && !req.session.isManager) {
+        return res.status(403).send({message: 'error: you are not a manager or the owner of this shift. cannot get'});
+    }
 
-    if (isOwner){
-        ShiftController.putUpForGrabs(req.param('id'), function(err, shift) {
-            if (err) {
-                next(err);
-            } 
-            else if (shift){
-                res.send(shift);
-            } 
-            else {
-                next(errors.shifts.invalidShiftId);
+    if (req.session.isManager) {
+        UserController.retrieveEmployeeById(req.param('id'), function(err, employee) {
+            if (req.session.org !== employee.org) {
+                return res.status(403).send({message: 'error: you are not a manager for this employee. cannot get'});
             }
         });
     }
-    else {
-        next(errors.shifts.notOwnerOfShift);
-    }
-    
+
+    ShiftController.getAllUserShifts(req.param('id'), function(err, shifts) {
+        if (err) {
+            return next(err);
+        }
+        if (!shifts) {
+            return next(errors.users.invalidUserId);
+        }
+        res.send(shifts);
+    });
 });
 
 
-/*  GET request to get all shifts being offered associated with a schedule */
-router.get('/upForGrabs/:scheduleid', function(req, res, next) {
+/**
+ * GET all shifts associated with a schedule.
+ * No request body parameters required.
+ * Response body contains:
+ *     {Shift[]} The retrieved shifts.
+ */
+router.get('/all/:id', function(req, res, next) {
+    ShiftController.getAllShiftsOnASchedule(req.param('id'), function(err, shifts) {
+        if (err) {
+            return next(err);
+        }
+        if (!shifts) {
+            return next(errors.schedules.invalidScheduleId);
+        }
+        res.send(shifts);
+    });
+});
 
+
+/**
+ * PUT shift up for grabs.
+ * No request body parameters required.
+ * Response body contains:
+ *     {Shift} The shift put up for grabs.
+ */
+router.put('/upForGrabs/:id', function(req, res, next) {
+    // putUpForGrabs checks that current user is owner of the shift
+    ShiftController.putUpForGrabs(req.param('id'), req.user._id.toString(), function(err, shift) {
+        if (err) {
+            return next(err);
+        }
+        if (!shift) {
+            return next(errors.shifts.invalidShiftId);
+        }
+        RecordController.recordShiftUpForGrabs(req.session.managerEmails, req.user.name, shift);
+        res.send(shift);
+    });
+});
+
+
+/**
+ * GET all shifts up for grabs on a schedule.
+ * No request body parameters required.
+ * Response body contains:
+ *     {Shift[]} The shifts up for grabs.
+ */
+router.get('/upForGrabs/:scheduleid', function(req, res, next) {
     ShiftController.getOfferedShiftsOnASchedule(req.param('scheduleid'), function(err, shifts) {
         if (err) {
-            next(err);
+            return next(err);
         }
-        else if (shifts) {
-            res.send({'shifts': shifts});
+        else if (!shifts) {
+            return next(errors.schedules.invalidScheduleId);
         }
-        else {
-            next(errors.schedules.invalidScheduleId);
-        }
+        res.send(shifts);
     });
 });
 
-/*  GET request to get all shifts being offered for swapping */
+/**
+ * GET all shifts up for swap on a schedule.
+ * No request body parameters required.
+ * Response body contains:
+ *     {Shift[]} The shifts up for swap.
+ */
 router.get('/upForSwap/:scheduleid', function(req, res, next) {
-
     ShiftController.getShiftsUpForSwapOnASchedule(req.param('scheduleid'), function(err, shifts) {
         if (err) {
-            next(err);
+            return next(err);
         }
-        else if (shifts) {
-            res.send({'shifts': shifts});
+        else if (!shifts) {
+            return next(errors.schedules.invalidScheduleId);
         }
-        else {
-            next(errors.schedules.invalidScheduleId);
-        }
+        res.send(shifts);
     });
 });
 
-/*  PUT request to claim a given shift by user who is logged in */
+/**
+ * PUT claim a given shift.
+ * No request body parameters required.
+ * Response body contains:
+ *     {Shift} The claimed shift.
+ */
 router.put('/claim/:id', function(req, res, next) {
-    // TODO: Make sure user logged in is in same schedule as shift to claim
-
-    ShiftController.giveShiftTo(req.param('id'), req.body.employeeId, function(err, shift) {
-        // TODO : error handling
+    ShiftController.giveShiftTo(req.param('id'), req.body.employeeId, function(err, shift, originalOwner) {
         if (err) {
-            next(err);
+            return next(err);
         }
-        else if (shift) {
-            res.send(shift);
+        if (!shift) {
+            return next(errors.schedules.invalidShiftId);
         }
-        else {
-            next(errors.schedules.invalidShiftId);
-        }
+        var emails = req.session.managerEmails.slice(0);
+        emails.push(originalOwner.email, req.user.email);
+        RecordController.recordShiftClaim(emails, originalOwner.name, req.user.name, shift);
+
+        res.send(shift);
     });
 });
 

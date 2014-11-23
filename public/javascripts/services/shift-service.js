@@ -2,6 +2,7 @@
  * ShiftsService
  *
  * Angular Service for shifts mixin.
+ * TODO: Error handling
  * 
  * @author: Lily Seropian, Vicky Gong
  */
@@ -16,9 +17,8 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: 'shift/all/' + scheduleId,
             }).success(function(res) {
-                callback(res);
+                callback(null,res);
             }).error(function(res){
-                // TODO: error handling
                 callback(res);
             });
         },
@@ -29,9 +29,8 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: 'shift/user/' + employeeId,
             }).success(function(res) {
-                callback(res.shifts);
+                callback(res);
             }).error(function(res){
-                // TODO: error handling
                 callback(res);
             });
         },
@@ -42,9 +41,8 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: 'shift/upForGrabs/' + scheduleId,
             }).success(function(res) {
-                callback(res.shifts);
+                callback(res);
             }).error(function(res){
-                // TODO: error handling
                 callback(res);
             });
         },
@@ -55,9 +53,8 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: 'shift/upForSwap/' + scheduleId,
             }).success(function(res) {
-                callback(res.shifts);
+                callback(res);
             }).error(function(res){
-                // TODO: error handling
                 callback(res);
             });
         },
@@ -66,11 +63,10 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             $.ajax({
                 datatype: 'json',
                 type: 'PUT',
-                url: 'shift/putUpForGrabs/' + shiftId,
+                url: 'shift/upForGrabs/' + shiftId,
             }).success(function(res) {
                 callback(res);
             }).error(function(res) {
-                // TODO: error handling
                 callback(res);
             });
         },
@@ -86,8 +82,30 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(res);
             }).error(function(res) {
-                // TODO: error handling
                 callback(res);
+            });
+        },
+
+        createShift: function(day, startTime, endTime, employeeId, scheduleId, date, templateShiftId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'POST',
+                url: '/shift/',
+                data: {
+                    day: day,
+                    startTime: startTime,
+                    endTime: endTime,
+                    employeeId: employeeId,
+                    scheduleId: scheduleId,
+                    date: date,
+                    templateShiftId: templateShiftId
+                },
+            }).success(function(res) {
+                callback(res);
+            }).error(function(res) {
+                // TODO: error handling
+                console.log(res.responseText);
+                callback(res.responseText);
             });
         }
     };

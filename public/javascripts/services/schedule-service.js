@@ -42,6 +42,18 @@ ZhiftApp.service('ScheduleService', ['$rootScope', function($rootScope) {
                 callback(res.responseText);
             });
         },
+
+        getSchedule: function(scheduleId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'GET',
+                url: '/schedule/' + scheduleId,
+            }).success(function(res) {
+                callback(res);
+            }).error(function(res) {
+                callback(res.responseText);
+            });
+        },
     };
   
     return service;

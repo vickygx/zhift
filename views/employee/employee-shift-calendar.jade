@@ -1,0 +1,46 @@
+block head
+    link(rel="stylesheet", href="stylesheets/shift-calendar/shift-calendar.css")
+    script(type="text/javascript", src="/javascripts/controllers/employee-schedule-controller.js")
+    script(type="text/javascript", src="/javascripts/services/schedule-service.js")
+    script(type="text/javascript", src="/javascripts/services/shift-service.js")
+    //- TODO: move this to layout?
+
+mixin employee-shift-calendar(org, scheduleId)
+    div(id="shift-calendar" ng-controller="EmployeeScheduleController" ng-init="init('#{org}', '#{scheduleId}')")
+        div.date-tabs-container
+            //- should be a tab to change date range
+        div(id="shift-schedule")
+            div.cal-column
+                div.cal-col-title 
+                div.events
+                    div.event-box.heading.time-label(data-ng-repeat="hour in ['12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM']") {{hour}}
+            div.cal-column(data-ng-repeat="day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']")
+                div.cal-col-title.heading {{day}}
+                div.events
+                    div.event-box.open-event-slot(
+                        data-ng-repeat="hour in [12,1,2,3,4,5]")
+                        //- TODO: if shift is own shift, add ability to pop up (TRADE/PUT) modal
+                        //- TODO: if shift is not own shift, + is put up, add ability to pop up (GRAB/TRADE) modal
+                        div.shift(data-ng-repeat="shift in shiftsByDay[day][hour]")
+                            //- TODO: add shift ID to shift. Add person id somewhere too
+                            p End: {{shift.end}}
+                            p Responsible: {{shift.responsiblePerson.name}}
+
+        div.modal.fade#reassignShiftModal
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button(type="button" class="close" data-dismiss="modal")
+                            span(aria-hidden="true") &times;
+                            span.sr-only Close 
+                        h4.modal-title Reassign shift to:
+                    div.modal-body
+                        form.form-horizontal
+                            div.form-group
+                                div.col-lg-10
+                                    select.form-control
+                                        option(data-ng-repeat="employee in ['Mary', 'Mark', 'Rachel']") {{employee}}
+                    div.modal-footer
+                        button.btn.btn-default(type="button" data-dismiss="modal") Close
+
+       

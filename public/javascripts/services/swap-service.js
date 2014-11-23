@@ -2,6 +2,7 @@
  * SwapService
  *
  * Angular Service for swaps.
+ * TODO: error handling
  * 
  * @author: Lily Seropian
  */
@@ -22,8 +23,6 @@ ZhiftApp.service('SwapService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(res);
             }).error(function(res){
-                // TODO: error handling
-                console.log(res);
                 callback(res);
             });
         },
@@ -39,7 +38,6 @@ ZhiftApp.service('SwapService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(res);
             }).error(function(res){
-                // TODO: error handling
                 callback(res);
             });
         },
@@ -52,7 +50,6 @@ ZhiftApp.service('SwapService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(res);
             }).error(function(res){
-                // TODO: error handling
                 callback(res);
             });
         },
@@ -68,7 +65,21 @@ ZhiftApp.service('SwapService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(res);
             }).error(function(res){
-                // TODO: error handling
+                callback(res);
+            });
+        },
+
+        rejectSwap: function(swapId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'PUT',
+                url: '/swap/' + swapId,
+                data: {
+                    acceptSwap: false,
+                }
+            }).success(function(res) {
+                callback(res);
+            }).error(function(res){
                 callback(res);
             });
         }

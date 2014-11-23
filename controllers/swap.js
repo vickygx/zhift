@@ -1,108 +1,118 @@
-/*  All the functions related to manipulating and retrieving information 
-    from the Swap database
+/**
+ * All the functions related to manipulating and retrieving information from the Swap database.
+ * @author: Vicky Gong, Lily Seropian
+ */
 
-    @author: Vicky Gong, Lily Seropian
-*/
 var Swap = require('../models/swap');
 var Shift = require('../models/shift');
 var ShiftController = require('./shift');
 var errors = require('../errors/errors');
 module.exports = {};
 
-/*  Function to create a swap
-    
-    @param 
-        {ObjectId} shiftId:           what shift is being put up for swap
-        {ObjectId} scheduleId:        scheduleId of the schedule the shfit belongs to
-        {function} fn:                callback function
-    @return ---
+/**
+ * Create a Swap if the user has permission to do so.
+ * @param {ObjectId} shiftId    The id of the shift to put up for swap.
+ * @param {String}   employeeId The id of the employee putting the shift up for swap.
+ * @param {ObjectId} scheduleId The id of the schedule to which the shift belongs.
+ * @param {function} fn         Callback that takes (err, swap).
 */
-module.exports.createSwap = function(shiftId, scheduleId, fn) {
+module.exports.createSwap = function(shiftId, employeeId, scheduleId, fn) {
     // Create new Shift
     var swap = new Swap({
        shiftUpForSwap: shiftId,
        schedule: scheduleId
     });
 
-    // Add to database
-    swap.save(function(err, swap) {
-        Shift.findByIdAndUpdate(shiftId, {upForSwap: true}, function(err) {
+    // Set the shift to be up for swap; checks to make sure the requester owns the shift
+    Shift.findOneAndUpdate({_id: shiftId, responsiblePerson: employeeId}, {upForSwap: true}, function(err) {
+        if (err) {
+            return fn(err);
+        }
+        swap.save(function(err, swap) {
             if (err) {
                 return fn(err);
             }
-
-            fn(null, swap);
+            swap.populate('shiftUpForSwap', fn);
         });
     });
 };
 
+/**
+ * Get the Swap object for a shift that is up for swap.
+ * @param {String}   shiftId The id of the searched-for shift.
+ * @param {Function} fn      Callback that takes (err, swap).
+ */
 module.exports.getSwapForShift = function(shiftId, fn) {
     Swap.findOne({shiftUpForSwap: shiftId}, fn);
 }
-/*  Function to get swaps associated with a schedule
-    
-    @param 
-        {ObjectId} shiftId:           what shift is being put up for swap
-        {ObjectId} scheduleId:        scheduleId of the schedule the shfit belongs to
-        {function} fn:                callback function
-    @return ---
+
+/**
+ * Get all swaps associated with a schedule.
+ * @param {ObjectId} scheduleId The id of the schedule to search.
+ * @param {function} fn         Callback that takes (err, swap[]).
 */
 module.exports.getSwapsOnSchedule = function(scheduleId, fn) {
     Swap.find({schedule: scheduleId}, fn);
 };
 
-/*  Function to set up a shift for offer on a swap 
-    Replaces old shiftOfferedInReturn with new value
-
-    @param 
-        {ObjectId} swapId:            id of swap object to edit
-        {ObjectId} shiftId:           id of shift object to set as new shiftOfferedInReturn
-        {function} fn:                callback function
-    @return ---
-
-*/
+/**
+ * Propose a shift to give in exchange for a shift that is up for swap.
+ * @param {ObjectId} swapId  The id of the swap to edit.
+ * @param {ObjectId} shiftId The id of the shift to give in exchange.
+ * @param {function} fn      Callback that takes (err, swap).
+ */
 module.exports.offerShiftForSwap = function(swapId, shiftId, fn) {
-    console.log('offering shift for swap', swapId, shiftId);
-    Swap.findByIdAndUpdate(swapId, {shiftOfferedInReturn: shiftId}, fn);
+    Swap.findByIdAndUpdate(swapId, {shiftOfferedInReturn: shiftId}).populate('shiftUpForSwap').populate('shiftOfferedInReturn').exec(function(err, swap) {
+        swap.shiftUpForSwap.populate('responsiblePerson', function(err) {
+            return fn(err, swap);
+        });
+    });
 };
 
-/*  Function to reset shiftOfferedInReturn to be an empty value
-
-    @param 
-        {ObjectId} swapId:            id of swap object to edit
-        {function} fn:                callback function
-    @return ---
-
-*/
+/**
+ * Reject a shift proposed in exhange for a shift that is up for grabs.
+ * @param {ObjectId} swapId The id of swap containing the rejected shift.
+ * @param {function} fn     Callback that takes (err, swap).
+ */
 module.exports.resetOfferedShiftInSwap = function(swapId, fn) {
-    Swap.findByIdAndUpdate(swapId, {shiftOfferedInReturn: null}, fn);
+    Swap.findById(swapId).populate('shiftOfferedInReturn').populate('shiftUpForSwap').exec(function(err, swap) {
+        var shiftOfferedInReturn = swap.shiftOfferedInReturn;
+        swap.shiftOfferedInReturn = null;
+        swap.save(function(err, swap) {
+            shiftOfferedInReturn.populate('responsiblePerson', function(err) {
+                swap.shiftOfferedInReturn = shiftOfferedInReturn;
+                return fn(err, swap);
+            });
+        });
+    });
 };
 
-/*  Function to delete a swap
-
-    @param 
-        {ObjectId} swapId:            id of swap object to delete
-        {function} fn:                callback function
-    @return ---
-
-*/
+/**
+ * Delete a swap.
+ * @param {ObjectId} swapId The id of the swap to delete.
+ * @param {function} fn     Callback that takes (err, swap).
+ */
 module.exports.deleteSwap = function(swapId, fn) {
     Swap.findByIdAndRemove(swapId, fn);
 };
 
-module.exports.acceptSwap = function(swap_id, fn) {
-    Swap.findByIdAndRemove(swap_id, function(err, swap) {
+/**
+ * Accept a swap. Deletes the swap object and changes responsibility of the shift.
+ * @param {ObjectId} swapId The id of the swap to resolve.
+ * @param {Function} fn     Callback that takes (err, swap).
+ */
+module.exports.acceptSwap = function(swapId, fn) {
+    Swap.findByIdAndRemove(swapId).populate('shiftUpForSwap').populate('shiftOfferedInReturn').exec(function(err, swap) {
         if (err) {
-            console.log(err);
             return fn(err);
         }
-        else {
+        swap.shiftOfferedInReturn.populate('responsiblePerson', function(err) {
             ShiftController.tradeShifts(swap.shiftUpForSwap, swap.shiftOfferedInReturn, function(err) {
                 if (err) {
                     return fn(err);
                 }
                 return fn(null, swap);
             });
-        }
+        });
     });
 }

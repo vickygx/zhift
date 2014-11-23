@@ -1,0 +1,19 @@
+extends ../layout
+
+block head
+  script(type="text/javascript", src="/javascripts/controllers/dashboard-controller.js")
+  script(type="text/javascript", src="/javascripts/services/record-service.js")
+  script(type="text/javascript", src="/javascripts/services/schedule-service.js")
+
+block content
+  div
+    a(href="/signout", class="text-center") Sign Out
+  div
+    a(href="/home", class="text-center") Home
+
+  div(ng-controller="RecordController", ng-init="init('#{user.org}', '#{user.schedule}')")
+    div(ng-repeat="record in records") {{record.role}}
+      ul
+        li(ng-repeat="r in record.records") {{r.content}}
+        div(ng-if="record.records.length === 0")
+          i None

@@ -11,7 +11,10 @@ block head
   script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
 
 block content
-  a(href="/signout", class="text-center") Sign Out
+  div
+    a(href="/signout", class="text-center") Sign Out
+  div
+    a(href="/dashboard", class="text-center") Dashboard
 
   h1 Welcome, #{user.name}!
   h2 Check your details below:
