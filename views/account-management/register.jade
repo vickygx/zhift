@@ -1,0 +1,41 @@
+//- Registration Page
+//- @author Anji Ren, Lily Seropian
+
+extends ../layout
+
+block content
+  - if(message)
+    div.message-container #{message}
+  div.form-container
+    form.form-horizontal(action="/signup", method="POST")
+      fieldset
+        h2 Register for Zhift
+        div.form-group
+          label.col-lg-2.control-label Name
+          div.col-lg-10
+            input.form-control(type="text", name="name", placeholder='"Jane Doe"', required, autofocus)
+        div.form-group
+          label.col-lg-2.control-label Email
+          div.col-lg-10
+            input.form-control(type="text", name="email", placeholder='"jane@applebees.com"', required, autofocus)
+        div.form-group
+          label.col-lg-2.control-label Organization
+          div.col-lg-10
+            input.form-control(type="text", name="org" placeholder='"Applebee\'s"', required, autofocus)
+        div.form-group
+          label.col-lg-2.control-label Password
+          div.col-lg-10
+            input.form-control(type="password", name="password", required)
+        div.form-group
+          label.col-lg-2.control-label Account Type
+          div.col-lg-10
+            select.form-control(name="userType")
+              option(value="manager") Manager
+              option(value="employee") Employee
+        div.form-group
+          label.col-lg-2.control-label Role (only for employees)
+          div.col-lg-10
+            input.form-control(type="text", name="userRole", placeholder='"cashier"', required, autofocus)
+        div.form-group
+          div.col-lg-10.col-lg-offset-2
+            input.btn.btn-primary.yellow-button(type="submit", value="Sign in")
