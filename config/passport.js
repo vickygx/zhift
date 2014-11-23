@@ -13,10 +13,25 @@ var bCrypt			   = require('bcrypt-nodejs');
 
 module.exports = function(passport) {
 
+    /**
+     * Create hash for the given password
+     * 
+     * @param {String}: password:  plaintext password
+     * @return {String}: hashed password
+     */
 	var createHash = function(password) {
-        return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+        // data, salt
+        return bCrypt.hashSync(password, bCrypt.genSaltSync(10));
     }
 
+    /**
+     * Compare the user-inputted password to the stored, hashed version
+     * 
+     * @param {User} user: User object from the User database
+     * @param {String} password: user-inputted password
+     * @return {Boolean}: whether the user-inputted password matches 
+     * the stored, hashed version
+     */
 	var isCorrectPassword = function(user, password) {
 		return bCrypt.compareSync(password, user.password);
 	}
