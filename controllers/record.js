@@ -1,5 +1,6 @@
 /**  
  * Email notifications.
+ * 
  * TODO: error handling, permissions, send emails when on prod
  *
  * @author: Lily Seropian
@@ -20,7 +21,7 @@ var FROM = '6170-zhift@mit.edu';
 /**
  * Get a string representation of a shift for use in records.
  * Example: 'Monday, November 22, 2014 shift from 02:00 to 04:00'.
- * @param  {Shift} shift The shift for which to create a string.
+ * @param  {Shift}  shift The shift for which to create a string.
  * @return {String} The created string.
  */
 var shiftToString = function(shift) {
@@ -157,8 +158,8 @@ module.exports.recordSwapRejected = function(to, swap) {
 
 /**
  * Inform the manager(s) and employees involved that a shift swap occurred.
- * @param  {Array.<string>} to A list of all email addresses to which to send the notification.
- * @param  {Swap} swap The swap that occurred.
+ * @param {Array.<string>} to   A list of all email addresses to which to send the notification.
+ * @param {Swap}           swap The swap that occurred.
  */
 module.exports.recordSwapAccepted = function(to, swap) {
     var proposedShift = swap.shiftOfferedInReturn;

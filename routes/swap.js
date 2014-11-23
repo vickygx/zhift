@@ -1,6 +1,8 @@
 /**
  * Swap routes.
+ * 
  * TODO: Error handling, permissions
+ * 
  * @author: Vicky Gong, Lily Seropian
  */
 

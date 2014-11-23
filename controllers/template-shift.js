@@ -1,24 +1,21 @@
-/*  All the functions related to manipulating and retrieving information 
-    from the Template Shift database
+/**
+ * All the functions related to manipulating and retrieving information from the Template Shift database.
+ * @author: Anji Ren
+ */
 
-    @author: Anji Ren
-*/
 var TemplateShift = require('../models/template-shift');
 var errors = require('../errors/errors');
 module.exports = {};
 
-/*  Function to create a template for a regularly occurring shift
-    
-    @param 
-        {String} day:           what day of the week the shift is on
-        {String} startTime:     time the shift starts
-        {String} endTime:       time the shift ends
-        {ObjectId} employeeId:  id of the employee regularly responsible for shift
-        {ObjectId} scheduleId:  id of the schedule the shift is associated with
-        {function} fn: 			callback function
-
-    @return ---
-*/
+/**
+ * Create a template for a regularly occurring shift.
+ * @param {String}   day        What day of the week the shift is on.
+ * @param {String}   startTime  Time the shift starts.
+ * @param {String}   endTime    Time the shift ends.
+ * @param {ObjectId} employeeId The id of the employee regularly responsible for shift.
+ * @param {ObjectId} scheduleId The id of the schedule the shift is associated with.
+ * @param {Function} fn         Callback that takes (err, templateShift).
+ */
 module.exports.createShift = function(day, startTime, endTime, employeeId, scheduleId, fn) {
     // Create new Template Shift
     var shift = new TemplateShift({
@@ -33,52 +30,38 @@ module.exports.createShift = function(day, startTime, endTime, employeeId, sched
     shift.save(fn);
 };
 
-/*  Function to retrieve a template for a regularly occurring shift
-    
-    @param 
-        {ObjectId} shiftId:  id of the shift to be retrieved
-        {function} fn:       callback function
-
-    @return ---
-*/
+/**
+ * Retrieve a template for a regularly occurring shift.
+ * @param {ObjectId} shiftId The id of the shift to be retrieved.
+ * @param {Function} fn      Callback that takes (err, templateShift).
+ */
 module.exports.retrieveShift = function(shiftId, fn) {
     TemplateShift.findById(shiftId, fn);
 };
 
-/*  Function to delete a template for a regularly occurring shift
-    
-    @param 
-        {ObjectId} shiftId:  id of the shift to be deleted
-        {function} fn:       callback function
-
-    @return ---
+/**
+ * Delete a template for a regularly occurring shift.
+ * @param {ObjectId} shiftId The id of the shift to be deleted.
+ * @param {Function} fn      Callback that takes (err, templateShift).
 */
 module.exports.deleteShift = function(shiftId, fn) {
     TemplateShift.findByIdAndRemove(shiftId, fn);
 };
 
-/*  Function that grabs a template shift and
-    gives the shift's responsibility to another employee
-
-    
-    @param 
-        {ObjectId} shiftId:     id of the shift 
-        {ObjectId} employeeId:  id of the employee that will take the shift 
-        {function} fn:          callback function
-
-    @return ---
+/**
+ * Grab a template shift and give the shift's responsibility to another employee.
+ * @param {ObjectId} shiftId    The id of the shift.
+ * @param {ObjectId} employeeId The id of the employee that will take the shift.
+ * @param {Function} fn         Callback that takes (err, templateShift).
 */
 module.exports.giveShiftTo = function(shiftId, employeeId, fn) {
     TemplateShift.findByIdAndUpdate(shiftId, {responsiblePerson: employeeId}, fn);
 };
 
-/*  Function to get all template shifts associated with a schedule
-    
-    @param 
-        {ObjectId} scheduleId:  id of the schedule shift is part of
-        {function} fn:          callback function
-
-    @return ---
+/**
+ * Get all template shifts associated with a schedule.
+ * @param {ObjectId} scheduleId The id of the schedule shift is part of.
+ * @param {Function} fn         Callback that takes (err, templateShift).
 */
 module.exports.getAllShiftsBySchedule = function(scheduleId, fn) {
     TemplateShift.find({schedule: scheduleId})

@@ -1,6 +1,8 @@
 /**
- * All the routes relating to shifts
- * TODO: error handling, permissions
+ * All the routes relating to shifts.
+ * 
+ * TODO: error handling, permissions.
+ * 
  * @author: Lily Seropian, Vicky Gong
  */
 

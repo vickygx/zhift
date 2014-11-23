@@ -1,8 +1,8 @@
-/*  All the functions related to manipulating and retrieving information 
-    from the Swap database
+/**
+ * All the functions related to manipulating and retrieving information from the Swap database.
+ * @author: Vicky Gong, Lily Seropian
+ */
 
-    @author: Vicky Gong, Lily Seropian
-*/
 var Swap = require('../models/swap');
 var Shift = require('../models/shift');
 var ShiftController = require('./shift');
@@ -12,7 +12,7 @@ module.exports = {};
 /**
  * Create a Swap if the user has permission to do so.
  * @param {ObjectId} shiftId    The id of the shift to put up for swap.
- * @param {String} employeeId   The id of the employee putting the shift up for swap.
+ * @param {String}   employeeId The id of the employee putting the shift up for swap.
  * @param {ObjectId} scheduleId The id of the schedule to which the shift belongs.
  * @param {function} fn         Callback that takes (err, swap).
 */
@@ -99,7 +99,7 @@ module.exports.deleteSwap = function(swapId, fn) {
 /**
  * Accept a swap. Deletes the swap object and changes responsibility of the shift.
  * @param {ObjectId} swapId The id of the swap to resolve.
- * @param {Function} fn      Callback that takes (err, swap).
+ * @param {Function} fn     Callback that takes (err, swap).
  */
 module.exports.acceptSwap = function(swapId, fn) {
     Swap.findByIdAndRemove(swapId).populate('shiftUpForSwap').populate('shiftOfferedInReturn').exec(function(err, swap) {
