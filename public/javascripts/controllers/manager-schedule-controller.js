@@ -122,7 +122,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
     *   And updates the template shifts
     */
     $scope.setCurrentSchedule = function(scheduleId) {
-        $scope.currentSchedule = scheduleId;
+        $scope.currentScheduleId = scheduleId;
         getTemplateShifts(scheduleId, function(err){
             if (!err)
                 $scope.$apply();
@@ -230,7 +230,8 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
                 console.log(scope.activeShift);
                 scope.createTemplateShift(scope.activeShift["day"], scope.activeShift["startTime"], 
                 scope.activeShift["endTime"], employeeId, scope.currentScheduleId);
-                console.log(scope.activeShift["day"], scope.activeShift["startTime"], 
+                console.log(scope.activeShift["day"], scope.activeShift["startTime"],
+
                 scope.activeShift["endTime"], employeeId, scope.currentScheduleId);
                 location.reload();
             });
