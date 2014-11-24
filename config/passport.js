@@ -70,25 +70,12 @@ module.exports = function(passport) {
         var org = req.body.org;
         var type = req.body.userType;
         var role = req.body.userRole;
-        var scheduleID;
 
         // managers must not be associated with roles 
         if (role) {
+            console.log('role exists');
             if (type === 'manager') {
                 return done(null, false, req.flash('message', 'Managers are not associated with roles.'));                 
-            }
-            else {
-                ScheduleController.retrieveScheduleByOrgAndRole(org, role, function(err, schedule) {
-                    if (err) {
-                        return done(null, false, req.flash('message', err));                 
-                    }
-                    if (!schedule) {
-                        return done(null, false, req.flash('message', 'No schedule found for that organization and role.'));
-                    }
-                    else {
-                        scheduleID = schedule._id;
-                    }
-                });
             }
         }
         // employees must be associated with roles
@@ -97,34 +84,31 @@ module.exports = function(passport) {
                 return done(null, false, req.flash('message', 'Employees must be associated with roles.'));                 
             }
         }
+        console.log('just finished checking some shit');
 
-        // check whether a user account with those details already exists
-        UserController.retrieveUser(email, org, function(err, retrievedUser) {
+        OrgController.retrieveOrg(org, function(err, retrievedOrg) {
             if (err) {
                 return done(null, false, req.flash('message', err));
             }
-            if (retrievedUser) {
-                return done(null, false, req.flash('message', 'User account already exists.'));                 
-            }
-
-            OrgController.retrieveOrg(org, function(err, retrievedOrg) {
-                if (err) {
-                    return done(null, false, req.flash('message', err));
-                }
-                // creating a manager associated with a new organization --> create that organization
-                if (!retrievedOrg && type === 'manager') {
+            // creating a manager associated with a new organization --> create that organization
+            if (!retrievedOrg) {
+                if (type === 'manager') {
+                    console.log('about to create new org');
                     OrgController.createOrg(org, function(err, newOrg) {
                         if (err) {
                             return done(null, false, req.flash('message', err)); 
                         }
-                    });
+                    }); 
                 }
-            });
-
+                else {
+                    return done(null, false, req.flash('message', 'Cannot associate employee with nonexistent organization'));
+                }   
+            }
+            console.log('about to call createUser');
             password = createHash(password);
-            UserController.createUser(name, email, password, org, scheduleID, function(err, newUser) {
+            UserController.createUser(name, email, password, org, role, function(err, newUser) {
                 if (err) {
-                    return done(null, false, req.flash('message', err)); 
+                    return done(null, false, req.flash('message', err.message)); 
                 }
                 return done(null, newUser);
             });

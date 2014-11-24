@@ -10,6 +10,7 @@ var User = require('../models/user');
 var ManagerUser = require('../models/manager-user');
 var EmployeeUser = require('../models/employee-user');
 var OrgController   = require('../controllers/organization');
+var ScheduleController   = require('../controllers/schedule');
 var errors = require('../errors/errors');
 module.exports = {};
 
@@ -22,9 +23,7 @@ module.exports = {};
  * @param {Number}   scheduleID A user's scheduleID (not set if the user is a manager).
  * @param {Function} callback   Callback that takes (err, user).
  */
-module.exports.createUser = function(name, email, password, org, scheduleID, callback) {    
-    console.log('scheduleID:', scheduleID);
-
+module.exports.createUser = function(name, email, password, org, role, callback) {    
     var userModel;
 
     var userData = {
@@ -34,31 +33,51 @@ module.exports.createUser = function(name, email, password, org, scheduleID, cal
         org: org
     };
 
-    if (scheduleID) {
-        userData.schedule = scheduleID;
+    var newUser = new User(userData);
 
-        userModel = EmployeeUser;
-    }
-    else {
-        userModel = ManagerUser;
-    }
-
-    console.log(userData);
-
-    var newUser = new userModel(userData);
-    var newUserCopy = new User(userData);
-
-    // Add to specific database (i.e. ManagerUser or EmployeeUser)
     newUser.save(function(err, user) {
         if (err) {
-            console.log(err);
+            return callback(err);
         }
+        console.log('just created new user');
+        userData._id = user._id;
 
-        // Add to User database
-        // We do this to avoid have to make queries on both ManagerUser DB and EmployeeUser DB
-        // when looking up a user (and we don't know the user's type)
-        newUserCopy._id = user._id;
-        newUserCopy.save(callback);
+        if (role) {
+            ScheduleController.retrieveScheduleByOrgAndRole(org, role, function(err, schedule) {
+                if (err) {
+                    return callback(err);                 
+                }
+                if (schedule) {
+                    console.log('just looked up schedule id');
+                    userData.schedule = schedule._id;
+
+                    var newEmployee = new EmployeeUser(userData);
+
+                    console.log('about to save new employee');
+
+                    newEmployee.save(function(err, employee) {
+                        if (err) {
+                            return callback(err);
+                        }
+                        callback(null, employee);
+                    });
+                }
+                else {
+                    return callback(new Error('No schedule found for that organization and role.'));
+                }
+            });
+        }
+        else {
+            var newManager = new ManagerUser(userData);
+
+            console.log('about to save new manager');
+            newManager.save(function(err, manager) {
+                if (err) {
+                    return callback(err);
+                }
+                callback(null, manager);
+            });
+        }
     });
 };
 
@@ -74,7 +93,7 @@ module.exports.retrieveUser = function(email, org, callback) {
             return callback(err);
         } 
         if (!user) {
-            return callback(null, false, {message: 'Incorrect name or organization.'})
+            return callback(err, {message: 'Incorrect name or organization.'})
         } 
         callback(null, user);
     });
