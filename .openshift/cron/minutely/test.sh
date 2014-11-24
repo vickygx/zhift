@@ -1,1 +1,1 @@
-date >> $OPENSHIFT_REPO_DIR/test/test.txt
+date >> $OPENSHIFT_REPO_DIR/php/test.txt
