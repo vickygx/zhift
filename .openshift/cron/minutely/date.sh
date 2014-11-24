@@ -1,1 +1,2 @@
-date >> $OPENSHIFT_REPO_DIR/php/date.txt
+#!/bin/bash
+date >> ${OPENSHIFT_LOG_DIR}/ticktock.log
