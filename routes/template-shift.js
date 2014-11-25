@@ -24,7 +24,7 @@ var errorChecking = require('../errors/error-checking');
  * Response body contains:
  *     {TemplateShift} The created template shift.
  */
-router.post('/', function(req, res) {
+router.post('/make', function(req, res) {
     TemplateShiftController.createShift(req.body.day, req.body.startTime, req.body.endTime, 
         req.body.employeeId, req.body.scheduleId, function(err, templateShift) {
             if (err) {
