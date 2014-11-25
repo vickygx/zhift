@@ -77,7 +77,7 @@ app.use(flash());
 app.use('/', routes);
 app.use('/user', user);
 app.use('/shift', shift);
-app.use('/shift/template', templateShift);
+app.use('/template', templateShift);
 app.use('/schedule', schedule);
 app.use('/org', organization);
 app.use('/swap', swap);

@@ -14,7 +14,7 @@ ZhiftApp.service('TemplateShiftService', ['$rootScope', function($rootScope) {
             $.ajax({
                 datatype: 'json',
                 type: 'GET',
-                url: '/shift/template/all/' + scheduleId,
+                url: '/template/all/' + scheduleId,
             }).success(function(res) {
                 callback(null, res);
             }).error(function(res) {
@@ -28,7 +28,7 @@ ZhiftApp.service('TemplateShiftService', ['$rootScope', function($rootScope) {
             $.ajax({
                 datatype: 'json',
                 type: 'POST',
-                url: '/shift/template/',
+                url: '/template/',
                 data: {
                     day: day,
                     startTime: startTime,
@@ -48,13 +48,13 @@ ZhiftApp.service('TemplateShiftService', ['$rootScope', function($rootScope) {
             $.ajax({
                 datatype: 'json',
                 type: 'DELETE',
-                url: '/shift/template/' + id,
+                url: '/template/' + id,
             }).success(function(res) {
                 console.log('delete success!')
                 $.ajax({
                     datatype: 'json',
                     type: 'POST',
-                    url: '/shift/template/',
+                    url: '/template/',
                     data: {
                         day: day,
                         startTime: startTime,
