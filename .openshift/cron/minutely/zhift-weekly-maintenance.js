@@ -7,17 +7,16 @@
 var fs = require('fs');
 var request = require('request');
 
-// request.post(
-//     'http://www.yoursite.com/formpage',
-//     { form: { key: 'value' } },
-//     function (error, response, body) {
-//         if (!error && response.statusCode == 200) {
-//             console.log(body)
-//         }
-//     }
-// );
+request.get(
+    'http://zhift-seropian.rhcloud.com/org/CC',
+    function (error, response, body) {
+        console.log('ERROR', error);
+        console.log('RESPONSE', response);
+        console.log('BODY', body);
+    }
+);
 
-var logPath = process.env.OPENSHIFT_LOG_DIR + '/ticktock-node.log';
+// var logPath = process.env.OPENSHIFT_LOG_DIR + '/zhift-cron-debug.log';
 // var currentTime = new Date().toTimeString();
-fs.writeFileSync(logPath, request.toString());
+// fs.writeFileSync(logPath, request.toString());
 
