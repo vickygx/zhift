@@ -24,18 +24,19 @@ router.get('/', function(req, res, next) {
 /**
  * POST to create a new shift for a template shift for the next X week
  * Request body should contain:
- *     {String}   day             [REMOVE]
- *     {String}   startTime       [REMOVE]
- *     {String}   endTime         [REMOVE]
- *     {ObjectId} employeeId      [REMOVE]
- *     {ObjectId} scheduleId      [REMOVE]
- *     {ObjectId} templateShiftId The id of the template shift from which to generate the shift.
- *     {Date}     date            The date on which the shift occurs.
+ *     {Integer}   week        The week to create the next template shift     
+ *  
  * Response body contains:
  *     {Shift} The created shift.
  */
 router.post('/:template_shift', function(req, res, next){
-
+    ShiftController.createShiftFromTemplateShift(req.param('template_shift'), req.user.week, new Date(),
+        function(err, shift){
+            if (err){
+                return next(err);
+            }
+            res.send(shift);
+        });
 });
 
 

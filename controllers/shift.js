@@ -73,11 +73,24 @@ module.exports.createShiftFromTemplateShift = function(templateShiftId, next, da
             var scheduleId = templateShift.schedule;
             var date = eval('dateFrom.next().' + day.toLowerCase() + '().addDays(' + (next-1)*7 + ')');
 
-            module.exports.createShift(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn);
+            // Check if this shift already exists
+            Shift.findOne({templateShift: templateShiftId, dateScheduled: date}, function(err, shift){
+                if (err) {
+                    fn(err);
+                }
+                // If this shift exists for this day, do not create
+                else if (shift){
+                    fn(errors.shifts.shiftForWeekAlreadyCreated); 
+                }
+                // Create only if this shift doesn't exist
+                else {
+                     module.exports.createShift(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn);
+                }
+            });   
         }
         // templateshift with given id doesn't exist, return error
         else {
-            fn(); //TODO
+            fn(errors.shifts.templateShiftDoesNotExist); 
         }
     });
 }
