@@ -5,7 +5,7 @@
  * 
  * @author: Lily Seropian, Vicky Gong
  */
-
+ 
 var express = require('express');
 var router = express.Router();
 
@@ -20,6 +20,24 @@ var datejs = require('../public/javascripts/libraries/date');
 router.get('/', function(req, res, next) {
     res.render('shift/test_shift', {title: 'shift calendar testing', user: req.user});
 });
+
+/**
+ * POST to create a new shift for a template shift for the next X week
+ * Request body should contain:
+ *     {String}   day             [REMOVE]
+ *     {String}   startTime       [REMOVE]
+ *     {String}   endTime         [REMOVE]
+ *     {ObjectId} employeeId      [REMOVE]
+ *     {ObjectId} scheduleId      [REMOVE]
+ *     {ObjectId} templateShiftId The id of the template shift from which to generate the shift.
+ *     {Date}     date            The date on which the shift occurs.
+ * Response body contains:
+ *     {Shift} The created shift.
+ */
+router.post('/:template_shift', function(req, res, next){
+
+});
+
 
 /**
  * POST to create a new shift.
