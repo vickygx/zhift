@@ -105,11 +105,15 @@ router.get('/:id', function(req, res, next) {
  */
 router.get('/user/:id', function(req, res, next) {
     // Checking if logged in user is userid
-    if(req.param('id') !== req.user._id.toString() && !req.session.isManager) {
+    console.log(req.user.schedule);
+    if(req.param('id') !== req.user._id.toString() && req.user.schedule !== undefined) {
+        console.log(req.param('id'));
+        console.log(req.user._id.toString());
+        console.log(req.user.schedule);
         return res.status(403).send({message: 'error: you are not a manager or the owner of this shift. cannot get'});
     }
 
-    if (req.session.isManager) {
+    if (!req.user.schedule) {
         UserController.retrieveEmployeeById(req.param('id'), function(err, employee) {
             if (req.session.org !== employee.org) {
                 return res.status(403).send({message: 'error: you are not a manager for this employee. cannot get'});

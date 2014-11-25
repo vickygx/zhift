@@ -1,14 +1,19 @@
 /**
+ * User login and account creation
+ * 
  * @author Anji Ren, Lily Seropian, Dylan Joss
- * TODO: when creating a new manager, add their email to req.session.managerEmails
- * TODO: when deleting a manager, remove their email from req.session.managerEmails
- * TODO: when creating a new manager, set req.session.isManager to true
+ * 
+ * The logged in user's associated organization may be accessed by req.user.org
+ * Whether the logged in user is an employee or manager may be determined by
+ *     req.user.schedule (will be set for employees, not for managers)
+ * 
  */
 
 var mongoose           = require('mongoose');
 var LocalStrategy      = require('passport-local').Strategy;
 var User               = require('../models/user');
 var EmployeeUser       = require('../models/employee-user');
+var ManagerUser        = require('../models/manager-user');
 var UserController     = require('../controllers/user');
 var OrgController      = require('../controllers/organization');
 var ScheduleController = require('../controllers/schedule');
@@ -16,22 +21,37 @@ var bCrypt             = require('bcrypt-nodejs');
 
 module.exports = function(passport) {
 
-    var createHash = function(password) {
-        return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+    /**
+     * Create hash for the given password
+     * @param  {String} password Plaintext password
+     * @return {String}          Hashed password
+     */
+	var createHash = function(password) {
+        // data, salt
+        return bCrypt.hashSync(password, bCrypt.genSaltSync(10));
     }
 
-    var isCorrectPassword = function(user, password) {
-        return bCrypt.compareSync(password, user.password);
-    }
+    /**
+     * Compare the user-inputted password to the stored, hashed version
+     * @param  {User}   user     User object from the User database
+     * @param  {String} password User-inputted password
+     * @return {Boolean}         Whether the user-inputted password matches 
+     *                           the stored, hashed version
+     */
+	var isCorrectPassword = function(user, password) {
+		return bCrypt.compareSync(password, user.password);
+	}
 
+    // serialization to enable user sessions
     passport.serializeUser(function(user, done) {
         done(null, user._id);
     });
 
+    // deserialization enable user sessions
     passport.deserializeUser(function(id, done) {
         EmployeeUser.findById(id, function(err, user) {
             if (!user) {
-                User.findById(id, function(err, user) {
+                ManagerUser.findById(id, function(err, user) {
                     done(err, user);
                 });
             }
@@ -45,57 +65,41 @@ module.exports = function(passport) {
         usernameField: 'email',
         passReqToCallback: true
     }, function(req, email, password, done) {
+        // user inputs
         var name = req.body.name;
         var org = req.body.org;
         var type = req.body.userType;
         var role = req.body.userRole;
-        var scheduleID = null;
+        password = createHash(password);
 
-        // only employees accounts are associated with a role
-        if (role) {
-            ScheduleController.retrieveScheduleByOrgAndRole(org, role, function(err, schedule) {
-                if (err) {
-                    return done(null, false, req.flash('message', err));                 
-                }
-                if (schedule) {
-                    scheduleID = schedule._id;
-                }
-            });
-        }
-
-        UserController.retrieveUser(email, org, function(err, retrievedUser) {
-            if (err) {
-                // TODO
-                return done(null, false, req.flash('message', err));                 
+        if (type === 'manager') {
+            // managers must not be associated with roles 
+            if (role) {
+                return done(null, false, req.flash('message', 'Managers are not associated with roles.'));                 
             }
-
-            OrgController.retrieveOrg(org, function(err, retrievedOrg) {
-                if (err) {
-                    return done(null, false, req.flash('message', err));
-                }
-                if (retrievedOrg && retrievedUser) {
-                    return done(null, false, req.flash('message',
-                        'An organization with this name already exists!'));
-                }
-                // creating a manager associated with a new organization --> create that organization
-                if (!retrievedOrg && !scheduleID) {
-                    OrgController.createOrg(org, function(err, newOrg) {
-                        if (err) {
-                            return done(null, false, req.flash('message', err)); 
-                        }
-                    });
-                }
-            });
-
-            password = createHash(password);
-            UserController.createUser(name, email, password, org, scheduleID, function(err, newUser) {
-                if (err) {
-                    return done(null, false, req.flash('message', err)); 
-                    //TODO
-                }
-                return done(null, newUser);
-            });
-        });
+            else {
+                UserController.createManager(name, email, password, org, function(err, newManager) {
+                    if (err) {
+                        return done(null, false, req.flash('message', err.message));
+                    }
+                    return done(null, newManager);
+                });
+            }
+        }
+        // employees must be associated with roles
+        if (type === 'employee') {
+            if (!role) {
+                return done(null, false, req.flash('message', 'Employees must be associated with roles.'));                 
+            }
+            else {
+                UserController.createEmployee(name, email, password, org, role, function(err, newEmployee) {
+                    if (err) {
+                        return done(null, false, req.flash('message', err.message));
+                    }
+                    return done(null, newEmployee);
+                });
+            }
+        }
     }));
 
     passport.use('login', new LocalStrategy({
@@ -103,20 +107,23 @@ module.exports = function(passport) {
         passReqToCallback: true
     }, function(req, email, password, done) {
         var org = req.body.org;
+
         UserController.retrieveUser(email, org, function(err, user) {
             if (err) {
                 return done(null, false, req.flash('message', err));
             }
-
             if (!user) {
-                return done(null, false, req.flash('message', 'User not found.'));
+                return done(null, false, req.flash('message', 'User with that email and organization not found.'));
             }
-
             if (!isCorrectPassword(user, password)) {
                 return done(null, false, req.flash('message', 'Incorrect password.'));
             }
 
+            // logic for record creation
             UserController.retrieveManagersByOrgId(org, function(err, managers) {
+                if (err) {
+                    return done(null, false, req.flash('message', err));
+                }
                 req.session.managerEmails = managers.map(function(manager) {
                     if (manager._id.toString() === user._id.toString()) {
                         req.session.isManager = true;

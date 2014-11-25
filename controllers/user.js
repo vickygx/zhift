@@ -10,21 +10,20 @@ var User = require('../models/user');
 var ManagerUser = require('../models/manager-user');
 var EmployeeUser = require('../models/employee-user');
 var OrgController   = require('../controllers/organization');
+var ScheduleController   = require('../controllers/schedule');
 var errors = require('../errors/errors');
 module.exports = {};
 
 /**
- * Create a user.
- * @param {String}   name       User full name.
- * @param {String}   email      User email.
- * @param {String}   password   User password.
- * @param {String}   org        Organization user is part of.
- * @param {Number}   scheduleID A user's scheduleID (null if the user is a manager).
- * @param {Function} callback   Callback that takes (err, user).
+ * Create an employee.
+ * @param  {String}   name     Employee full name.
+ * @param  {String}   email    Employee email.
+ * @param  {String}   password Employee password.
+ * @param  {String}   org      Organization employee is part of.
+ * @param  {String}   role     Employee role.
+ * @param  {Function} callback Callback that takes (err, employee).
  */
-module.exports.createUser = function(name, email, password, org, scheduleID, callback) {    
-    var userModel;
-
+module.exports.createEmployee = function(name, email, password, org, role, callback) {
     var userData = {
         name: name,
         email: email,
@@ -32,31 +31,104 @@ module.exports.createUser = function(name, email, password, org, scheduleID, cal
         org: org
     };
 
-    if (scheduleID) {
-        userData.schedule = scheduleID;
+    var newUser = new User(userData);
 
-        userModel = EmployeeUser;
-    }
-    else {
-        userModel = ManagerUser;
-    }
-
-    var newUser = new userModel(userData);
-    var newUserCopy = new User(userData);
-
-    // Add to specific database (i.e. ManagerUser or EmployeeUser)
-    newUser.save(function(err, user) {
+    // employees cannot be associated with a nonexistent organization
+    OrgController.retrieveOrg(org, function(err, retrievedOrg) {
         if (err) {
-            console.log(err);
+            return callback(err);
         }
+        if (!retrievedOrg) {
+            return callback(new Error('Employee cannot be associated with a nonexistent organization.'));
+        }
+        else {
+            // employees cannot be associated with a nonexistent role (i.e. one for which there
+            // is no associated schedule)
+            ScheduleController.retrieveScheduleByOrgAndRole(org, role, function(err, schedule) {
+                if (err) {
+                    return callback(err);                 
+                }
+                if (!schedule) {
+                    return callback(new Error('No schedule found for that organization and role'));
+                }
+                else {
+                    newUser.save(function(err, user) {
+                        if (err) {
+                            return callback(err);
+                        }
 
-        // Add to User database
-        // We do this to avoid have to make queries on both ManagerUser DB and EmployeeUser DB
-        // when looking up a user (and we don't know the user's type)
-        newUserCopy._id = user._id;
-        newUserCopy.save(callback);
+                        // ensure that the ID of User saved to the User database is same as that of 
+                        // Employee saved to the EmployeeUser database
+                        userData._id = user._id;
+
+                        userData.schedule = schedule._id;
+
+                        var newEmployee = new EmployeeUser(userData);
+
+                        newEmployee.save(function(err, employee) {
+                            if (err) {
+                                return callback(err);
+                            }
+                            callback(null, employee);
+                        });
+                    });
+                }
+            });
+        }
     });
-};
+}
+
+/**
+ * Create a manager.
+ * @param  {String}   name     Manager full name.
+ * @param  {String}   email    Manager email.
+ * @param  {String}   password Manager password.
+ * @param  {String}   org      Organization manager is part of.
+ * @param  {Function} callback Callback that takes (err, manager)
+ */
+module.exports.createManager = function(name, email, password, org, callback) {
+    var userData = {
+        name: name,
+        email: email,
+        password: password,
+        org: org
+    };
+
+    var newUser = new User(userData);
+
+    // creating a manager associated with a new organization --> create that organization
+    OrgController.retrieveOrg(org, function(err, retrievedOrg) {
+        if (err) {
+            return callback(err);
+        }
+        if (!retrievedOrg) {
+            OrgController.createOrg(org, function(err, newOrg) {
+                if (err) {
+                    return callback(err); 
+                }
+            }); 
+        }
+        
+        newUser.save(function(err, user) {
+            if (err) {
+                return callback(err);
+            }
+
+            // ensure that the ID of User saved to the User database is same as that of 
+            // Manager saved to the ManagerUser database
+            userData._id = user._id;
+
+            var newManager = new ManagerUser(userData);
+
+            newManager.save(function(err, manager) {
+                if (err) {
+                    return callback(err);
+                }
+                callback(null, manager);
+            });
+        });
+    });
+}
 
 /**
  * Retrieve existing user.
@@ -70,7 +142,7 @@ module.exports.retrieveUser = function(email, org, callback) {
             return callback(err);
         } 
         if (!user) {
-            return callback(null, false, {message: 'Incorrect name or organization.'})
+            return callback(err, {message: 'Incorrect name or organization.'})
         } 
         callback(null, user);
     });
