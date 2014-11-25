@@ -23,8 +23,8 @@ module.exports = function(passport) {
 
     /**
      * Create hash for the given password
-     * @param  {String} password plaintext password
-     * @return {String}          hashed password
+     * @param  {String} password Plaintext password
+     * @return {String}          Hashed password
      */
 	var createHash = function(password) {
         // data, salt
@@ -34,8 +34,8 @@ module.exports = function(passport) {
     /**
      * Compare the user-inputted password to the stored, hashed version
      * @param  {User}   user     User object from the User database
-     * @param  {String} password user-inputted password
-     * @return {Boolean}         whether the user-inputted password matches 
+     * @param  {String} password User-inputted password
+     * @return {Boolean}         Whether the user-inputted password matches 
      *                           the stored, hashed version
      */
 	var isCorrectPassword = function(user, password) {
@@ -70,49 +70,36 @@ module.exports = function(passport) {
         var org = req.body.org;
         var type = req.body.userType;
         var role = req.body.userRole;
+        password = createHash(password);
 
-        // managers must not be associated with roles 
-        if (role) {
-            console.log('role exists');
-            if (type === 'manager') {
+        if (type === 'manager') {
+            // managers must not be associated with roles 
+            if (role) {
                 return done(null, false, req.flash('message', 'Managers are not associated with roles.'));                 
+            }
+            else {
+                UserController.createManager(name, email, password, org, function(err, newManager) {
+                    if (err) {
+                        return done(null, false, req.flash('message', err.message));
+                    }
+                    return done(null, newManager);
+                });
             }
         }
         // employees must be associated with roles
-        else {
-            if (type === 'employee') {
+        if (type === 'employee') {
+            if (!role) {
                 return done(null, false, req.flash('message', 'Employees must be associated with roles.'));                 
             }
+            else {
+                UserController.createEmployee(name, email, password, org, role, function(err, newEmployee) {
+                    if (err) {
+                        return done(null, false, req.flash('message', err.message));
+                    }
+                    return done(null, newEmployee);
+                });
+            }
         }
-        console.log('just finished checking some shit');
-
-        OrgController.retrieveOrg(org, function(err, retrievedOrg) {
-            if (err) {
-                return done(null, false, req.flash('message', err));
-            }
-            // creating a manager associated with a new organization --> create that organization
-            if (!retrievedOrg) {
-                if (type === 'manager') {
-                    console.log('about to create new org');
-                    OrgController.createOrg(org, function(err, newOrg) {
-                        if (err) {
-                            return done(null, false, req.flash('message', err)); 
-                        }
-                    }); 
-                }
-                else {
-                    return done(null, false, req.flash('message', 'Cannot associate employee with nonexistent organization'));
-                }   
-            }
-            console.log('about to call createUser');
-            password = createHash(password);
-            UserController.createUser(name, email, password, org, role, function(err, newUser) {
-                if (err) {
-                    return done(null, false, req.flash('message', err.message)); 
-                }
-                return done(null, newUser);
-            });
-        });
     }));
 
     passport.use('login', new LocalStrategy({

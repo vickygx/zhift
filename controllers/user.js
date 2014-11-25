@@ -15,17 +15,15 @@ var errors = require('../errors/errors');
 module.exports = {};
 
 /**
- * Create a user.
- * @param {String}   name       User full name.
- * @param {String}   email      User email.
- * @param {String}   password   User password.
- * @param {String}   org        Organization user is part of.
- * @param {Number}   scheduleID A user's scheduleID (not set if the user is a manager).
- * @param {Function} callback   Callback that takes (err, user).
+ * Create an employee.
+ * @param  {String}   name     Employee full name.
+ * @param  {String}   email    Employee email.
+ * @param  {String}   password Employee password.
+ * @param  {String}   org      Organization employee is part of.
+ * @param  {String}   role     Employee role.
+ * @param  {Function} callback Callback that takes (err, employee).
  */
-module.exports.createUser = function(name, email, password, org, role, callback) {    
-    var userModel;
-
+module.exports.createEmployee = function(name, email, password, org, role, callback) {
     var userData = {
         name: name,
         email: email,
@@ -35,51 +33,102 @@ module.exports.createUser = function(name, email, password, org, role, callback)
 
     var newUser = new User(userData);
 
-    newUser.save(function(err, user) {
+    // employees cannot be associated with a nonexistent organization
+    OrgController.retrieveOrg(org, function(err, retrievedOrg) {
         if (err) {
             return callback(err);
         }
-        console.log('just created new user');
-        userData._id = user._id;
-
-        if (role) {
+        if (!retrievedOrg) {
+            return callback(new Error('Employee cannot be associated with a nonexistent organization.'));
+        }
+        else {
+            // employees cannot be associated with a nonexistent role (i.e. one for which there
+            // is no associated schedule)
             ScheduleController.retrieveScheduleByOrgAndRole(org, role, function(err, schedule) {
                 if (err) {
                     return callback(err);                 
                 }
-                if (schedule) {
-                    console.log('just looked up schedule id');
-                    userData.schedule = schedule._id;
-
-                    var newEmployee = new EmployeeUser(userData);
-
-                    console.log('about to save new employee');
-
-                    newEmployee.save(function(err, employee) {
+                if (!schedule) {
+                    return callback(new Error('No schedule found for that organization and role'));
+                }
+                else {
+                    newUser.save(function(err, user) {
                         if (err) {
                             return callback(err);
                         }
-                        callback(null, employee);
+
+                        // ensure that the ID of User saved to the User database is same as that of 
+                        // Employee saved to the EmployeeUser database
+                        userData._id = user._id;
+
+                        userData.schedule = schedule._id;
+
+                        var newEmployee = new EmployeeUser(userData);
+
+                        newEmployee.save(function(err, employee) {
+                            if (err) {
+                                return callback(err);
+                            }
+                            callback(null, employee);
+                        });
                     });
-                }
-                else {
-                    return callback(new Error('No schedule found for that organization and role.'));
                 }
             });
         }
-        else {
+    });
+}
+
+/**
+ * Create a manager.
+ * @param  {String}   name     Manager full name.
+ * @param  {String}   email    Manager email.
+ * @param  {String}   password Manager password.
+ * @param  {String}   org      Organization manager is part of.
+ * @param  {Function} callback Callback that takes (err, manager)
+ */
+module.exports.createManager = function(name, email, password, org, callback) {
+    var userData = {
+        name: name,
+        email: email,
+        password: password,
+        org: org
+    };
+
+    var newUser = new User(userData);
+
+    // creating a manager associated with a new organization --> create that organization
+    OrgController.retrieveOrg(org, function(err, retrievedOrg) {
+        if (err) {
+            return callback(err);
+        }
+        if (!retrievedOrg) {
+            OrgController.createOrg(org, function(err, newOrg) {
+                if (err) {
+                    return callback(err); 
+                }
+            }); 
+        }
+        
+        newUser.save(function(err, user) {
+            if (err) {
+                return callback(err);
+            }
+
+            // ensure that the ID of User saved to the User database is same as that of 
+            // Manager saved to the ManagerUser database
+            userData._id = user._id;
+
             var newManager = new ManagerUser(userData);
 
-            console.log('about to save new manager');
             newManager.save(function(err, manager) {
                 if (err) {
                     return callback(err);
                 }
                 callback(null, manager);
             });
-        }
+        });
     });
-};
+}
 
 /**
  * Retrieve existing user.
