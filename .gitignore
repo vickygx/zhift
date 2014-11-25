@@ -1,0 +1,6 @@
+.DS_Store
+
+# NODE DEPENDENCIES
+node_modules
+
+npm-debug.log

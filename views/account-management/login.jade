@@ -1,0 +1,29 @@
+//- Login page, with link to create a new account
+//- @author Anji Ren
+
+extends ../layout
+
+block content
+  - if(message)
+    div.message-container #{message}
+  div.form-container
+    form.form-horizontal(action="/login", method="POST")
+      fieldset
+        h2 Sign in
+        div.form-group
+          label.col-lg-2.control-label Email
+          div.col-lg-10
+            input.form-control(type="email", name="email", placeholder='"jane@applebees.com"', required, autofocus)
+        div.form-group
+          label.col-lg-2.control-label Organization
+          div.col-lg-10
+            input.form-control(type="text", name="org" placeholder='"Applebee\'s"', required, autofocus)
+        div.form-group
+          label.col-lg-2.control-label Password
+          div.col-lg-10
+            input.form-control(type="password", name="password", required)
+        div.form-group
+          div.col-lg-10.col-lg-offset-2
+            input.btn.btn-primary.yellow-button(type="submit", value="Sign in")
+    br
+    a(href="/signup") Create an account
