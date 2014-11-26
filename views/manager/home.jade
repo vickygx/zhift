@@ -68,6 +68,16 @@ mixin allShifts(org)
         option(value="{{templateShift}}", ng-repeat="templateShift in templateShifts[scheduleId]") {{templateShift}}
       input(type="submit", value="Add", ng-click="createShift(shiftDay, shiftStartTime, shiftEndTime, scheduleId, employeeId[scheduleId], date, templateShiftId[scheduleId])")
 
+  //- TEMP (remove later)
+  div
+    h4 Add shift from template shift
+    form()
+      select(ng-model="templateShiftId[scheduleId]")
+        option(value="{{templateShift}}", ng-repeat="templateShift in templateShifts[scheduleId]") {{templateShift}}
+      input(type="number" placeholder="week to create from [1,2,3..]" ng-model="week" min="1", max="3")
+      input(type="submit" ng-click="alert('hi');")
+  //- END TEMP
+
   ul(ng-repeat="schedule in schedules")
     li {{schedule.role}}
       ul(ng-repeat="shift in schedule.shifts")

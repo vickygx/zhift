@@ -160,8 +160,9 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         $scope.employeesOfCurrentSchedule = [];
     }
 
-    $scope.setActiveShiftInfo = function(day, startTime, endTime) {
+    $scope.setActiveShiftInfo = function(id, day, startTime, endTime) {
         $scope.activeShift = {
+            shiftId: id,
             day: day,
             startTime: hourToHHMM(startTime),
             endTime: hourToHHMM(endTime)
@@ -174,12 +175,19 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         TemplateShiftService.createTemplateShift(day, startTime, endTime, employeeId, scheduleId, 
             function(err, newTemplateShift){
                 if (!err){
-
+                    //TODO
                 }
                 console.log(err);
             });
     }
     
+    $scope.reassignTemplateShift = function(id, day, startTime, endTime, employeeId, scheduleId){
+        TemplateShiftService.reassignTemplateShift(id, day, startTime, endTime, employeeId, scheduleId,
+            function(err, shift){
+                if (!err){
+                }
+            });
+    }
     var hourToHHMM = function(hour) {
         // If hour is single digit
         var hourString = String(hour);
@@ -211,7 +219,10 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             element.unbind('click');
             element.bind('click', function(evt) {
                 // Store information of clicked shift
-                scope.setActiveShiftInfo(evt.currentTarget.dataset.dayWeek, evt.currentTarget.dataset.startTime,
+                scope.setActiveShiftInfo(
+                    evt.currentTarget.dataset.shiftId, 
+                    evt.currentTarget.dataset.dayWeek, 
+                    evt.currentTarget.dataset.startTime,
                     evt.currentTarget.dataset.endTime);
                 console.log(scope.activeShift);
             });
@@ -233,6 +244,32 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
                 console.log(scope.activeShift["day"], scope.activeShift["startTime"],
 
                 scope.activeShift["endTime"], employeeId, scope.currentScheduleId);
+                location.reload();
+            });
+        }
+    };
+})
+
+.directive('reassignTemplateShift', function() {
+    return {
+        restrict: 'C', 
+        link: function(scope, element, attrs) {
+            element.unbind('click');
+            element.bind('click', function(evt) {
+                var employeeId = $('select[name="reassignShiftEmployee"]').children(":selected").attr("id");
+                console.log(employeeId);
+                console.log(scope.activeShift);
+                scope.reassignTemplateShift(
+                    scope.activeShift["shiftId"], 
+                    scope.activeShift["day"], 
+                    scope.activeShift["startTime"], 
+                    scope.activeShift["endTime"], 
+                    employeeId, 
+                    scope.currentScheduleId);
+
+                console.log(scope.activeShift["day"], scope.activeShift["startTime"],
+                scope.activeShift["endTime"], employeeId, scope.currentScheduleId);
+                console.log("reassigned");
                 location.reload();
             });
         }

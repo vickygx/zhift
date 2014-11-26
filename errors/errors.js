@@ -45,6 +45,18 @@ module.exports.shifts.notOwnerOfShift = {
     status: 400,
     name: "Bad permissions",
     message: "User is not owner of shift. Cannot put up for grabs."
+};
+
+module.exports.shifts.shiftForWeekAlreadyCreated = {
+    status: 400,
+    name: "Bad Input",
+    message: "Shift associated with this template shift and week already exists! Try another week!"
+};
+
+module.exports.shifts.templateShiftDoesNotExist = {
+    status: 400,
+    name: "Bad Input",
+    message: "Cannot create shift from this template shift. Id doesn't exist."
 }
 
 //================== Schedule error functions =================//
