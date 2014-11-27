@@ -1,6 +1,12 @@
 .DS_Store
 
-# NODE DEPENDENCIES
-node_modules
-
 npm-debug.log
+
+# NODE DEPENDENCIES
+node_modules/
+
+# OPENSHIFT
+.openshift/
+index.html
+server.js
+deplist.txt
