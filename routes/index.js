@@ -5,20 +5,7 @@
 
 var express = require('express');
 var router = express.Router();
-
-/**
- * Authentication middleware: redirect the user to '/' if they are not authenticated.
- */
-var isAuthenticated = function (req, res, next) {
-    // if user is authenticated in the session, call the next() to call the next request handler 
-    // Passport adds this method to request object. A middleware is allowed to add properties to
-    // request and response objects.
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    // if the user is not authenticated then redirect him to the login page
-    res.redirect('/');
-}
+var authorization = require('../errors/authorization');
 
 module.exports = function(passport) {
 	/**
@@ -64,7 +51,7 @@ module.exports = function(passport) {
 	/**
 	 * GET Home Page.
 	 */
-	router.get('/home', isAuthenticated, function(req, res) {
+	router.get('/home', authorization.isAuthenticated, function(req, res) {
 		res.render('index', {user: req.user});
 	});
 
@@ -79,14 +66,14 @@ module.exports = function(passport) {
 	/**
 	 * GET shift test page.
 	 */
-	router.get('/shifts', isAuthenticated, function(req, res) {
+	router.get('/shifts', authorization.isAuthenticated, function(req, res) {
     	res.render('shift/test_shift', {title: 'shift calendar testing', user: req.user});
 	});
 
 	/**
 	 * GET dashboard page.
 	 */
-	router.get('/dashboard', isAuthenticated, function(req, res) {
+	router.get('/dashboard', authorization.isAuthenticated, function(req, res) {
 		res.render('dashboard/dash', {user: req.user});
 	});
 

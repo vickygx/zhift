@@ -25,50 +25,11 @@ var logError = function(err) {
 }
 
 /**
- * Log in as cron.
- */
-
-var loginBody = {
-    email: CRON_EMAIL,
-    password: CRON_PASSWORD,
-    org: CRON_ORG,
-};
-
-request.post(URL + '/login', {form: loginBody}, function(err, res, body) {
-    if (err) {
-        return logError(err);
-    }
-
-    if (body === 'Moved Temporarily. Redirecting to /') {
-        return logError('Failed to log in');
-    }
-
-    createNewShifts();
-    deleteAllOldShifts();
-    deleteAllOldRecords();
-});
-
-
-/**
- * Create shifts for three weeks from now.
- */
-var createNewShiftBody = {
-    week: 3,
-}
-function createNewShifts() {
-    getAllTemplateShifts(function(templateShifts) {
-        templateShifts.forEach(function(templateShift) {
-            request.post(URL + '/shift/' + templateShift._id, {form: createNewShiftBody}, logError);
-        });
-    });
-};
-
-/**
  * Get all template shifts in the database.
  * @param  {Function} fn Callback that takes (err, templateShifts)
  */
-function getAllTemplateShifts(fn) {
-    request.get(URL + '/template/all', function (err, res, body) {
+var getAllTemplateShifts = function(fn) {
+    request.get(URL + '/template/all', {form: {cron: CRON_PASSWORD}}, function (err, res, body) {
         body = JSON.parse(body);
         if(body.message) {
             return logError(body.message);
@@ -77,16 +38,41 @@ function getAllTemplateShifts(fn) {
     });
 };
 
-/**
- * Delete all shifts that have already occurred.
- */
-function deleteAllOldShifts() {
-    request.del(URL + '/shift/old', logError);
-};
+// Create shifts for 3 weeks from now
+getAllTemplateShifts(function(templateShifts) {
+    templateShifts.forEach(function(templateShift) {
+        request.post(
+            URL + '/shift/' + templateShift._id,
+            {
+                form: {
+                    cron: CRON_PASSWORD,
+                    week: 3,
+                },
+            },
+            logError
+        );
+    });
+});
 
-/**
- * Delete all records pertaining to shifts that have already occurred.
- */
-function deleteAllOldRecords() {
-    request.del(URL + '/record/old', logError);
-};
+
+// Delete all shifts that have already occurred.
+request.del(
+    URL + '/shift/old',
+    {
+        form: {
+            cron: CRON_PASSWORD,
+        },
+    },
+    logError
+);
+
+// Delete all records pertaining to shifts that have already occurred.
+request.del(
+    URL + '/record/old',
+    {
+        form: {
+            cron: CRON_PASSWORD,
+        },
+    },
+    logError
+);
