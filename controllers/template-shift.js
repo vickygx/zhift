@@ -68,3 +68,11 @@ module.exports.getAllShiftsBySchedule = function(scheduleId, fn) {
         .populate('responsiblePerson', 'name')
         .exec(fn);
 };
+
+/**
+ * Get all template shifts in database. Used only by cron.
+ * @param {Function} fn Callback that takes (err, templateShift[]).
+ */
+module.exports.getAllShifts = function(fn) {
+    TemplateShift.find({}, fn);
+}

@@ -30,13 +30,12 @@ router.get('/', function(req, res, next) {
  *     {Shift} The created shift.
  */
 router.post('/:template_shift', function(req, res, next){
-    ShiftController.createShiftFromTemplateShift(req.param('template_shift'), req.user.week, new Date(),
-        function(err, shift){
-            if (err){
-                return next(err);
-            }
-            res.send(shift);
-        });
+    ShiftController.createShiftFromTemplateShift(req.param('template_shift'), req.body.week, new Date(), function(err, shift){
+        if (err) {
+            return next(err);
+        }
+        res.send(shift);
+    });
 });
 
 
@@ -106,11 +105,7 @@ router.get('/:id', function(req, res, next) {
  */
 router.get('/user/:id', function(req, res, next) {
     // Checking if logged in user is userid
-    console.log(req.user.schedule);
     if(req.param('id') !== req.user._id.toString() && req.user.schedule !== undefined) {
-        console.log(req.param('id'));
-        console.log(req.user._id.toString());
-        console.log(req.user.schedule);
         return res.status(403).send({message: 'error: you are not a manager or the owner of this shift. cannot get'});
     }
 
@@ -229,6 +224,20 @@ router.put('/claim/:id', function(req, res, next) {
         RecordController.recordShiftClaim(emails, originalOwner.name, req.user.name, shift);
 
         res.send(shift);
+    });
+});
+
+/**
+ * DELETE all shifts that have already happened. Only called by cron.
+ * No request body parameters required.
+ * No response body contents on success.
+ */
+router.delete('/old', function(req, res, next) {
+    ShiftController.deleteOldShifts(function(err, numDeleted) {
+        if (err) {
+            return next(err);
+        }
+        res.send({});
     });
 });
 

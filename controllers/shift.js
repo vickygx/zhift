@@ -61,39 +61,39 @@ module.exports.deleteShiftsGeneratedFromTemplateShift = function(templateShiftId
 * @param {Function} fn              Callback that takes (err, shift).
 */
 module.exports.createShiftFromTemplateShift = function(templateShiftId, next, dateFrom, fn){
-    TemplateShift.findById(templateShiftId, function(err, templateShift){
-        if (err){
-            fn(err);
+    TemplateShift.findById(templateShiftId, function(err, templateShift) {
+        if (err) {
+            return fn(err);
         }
-        else if (templateShift){
-            var day = templateShift.dayOfWeek;
-            var startTime = templateShift.start;
-            var endTime = templateShift.end;
-            var employeeId = templateShift.responsiblePerson;
-            var scheduleId = templateShift.schedule;
-            var date = eval('dateFrom.next().' + day.toLowerCase() + '().addDays(' + (next-1)*7 + ')');
 
-            // Check if this shift already exists
-            Shift.findOne({templateShift: templateShiftId, dateScheduled: date}, function(err, shift){
-                if (err) {
-                    fn(err);
-                }
-                // If this shift exists for this day, do not create
-                else if (shift){
-                    fn(errors.shifts.shiftForWeekAlreadyCreated); 
-                }
-                // Create only if this shift doesn't exist
-                else {
-                     module.exports.createShift(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn);
-                }
-            });   
-        }
         // templateshift with given id doesn't exist, return error
-        else {
-            fn(errors.shifts.templateShiftDoesNotExist); 
+        if (!templateShift) {
+            return fn(errors.shifts.templateShiftDoesNotExist);
         }
+
+        var day = templateShift.dayOfWeek;
+        var startTime = templateShift.start;
+        var endTime = templateShift.end;
+        var employeeId = templateShift.responsiblePerson;
+        var scheduleId = templateShift.schedule;
+        var date = eval('dateFrom.next().' + day.toLowerCase() + '().addDays(' + (next-1)*7 + ')');
+
+        // Check if this shift already exists
+        Shift.findOne({templateShift: templateShiftId, dateScheduled: date}, function(err, shift) {
+            if (err) {
+                fn(err);
+            }
+            // If this shift exists for this day, do not create
+            else if (shift) {
+                fn(errors.shifts.shiftForWeekAlreadyCreated);
+            }
+            // Create only if this shift doesn't exist
+            else {
+                 module.exports.createShift(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn);
+            }
+        });
     });
-}
+};
 
 /**
  * Put a shift up for grabs.
@@ -171,7 +171,7 @@ module.exports.tradeShifts = function(shiftIdA, shiftIdB, fn) {
             });
         });
     });
-}
+};
 
 /**
  * Get all shifts associated with a user.
@@ -180,7 +180,7 @@ module.exports.tradeShifts = function(shiftIdA, shiftIdB, fn) {
  */
 module.exports.getAllUserShifts = function(employeeId, fn) {
     Shift.find({responsiblePerson: employeeId}, fn);
-}
+};
 
 /**
  * Get all shifts associated with a schedule to get shifts for.
@@ -191,7 +191,7 @@ module.exports.getAllShiftsOnASchedule = function(scheduleId, fn) {
     Shift.find({schedule: scheduleId})
         .populate('responsiblePerson', 'name')
         .exec(fn);
-}
+};
 
 /**
  * Get all shifts currently on open offer.
@@ -200,7 +200,7 @@ module.exports.getAllShiftsOnASchedule = function(scheduleId, fn) {
  */
 module.exports.getOfferedShiftsOnASchedule = function(scheduleId, fn) {
     Shift.find({schedule: scheduleId, upForGrabs: true}, fn);
-}
+};
 
 /**
  * Get all shifts currently up for grabs.
@@ -209,4 +209,12 @@ module.exports.getOfferedShiftsOnASchedule = function(scheduleId, fn) {
  */
 module.exports.getShiftsUpForSwapOnASchedule = function(scheduleId, fn) {
     Shift.find({schedule: scheduleId, upForSwap: true}, fn);
-}
+};
+
+/**
+ * Delete all shifts that have already happened. Only called by cron.
+ * @param  {Function} fn Callback that takes (err, numShiftsDeleted).
+ */
+module.exports.deleteOldShifts = function(fn) {
+    Shift.remove({dateScheduled: {$lt: new Date()}}, fn);
+};

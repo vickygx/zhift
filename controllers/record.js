@@ -41,7 +41,7 @@ var logErrors = function(err) {
 /**
  * Get all records about a schedule.
  * @param {ObjectId} scheduleId The id of the schedule to get records for.
- * @param {Function} fn         Callback that takes (err, record[])
+ * @param {Function} fn         Callback that takes (err, record[]).
  */
 module.exports.getRecordsForSchedule = function(scheduleId, fn) {
     Record.find({schedule: scheduleId}).sort([['_id', -1]]).exec(fn);
@@ -50,10 +50,18 @@ module.exports.getRecordsForSchedule = function(scheduleId, fn) {
 /**
  * Get a specific record.
  * @param {ObjectId} recordId The id of the record to get.
- * @param {Function} fn       Callback that takes (err, record)
+ * @param {Function} fn       Callback that takes (err, record).
  */
 module.exports.getRecord = function(recordId, fn) {
     Record.findOneById(recordId, fn);
+};
+
+/**
+ * Delete all records pertaining to shifts that have already occurred.
+ * @param {Function} fn Callback that takes (err, numDeleted).
+ */
+module.exports.deleteOldRecords = function(fn) {
+    Record.remove({dateAbout: {$lt: new Date()}}, fn);
 };
 
 /**
@@ -70,7 +78,12 @@ module.exports.recordShiftUpForGrabs = function(to, owner, shift) {
         text: owner + ' put their ' + shiftToString(shift) + ' up for grabs.',
     };
     console.log(email);
-    new Record({content: email.text, schedule: shift.schedule}).save(logErrors);
+
+    new Record({
+        content: email.text,
+        schedule: shift.schedule,
+        dateAbout: shift.dateScheduled
+    }).save(logErrors);
     // sendgrid.send(email, console.log);
 };
 
@@ -89,7 +102,12 @@ module.exports.recordShiftClaim = function(to, originalOwner, newOwner, shift) {
         text: newOwner + ' has claimed ' + originalOwner + '\'s ' + shiftToString(shift) + '.',
     };
     console.log(email);
-    new Record({content: email.text, schedule: shift.schedule}).save(logErrors);
+
+    new Record({
+        content: email.text,
+        schedule: shift.schedule,
+        dateAbout: shift.dateScheduled,
+    }).save(logErrors);
     // sendgrid.send(email, console.log);
 };
 
@@ -108,7 +126,12 @@ module.exports.recordShiftUpForSwap = function(to, owner, shift) {
         text: owner + ' put their ' + shiftToString(shift) + ' up for swap.',
     };
     console.log(email);
-    new Record({content: email.text, schedule: shift.schedule}).save(logErrors);
+
+    new Record({
+        content: email.text,
+        schedule: shift.schedule,
+        dateAbout: shift.dateScheduled,
+    }).save(logErrors);
     // sendgrid.send(email, console.log);
 };
 
@@ -123,6 +146,11 @@ module.exports.recordSwapProposal = function(to, swap) {
     var originalShift = swap.shiftUpForSwap;
     var owner = originalShift.responsiblePerson.name;
 
+    var dateAbout = proposedShift.dateScheduled;
+    if (originalShift.dateScheduled > proposedShift.dateScheduled) {
+        dateAbout = originalShift.dateScheduled;
+    }
+
     var email = {
         to: to,
         from: FROM,
@@ -130,7 +158,12 @@ module.exports.recordSwapProposal = function(to, swap) {
         text: proposer + ' has offered their ' + shiftToString(proposedShift) + ' in exchange for ' + owner + '\'s ' + shiftToString(originalShift) + '.',
     };
     console.log(email);
-    new Record({content: email.text, schedule: swap.schedule}).save(logErrors);
+
+    new Record({
+        content: email.text,
+        schedule: swap.schedule,
+        dateAbout: dateAbout,
+    }).save(logErrors);
     // sendgrid.send(email, console.log);
 };
 
@@ -145,6 +178,11 @@ module.exports.recordSwapRejected = function(to, swap) {
     var originalShift = swap.shiftUpForSwap;
     var owner = originalShift.responsiblePerson.name;
 
+    var dateAbout = proposedShift.dateScheduled;
+    if (originalShift.dateScheduled > proposedShift.dateScheduled) {
+        dateAbout = originalShift.dateScheduled;
+    }
+
     var email = {
         to: to,
         from: FROM,
@@ -152,7 +190,12 @@ module.exports.recordSwapRejected = function(to, swap) {
         text: owner + ' has rejected ' + proposer + '\'s proposal to swap their ' + shiftToString(proposedShift) + ' with ' + owner + '\'s ' + shiftToString(originalShift) + '.',
     };
     console.log(email);
-    new Record({content: email.text, schedule: swap.schedule}).save(logErrors);
+
+    new Record({
+        content: email.text,
+        schedule: swap.schedule,
+        dateAbout: dateAbout,
+    }).save(logErrors);
     // sendgrid.send(email, console.log);
 };
 
@@ -167,6 +210,11 @@ module.exports.recordSwapAccepted = function(to, swap) {
     var originalShift = swap.shiftUpForSwap;
     var owner = originalShift.responsiblePerson.name;
 
+    var dateAbout = proposedShift.dateScheduled;
+    if (originalShift.dateScheduled > proposedShift.dateScheduled) {
+        dateAbout = originalShift.dateScheduled;
+    }
+
     var email = {
         to: to,
         from: FROM,
@@ -174,6 +222,11 @@ module.exports.recordSwapAccepted = function(to, swap) {
         text: owner + ' has accepted ' + proposer + '\'s proposal to swap their ' + shiftToString(proposedShift) + ' with ' + owner + '\'s ' + shiftToString(originalShift) + '.',
     };
     console.log(email);
-    new Record({content: email.text, schedule: swap.schedule}).save(logErrors);
+
+    new Record({
+        content: email.text,
+        schedule: swap.schedule,
+        dateAbout: dateAbout,
+    }).save(logErrors);
     // sendgrid.send(email, console.log);
 };

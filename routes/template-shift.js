@@ -36,6 +36,22 @@ router.post('/', function(req, res) {
 });
 
 /**
+ * GET all template shifts in the database. Should only be accessiblie by cron.
+ * TODO: permissions
+ * No request body parameters required.
+ * Response body contains:
+ *     {TemplateShift[]} The retrieved template shfits.
+ */
+router.get('/all', function(req, res) {
+    TemplateShiftController.getAllShifts(function(err, templateShifts) {
+        if (err) {
+            return res.send(err);
+        }
+        res.send(templateShifts);
+    });
+});
+
+/**
  * GET all template shifts associated with a schedule.
  * No request body parameters required.
  * Response body contains:

@@ -42,4 +42,18 @@ router.get('/:id', function(req, res, next) {
     });
 });
 
+/**
+ * DELETE all records about changes that have already occurred.
+ * No request body parameters requires.
+ * No response body contents on success.
+ */
+router.delete('/old', function(req, res, next) {
+    RecordController.deleteOldRecords(function(err, numDeleted) {
+        if (err) {
+            return next(err);
+        }
+        res.send({});
+    });
+});
+
 module.exports = router;
