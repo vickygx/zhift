@@ -31,6 +31,14 @@ router.post('/', function(req, res) {
                 return res.send(err);
             }
             res.send(templateShift);
+
+            [1, 2, 3].forEach(function(next) {
+                ShiftController.createShiftFromTemplateShift(templateShift._id, next, new Date(), function(err, shift) {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            });
         }
     );
 });

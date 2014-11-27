@@ -20,7 +20,7 @@ module.exports = {};
  * @param {Date}     date            Date of shift.
  * @param {Function} fn              Callback that takes (err, shift).
  */
-module.exports.createShift = function(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn) {
+var createShift = function(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn) {
     var shift = new Shift({
         dayOfWeek: day,
         start: startTime,
@@ -90,7 +90,7 @@ module.exports.createShiftFromTemplateShift = function(templateShiftId, next, da
             }
             // Create only if this shift doesn't exist
             else {
-                module.exports.createShift(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn);
+                createShift(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn);
             }
         });
     });
