@@ -56,6 +56,14 @@ else {
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function callback () {
         console.log('Database ready.');
+        if (app.get('env') === 'test') {
+            require('./tests/clear-db')(db, function(err) {
+                if (err) {
+                    return console.log(err);
+                }
+                require('./tests/seed-db')(db);
+            });
+        }
     });
 }
 
