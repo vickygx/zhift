@@ -67,6 +67,9 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(res);
             }).error(function(res) {
+                if (res.status === 401) {
+                    return window.location = res.responseText;
+                }
                 callback(res);
             });
         },
@@ -82,6 +85,9 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(res);
             }).error(function(res) {
+                if (res.status === 401) {
+                    return window.location = res.responseText;
+                }
                 callback(res);
             });
         },
@@ -97,6 +103,9 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(null, res);
             }).error(function(res) {
+                if (res.status === 401) {
+                    return window.location = res.responseText;
+                }
                 callback(res.responseText);
             });
         },
