@@ -19,15 +19,20 @@ module.exports = {};
 module.exports.createShift = function(day, startTime, endTime, employeeId, scheduleId, fn) {
     // Create new Template Shift
     var shift = new TemplateShift({
-       dayOfWeek: day,
-       start: startTime,
-       end: endTime,
-       responsiblePerson: employeeId,
-       schedule: scheduleId
+         dayOfWeek: day,
+         start: startTime,
+         end: endTime,
+         responsiblePerson: employeeId,
+         schedule: scheduleId
     });
 
     // Add to database
-    shift.save(fn);
+    shift.save(function(err, shift) {
+        if (err) {
+            return fn(err);
+        }
+        shift.populate('responsiblePerson', fn);
+    });
 };
 
 /**

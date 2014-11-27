@@ -19,7 +19,6 @@ ZhiftApp.service('TemplateShiftService', ['$rootScope', function($rootScope) {
                 callback(null, res);
             }).error(function(res) {
                 // TODO: error handling
-                console.log(res.responseText);
                 callback(res.responseText);
             });
         },
@@ -50,7 +49,6 @@ ZhiftApp.service('TemplateShiftService', ['$rootScope', function($rootScope) {
                 type: 'DELETE',
                 url: '/template/' + id,
             }).success(function(res) {
-                console.log('delete success!')
                 $.ajax({
                     datatype: 'json',
                     type: 'POST',
@@ -59,21 +57,17 @@ ZhiftApp.service('TemplateShiftService', ['$rootScope', function($rootScope) {
                         day: day,
                         startTime: startTime,
                         endTime: endTime,
-                        employeeId: employeeId,
+                        employeeId: reassignToEmployeeId,
                         scheduleId: scheduleId,
                     },
                 }).success(function(res) {
-                    console.log('recreate success!');
-                    callback(res);
+                    callback(null, res);
                 }).error(function(res) {
                     // TODO: error handling
-                    console.log('recreate fail');
-                    console.log(res.responseText);
                     callback(res.responseText);
                 });
             }).error(function(res) {
                 // TODO: error handling
-                console.log(res.responseText);
                 callback(res.responseText);
             })
         }

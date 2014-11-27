@@ -30,6 +30,10 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
         $scope.templateShiftId = {};
 
         ScheduleService.getSchedules($scope.org, function(schedules) {
+            if (schedules.length === 0) {
+                return;
+            }
+
             $scope.scheduleId = schedules[0]._id;
 
             schedules.forEach(function(schedule) {
