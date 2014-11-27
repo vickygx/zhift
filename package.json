@@ -24,7 +24,8 @@
   },
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "NODE_ENV=test node app.js"
   },
   "dependencies": {
     "bcrypt-nodejs": "*",
