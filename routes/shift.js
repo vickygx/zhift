@@ -22,60 +22,24 @@ router.get('/', function(req, res, next) {
 });
 
 /**
- * POST to create a new shift for a template shift for the next X week
+ * POST to create a new shift for a template shift for the next X week.
  * Request body should contain:
  *     {Integer}   week        The week to create the next template shift     
  *  
  * Response body contains:
  *     {Shift} The created shift.
  */
-router.post('/:template_shift', function(req, res, next){
-    ShiftController.createShiftFromTemplateShift(req.param('template_shift'), req.body.week, new Date(), function(err, shift){
-        if (err) {
-            return next(err);
-        }
-        res.send(shift);
-    });
-});
-
-
-/**
- * POST to create a new shift.
- * Request body should contain:
- *     {String}   day             [REMOVE]
- *     {String}   startTime       [REMOVE]
- *     {String}   endTime         [REMOVE]
- *     {ObjectId} employeeId      [REMOVE]
- *     {ObjectId} scheduleId      [REMOVE]
- *     {ObjectId} templateShiftId The id of the template shift from which to generate the shift.
- *     {Date}     date            The date on which the shift occurs.
- * Response body contains:
- *     {Shift} The created shift.
- */
-router.post('/', function(req, res, next) {
-    // Checking if permissions are correct
-    // TODO: replace with req.session.isManager
+router.post('/:templateid', function(req, res, next) {
     UserController.isManagerOfOrganization(req.user.email, req.user.org, function(err, isManager) {
-        if (isManager) {
-            // TODO: generate from template shift, don't require day/startTime/endTime/employeeId/schedulEid
-            day = req.body.day;
-            startTime = req.body.startTime;
-            endTime = req.body.endTime;
-            employee = req.body.employeeId;
-            schedule = req.body.scheduleId;
-            templateShift = req.body.templateShiftId;
-            date = req.body.date;
-
-            ShiftController.createShift(day, startTime, endTime, employee, schedule, templateShift, date, function(err, shift) {
-                if (err) {
-                    return next(err);
-                }
-                res.send(shift);
-            });
+        if (!isManager) {
+            return res.status(403).send({message: 'error: you are not a manager. cannot create shift'});
         }
-        else {
-            res.status(403).send({message: 'error: you are not a manager. cannot create shift'});
-        }
+        ShiftController.createShiftFromTemplateShift(req.param('templateid'), req.body.week, new Date(), function(err, shift) {
+            if (err) {
+                return next(err);
+            }
+            res.send(shift);
+        });
     });
 });
 

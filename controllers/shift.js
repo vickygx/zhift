@@ -60,7 +60,7 @@ module.exports.deleteShiftsGeneratedFromTemplateShift = function(templateShiftId
 * @param {Date}     dateFrom        Date calculated from or Date.now() if none.
 * @param {Function} fn              Callback that takes (err, shift).
 */
-module.exports.createShiftFromTemplateShift = function(templateShiftId, next, dateFrom, fn){
+module.exports.createShiftFromTemplateShift = function(templateShiftId, next, dateFrom, fn) {
     TemplateShift.findById(templateShiftId, function(err, templateShift) {
         if (err) {
             return fn(err);
@@ -77,6 +77,7 @@ module.exports.createShiftFromTemplateShift = function(templateShiftId, next, da
         var employeeId = templateShift.responsiblePerson;
         var scheduleId = templateShift.schedule;
         var date = eval('dateFrom.next().' + day.toLowerCase() + '().addDays(' + (next-1)*7 + ')');
+        date.setHours(0,0,0,0);
 
         // Check if this shift already exists
         Shift.findOne({templateShift: templateShiftId, dateScheduled: date}, function(err, shift) {
@@ -89,7 +90,7 @@ module.exports.createShiftFromTemplateShift = function(templateShiftId, next, da
             }
             // Create only if this shift doesn't exist
             else {
-                 module.exports.createShift(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn);
+                module.exports.createShift(day, startTime, endTime, employeeId, scheduleId, templateShiftId, date, fn);
             }
         });
     });

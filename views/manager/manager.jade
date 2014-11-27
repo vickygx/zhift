@@ -18,8 +18,6 @@ mixin manager(user)
     div(ng-switch on="currentPage")
       div(ng-switch-when="Home")
         hr
-        +allTemplateShifts(user.org)
-        hr
         +allShifts(user.org)
         hr
       div(ng-switch-when="Edit")

@@ -86,28 +86,20 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
-        createShift: function(day, startTime, endTime, employeeId, scheduleId, date, templateShiftId, callback) {
+        createShift: function(templateShiftId, week, callback) {
             $.ajax({
                 datatype: 'json',
                 type: 'POST',
-                url: '/shift/',
+                url: '/shift/' + templateShiftId,
                 data: {
-                    day: day,
-                    startTime: startTime,
-                    endTime: endTime,
-                    employeeId: employeeId,
-                    scheduleId: scheduleId,
-                    date: date,
-                    templateShiftId: templateShiftId
+                    week: week,
                 },
             }).success(function(res) {
-                callback(res);
+                callback(null, res);
             }).error(function(res) {
-                // TODO: error handling
-                console.log(res.responseText);
                 callback(res.responseText);
             });
-        }
+        },
     };
   
     return service;
