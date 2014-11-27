@@ -15,8 +15,8 @@ var User = require('../models/user');
 
 /**
  * Delete all documents in the database.
- * @param  {mongoose.connection}   db The Zhift database to clear.
- * @param  {Function} fn Callback that takes (err).
+ * @param {mongoose.connection} db The Zhift database to clear.
+ * @param {Function}            fn Callback that takes (err).
  */
 module.exports = function(db, fn) {
     var models = [EmployeeUser, ManagerUser, Organization, Record, Schedule, Shift, Swap, TemplateShift, User];
