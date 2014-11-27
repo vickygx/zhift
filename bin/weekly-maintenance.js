@@ -54,7 +54,6 @@ getAllTemplateShifts(function(templateShifts) {
     });
 });
 
-
 // Delete all shifts that have already occurred.
 request.del(
     URL + '/shift/old',

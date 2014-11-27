@@ -36,7 +36,6 @@ module.exports.isAuthenticated = function (req, res, next) {
         return res.status(401).send('/');
     }
     if (req.method === 'PUT') {
-        console.log('put');
         return res.status(401).send('/');
     }
 };
