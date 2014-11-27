@@ -2,6 +2,8 @@
 
 npm-debug.log
 
+logs/
+
 # NODE DEPENDENCIES
 node_modules/
 
