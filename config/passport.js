@@ -106,9 +106,7 @@ module.exports = function(passport) {
         usernameField: 'email',
         passReqToCallback: true
     }, function(req, email, password, done) {
-        var org = req.body.org;
-
-        UserController.retrieveUser(email, org, function(err, user) {
+        UserController.retrieveUser(email, req.body.org, function(err, user) {
             if (err) {
                 return done(null, false, req.flash('message', err));
             }
@@ -118,20 +116,7 @@ module.exports = function(passport) {
             if (!isCorrectPassword(user, password)) {
                 return done(null, false, req.flash('message', 'Incorrect password.'));
             }
-
-            // logic for record creation
-            UserController.retrieveManagersByOrgId(org, function(err, managers) {
-                if (err) {
-                    return done(null, false, req.flash('message', err));
-                }
-                req.session.managerEmails = managers.map(function(manager) {
-                    if (manager._id.toString() === user._id.toString()) {
-                        req.session.isManager = true;
-                    }
-                    return manager.email;
-                });
-                return done(null, user);
-            });
+            return done(null, user);
         });
     }));
 }

@@ -127,7 +127,7 @@ router.put('/upForGrabs/:id', function(req, res, next) {
         if (!shift) {
             return next(errors.shifts.invalidShiftId);
         }
-        RecordController.recordShiftUpForGrabs(req.session.managerEmails, req.user.name, shift);
+        RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
         res.send(shift);
     });
 });
@@ -183,10 +183,7 @@ router.put('/claim/:id', function(req, res, next) {
         if (!shift) {
             return next(errors.schedules.invalidShiftId);
         }
-        var emails = req.session.managerEmails.slice(0);
-        emails.push(originalOwner.email, req.user.email);
-        RecordController.recordShiftClaim(emails, originalOwner.name, req.user.name, shift);
-
+        RecordController.recordShiftClaim(req.user.org, [originalOwner.email, req.user.email], originalOwner.name, req.user.name, shift);
         res.send(shift);
     });
 });
