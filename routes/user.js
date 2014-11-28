@@ -27,7 +27,7 @@ var errorChecking = require('../errors/error-checking');
  *     {ManagerUser} The created manager.
  */
 router.post('/manager', function(req, res) {
-    UserController.createUser(req.body.username, req.body.email, req.body.password, req.body.org, null, function(err, manager) {
+    UserController.createManager(req.body.username, req.body.email, req.body.password, req.body.org, function(err, manager) {
         if (err) {
             return res.send(err);
         }

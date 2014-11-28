@@ -12,18 +12,31 @@ mixin editRoles()
   hr
 
 mixin editUsers()
-  span Name
-  span Email
-  div(ng-repeat="manager in managers")
-    span {{manager.name}}
-    span {{manager.email}}
+  div(ng-init="showManagers = true; showAddManager = false; showAddEmployee = false;")
+    div(ng-show="showManagers")
+      input(type="submit", value="Employees", ng-click="showManagers = false")
+      input(type="submit", value="Add", ng-click="showAddManager = true")
+      div(ng-show="showAddManager")
+        input(type="text", placeholder="Name", ng-model="name")
+        input(type="text", placeholder="Email", ng-model="email")
+        input(type="submit", value="Submit", ng-click="showAddManager = false; createManager(name, email)")
+      h3 Managers
+      span Name
+      span Email
+      div(ng-repeat="manager in managers")
+        span {{manager.name}}
+        span {{manager.email}}
 
-  span Name
-  span Email
-  span Role
-  div(ng-repeat="(role, employeeList) in employees")
-    div(ng-repeat="employee in employeeList")
-      div(ng-if="employee.name !== 'None'")
-        span {{employee.name}}
-        span {{employee.email}}
-        span {{schedules[role].role}}
+    div(ng-show="!showManagers")
+      input(type="submit", value="Managers", ng-click="showManagers = true")
+      input(type="submit", value="Add", ng-click="showAddEmployee = true")
+      h3 Employees
+      span Name
+      span Email
+      span Role
+      div(ng-repeat="(role, employeeList) in employees")
+        div(ng-repeat="employee in employeeList")
+          div(ng-if="employee.name !== 'None'")
+            span {{employee.name}}
+            span {{employee.email}}
+            span {{schedules[role].role}}

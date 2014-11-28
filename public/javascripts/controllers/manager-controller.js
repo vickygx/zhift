@@ -105,4 +105,19 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
             $scope.$apply();
         });
     };
+
+    /**
+     * Create a new manager for this organization.
+     * @param {String} name  The name of the new manager.
+     * @param {String} email The email of the new manager.
+     */
+    $scope.createManager = function(name, email) {
+        UserService.createManager(name, email, $scope.org, function(err, manager) {
+            if (err) {
+                return $('.message-container').text(err);
+            }
+            $scope.managers.push(manager);
+            $scope.$apply();
+        });
+    };
 });
