@@ -19,6 +19,7 @@ ZhiftApp.controller('ManagerEditController', function($scope, ScheduleService, U
             for (var i = 0; i < schedules.length; i++) {
                 $scope.schedules[schedules[i]._id] = schedules[i].role;
             }
+            $scope.role = (schedules.length === 0) ? 'None' : schedules[0].role;
             $scope.$apply();
         });
 
@@ -56,8 +57,8 @@ ZhiftApp.controller('ManagerEditController', function($scope, ScheduleService, U
      * @param {String} email The email of the new employee.
      * @param {String} role  The role of the new employee.
      */
-    $scope.createEmployee = function() {
-        UserService.createEmployee($scope.name, $scope.email, $scope.role, $scope.org, function(err, employee) {
+    $scope.createEmployee = function(role) {
+        UserService.createEmployee($scope.name, $scope.email, role, $scope.org, function(err, employee) {
             if (err) {
                 return $('.message-container').text(err);
             }

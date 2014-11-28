@@ -36,8 +36,9 @@ mixin editUsers()
       div(ng-show="showAddEmployee")
         input(type="text", placeholder="Name", ng-model="name")
         input(type="text", placeholder="Email", ng-model="email")
-        input(type="text", placeholder="Role", ng-model="role")
-        input(type="submit", value="Submit", ng-click="showAddEmployee = false; createEmployee(name, email, role)")
+        select(name="role", ng-model="role")
+          option(ng-repeat="(scheduleId, roleName) in schedules", ng-value="roleName") {{roleName}}
+        input(type="submit", value="Submit", ng-click="showAddEmployee = false; createEmployee(role)")
       h3 Employees
       span Name
       span Email
