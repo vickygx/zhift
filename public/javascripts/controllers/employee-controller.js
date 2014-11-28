@@ -16,7 +16,7 @@ ZhiftApp.controller('EmployeeController', function($scope, ShiftService, UserSer
      */
     $scope.init = function(user_id) {
         // get the current user
-        UserService.getEmployee(user_id, function(employee) {
+        UserService.getEmployee(user_id, function(err, employee) {
             $scope.user = employee;
 
             $scope.myShifts = {};

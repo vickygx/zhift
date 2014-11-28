@@ -1,6 +1,9 @@
 //- Edit Organization: view and add roles
 //- author: @Lily Seropian
 
+block head
+  script(type="text/javascript", src="/javascripts/controllers/manager-edit-controller.js")
+
 mixin editRoles()
   hr
   h3 Existing Roles
@@ -12,9 +15,9 @@ mixin editRoles()
   hr
 
 mixin editUsers()
-  div(ng-init="showManagers = true; showAddManager = false; showAddEmployee = false;")
-    div(ng-show="showManagers")
-      input(type="submit", value="Employees", ng-click="showManagers = false")
+  div(ng-controller="ManagerEditController", ng-init="init('#{user.org}')")
+    div(ng-show="tab==='Managers'")
+      input(type="submit", value="Employees", ng-click="tab='Employees'")
       input(type="submit", value="Add", ng-click="showAddManager = true")
       div(ng-show="showAddManager")
         input(type="text", placeholder="Name", ng-model="name")
@@ -27,8 +30,8 @@ mixin editUsers()
         span {{manager.name}}
         span {{manager.email}}
 
-    div(ng-show="!showManagers")
-      input(type="submit", value="Managers", ng-click="showManagers = true")
+    div(ng-show="tab==='Employees'")
+      input(type="submit", value="Managers", ng-click="tab='Managers'")
       input(type="submit", value="Add", ng-click="showAddEmployee = true")
       div(ng-show="showAddEmployee")
         input(type="text", placeholder="Name", ng-model="name")
@@ -39,9 +42,8 @@ mixin editUsers()
       span Name
       span Email
       span Role
-      div(ng-repeat="(role, employeeList) in employees")
-        div(ng-repeat="employee in employeeList")
+      div(ng-repeat="employee in employees")
           div(ng-if="employee.name !== 'None'")
             span {{employee.name}}
             span {{employee.email}}
-            span {{schedules[role].role}}
+            span {{schedules[employee.schedule]}}

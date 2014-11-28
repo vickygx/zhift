@@ -116,7 +116,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
     /*  Gets all the schedules associated with the organization 
     */
     var getAllSchedules = function(orgId, callback) {
-        ScheduleService.getSchedules(orgId, function(schedules) {
+        ScheduleService.getSchedules(orgId, function(err, schedules) {
             $scope.schedules = schedules;
             callback();
         });

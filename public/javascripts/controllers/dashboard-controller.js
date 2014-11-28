@@ -34,12 +34,12 @@ ZhiftApp.controller('RecordController', function($scope, RecordService, Schedule
         $scope.records = [];
 
         if (scheduleId !== 'undefined') { // is an employee
-            ScheduleService.getSchedule(scheduleId, function(schedule) {
+            ScheduleService.getSchedule(scheduleId, function(err, schedule) {
                 getRecordsForSchedule(scheduleId, schedule.role);
             });
         }
         else { // is a manager
-            ScheduleService.getSchedules(orgName, function(schedules) {
+            ScheduleService.getSchedules(orgName, function(err, schedules) {
                 schedules.forEach(function(schedule) {
                     getRecordsForSchedule(schedule._id, schedule.role);
                 });

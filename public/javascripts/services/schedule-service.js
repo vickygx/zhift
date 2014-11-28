@@ -35,7 +35,7 @@ ZhiftApp.service('ScheduleService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: '/schedule/all/' + orgName,
             }).success(function(res) {
-                callback(res);
+                callback(null, res);
             }).error(function(res) {
                 // TODO: error handling
                 console.log(res.responseText);
@@ -49,7 +49,7 @@ ZhiftApp.service('ScheduleService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: '/schedule/' + scheduleId,
             }).success(function(res) {
-                callback(res);
+                callback(null, res);
             }).error(function(res) {
                 callback(res.responseText);
             });

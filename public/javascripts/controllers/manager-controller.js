@@ -29,7 +29,7 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
         $scope.templateShifts = {};
         $scope.templateShiftId = {};
 
-        ScheduleService.getSchedules($scope.org, function(schedules) {
+        ScheduleService.getSchedules($scope.org, function(err, schedules) {
             if (schedules.length === 0) {
                 return;
             }
@@ -55,7 +55,7 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
                 });
 
 
-                UserService.getEmployeesForSchedule(schedule._id, function(employees) {
+                UserService.getEmployeesForSchedule(schedule._id, function(err, employees) {
                     $scope.employees[schedule._id] = employees;
                     if (employees.length === 0) {
                         $scope.employees[schedule._id] = [{name: 'None', _id: 'None'}];
@@ -63,11 +63,6 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
                     $scope.employeeId[schedule._id] = $scope.employees[schedule._id][0]._id;
                 });
             });
-        });
-
-        UserService.getManagers($scope.org, function(err, managers) {
-            $scope.managers = managers;
-            $scope.$apply();
         });
     };
 
@@ -102,37 +97,6 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
                 return $('.message-container').text(err);
             }
             $scope.schedules[scheduleId].shifts.push(shift);
-            $scope.$apply();
-        });
-    };
-
-    /**
-     * Create a new manager for this organization.
-     * @param {String} name  The name of the new manager.
-     * @param {String} email The email of the new manager.
-     */
-    $scope.createManager = function(name, email) {
-        UserService.createManager(name, email, $scope.org, function(err, manager) {
-            if (err) {
-                return $('.message-container').text(err);
-            }
-            $scope.managers.push(manager);
-            $scope.$apply();
-        });
-    };
-
-    /**
-     * Create a new employee for this organization.
-     * @param {String} name  The name of the new employee.
-     * @param {String} email The email of the new employee.
-     * @param {String} role  The role of the new employee.
-     */
-    $scope.createEmployee = function(name, email, role) {
-        UserService.createEmployee(name, email, role, $scope.org, function(err, employee) {
-            if (err) {
-                return $('.message-container').text(err);
-            }
-            $scope.employees[employee.schedule].push(employee);
             $scope.$apply();
         });
     };
