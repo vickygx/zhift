@@ -23,7 +23,7 @@ var errors = require('../errors/errors');
 router.post('/', function(req, res, next) {
     OrgController.createOrg(req.body.name, function(err, org) {
         if (err) {
-            return next(err);
+            res.status(403).send(err.err);
         }
         res.send(org);
     });
