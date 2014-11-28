@@ -21,4 +21,5 @@ mixin manager(user)
         +allShifts(user.org)
         hr
       div(ng-switch-when="Edit")
-        +editOrg(user.org)
+        +editRoles()
+        +editUsers()

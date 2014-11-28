@@ -1,7 +1,7 @@
 //- Edit Organization: view and add roles
 //- author: @Lily Seropian
 
-mixin editOrg(org)
+mixin editRoles()
   hr
   h3 Existing Roles
   div(ng-repeat="schedule in schedules")
@@ -10,3 +10,20 @@ mixin editOrg(org)
   input(type="text", placeholder="Role Name", ng-model="roleName")
   input(type="submit", ng-click="createSchedule(roleName)")
   hr
+
+mixin editUsers()
+  span Name
+  span Email
+  div(ng-repeat="manager in managers")
+    span {{manager.name}}
+    span {{manager.email}}
+
+  span Name
+  span Email
+  span Role
+  div(ng-repeat="(role, employeeList) in employees")
+    div(ng-repeat="employee in employeeList")
+      div(ng-if="employee.name !== 'None'")
+        span {{employee.name}}
+        span {{employee.email}}
+        span {{schedules[role].role}}

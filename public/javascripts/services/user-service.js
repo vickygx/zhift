@@ -66,6 +66,25 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 callback(res.responseText);
             });
         },
+
+        /**
+         * GET /user/org/[orgId]/manager
+         * @param {String} id The id of the organization for which to get all managers.
+         * @param {Function} callback Called with retrieved managers or error.
+         */
+        getManagers: function(id, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'GET',
+                url: '/user/org/' + id + '/manager/',
+            }).success(function(res) {
+                callback(null, res);
+            }).error(function(res) {
+                // TODO: error handling
+                console.log(res.responseText);
+                callback(res.responseText, null);
+            });
+        }
     };
   
     return service;

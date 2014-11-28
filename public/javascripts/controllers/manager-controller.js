@@ -64,6 +64,11 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
                 });
             });
         });
+
+        UserService.getManagers($scope.org, function(err, managers) {
+            $scope.managers = managers;
+            $scope.$apply();
+        });
     };
 
     /**
