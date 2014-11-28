@@ -4,6 +4,7 @@
 */
 
 // Any specific errors go into their own object
+module.exports.org = {};
 module.exports.users = {};
 module.exports.shifts = {};
 module.exports.schedules = {};
@@ -24,6 +25,12 @@ module.exports.invalidIdError = {
     message: "The given id is not a valid ObjectId"
 };
 
+
+//================== Org error functions =================//
+module.exports.org.invalidId = {
+    status: 404,
+    message: "The given organization does not exist"
+};
 
 //================== User error functions =================//
 
