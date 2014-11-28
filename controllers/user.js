@@ -39,7 +39,7 @@ module.exports.createEmployee = function(name, email, password, org, role, callb
             return callback(err);
         }
         if (!retrievedOrg) {
-            return callback(new Error('Employee cannot be associated with a nonexistent organization.'));
+            return callback('Employee cannot be associated with a nonexistent organization.');
         }
         else {
             // employees cannot be associated with a nonexistent role (i.e. one for which there
@@ -49,7 +49,7 @@ module.exports.createEmployee = function(name, email, password, org, role, callb
                     return callback(err);                 
                 }
                 if (!schedule) {
-                    return callback(new Error('No schedule found for that organization and role'));
+                    return callback('No schedule found for that organization and role');
                 }
                 else {
                     newUser.save(function(err, user) {

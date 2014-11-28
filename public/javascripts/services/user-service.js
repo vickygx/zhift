@@ -24,7 +24,6 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 fn(res);
             }).error(function(res) {
                 // TODO: error handling
-                console.log(res.responseText);
                 fn(res.responseText);
             });
         },
@@ -43,7 +42,6 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 fn(null, res);
             }).error(function(res) {
                 // TODO: error handling
-                console.log(res.responseText);
                 fn(res.responseText, null);
             });
         },
@@ -62,8 +60,35 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 fn(res);
             }).error(function(res) {
                 // TODO: error handling
-                console.log(res.responseText);
                 fn(res.responseText);
+            });
+        },
+
+        /**
+         * POST /user/employee.
+         * @param {String}   name  The name of the new employee.
+         * @param {String}   email The email of the new employee.
+         * @param {String}   role  The role of the new employee.
+         * @param {String}   org   The org of the new employee.
+         * @param {Function} fn    Callback that takes (err, employee).
+         */
+        createEmployee: function(name, email, role, org, fn) {
+            $.ajax({
+                datatype: 'json',
+                type: 'POST',
+                url: '/user/employee/',
+                data: {
+                    username: name,
+                    email: email,
+                    password: email,
+                    role: role,
+                    org: org,
+                },
+            }).success(function(res) {
+                fn(null, res);
+            }).error(function(res) {
+                // TODO: error handling
+                fn(res.responseText, null);
             });
         },
 
@@ -81,7 +106,6 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 fn(null, res);
             }).error(function(res) {
                 // TODO: error handling
-                console.log(res.responseText);
                 fn(res.responseText, null);
             });
         },
@@ -108,7 +132,6 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 fn(null, res);
             }).error(function(res) {
                 // TODO: error handling
-                console.log(res.responseText);
                 fn(res.responseText, null);
             });
         }

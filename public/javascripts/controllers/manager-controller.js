@@ -120,4 +120,20 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
             $scope.$apply();
         });
     };
+
+    /**
+     * Create a new employee for this organization.
+     * @param {String} name  The name of the new employee.
+     * @param {String} email The email of the new employee.
+     * @param {String} role  The role of the new employee.
+     */
+    $scope.createEmployee = function(name, email, role) {
+        UserService.createEmployee(name, email, role, $scope.org, function(err, employee) {
+            if (err) {
+                return $('.message-container').text(err);
+            }
+            $scope.employees[employee.schedule].push(employee);
+            $scope.$apply();
+        });
+    };
 });

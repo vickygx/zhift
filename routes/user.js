@@ -47,17 +47,11 @@ router.post('/manager', function(req, res) {
  *     {EmployeeUser} The created employee.
  */
 router.post('/employee', function(req, res) {
-    // need to get the scheduleID in order to create employee
-    ScheduleController.retrieveScheduleByOrgAndRole(req.body.org, req.body.role, function(err, schedule) {
+    UserController.createEmployee(req.body.username, req.body.email, req.body.password, req.body.org, req.body.role, function(err, employee) {
         if (err) {
-            return res.send(err);
+            return res.status(403).send(err);
         }
-        UserController.createUser(req.body.username, req.body.email, req.body.password, req.body.org, schedule._id, function(err, employee) {
-            if (err) {
-                return res.send(err);
-            }
-            res.send(employee);
-        });  
+        res.send(employee);
     });
 });
 

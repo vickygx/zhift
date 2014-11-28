@@ -30,6 +30,11 @@ mixin editUsers()
     div(ng-show="!showManagers")
       input(type="submit", value="Managers", ng-click="showManagers = true")
       input(type="submit", value="Add", ng-click="showAddEmployee = true")
+      div(ng-show="showAddEmployee")
+        input(type="text", placeholder="Name", ng-model="name")
+        input(type="text", placeholder="Email", ng-model="email")
+        input(type="text", placeholder="Role", ng-model="role")
+        input(type="submit", value="Submit", ng-click="showAddEmployee = false; createEmployee(name, email, role)")
       h3 Employees
       span Name
       span Email
