@@ -10,9 +10,11 @@ block head
   script(type="text/javascript", src="/javascripts/services/shift-service.js")
   script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
 
+block navbar
+  a.navbar-brand(href="/signout")
+    span.glyphicon.glyphicon-log-out
+
 block content
-  div
-    a(href="/signout", class="text-center") Sign Out
   div
     a(href="/dashboard", class="text-center") Dashboard
 

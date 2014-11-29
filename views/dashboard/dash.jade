@@ -5,12 +5,11 @@ block head
   script(type="text/javascript", src="/javascripts/services/record-service.js")
   script(type="text/javascript", src="/javascripts/services/schedule-service.js")
 
-block content
-  div
-    a(href="/signout", class="text-center") Sign Out
-  div
-    a(href="/home", class="text-center") Home
+block navbar
+  a.navbar-brand(href="/signout")
+    span.glyphicon.glyphicon-log-out
 
+block content
   div(ng-controller="RecordController", ng-init="init('#{user.org}', '#{user.schedule}')")
     div(ng-repeat="record in records") {{record.role}}
       ul
