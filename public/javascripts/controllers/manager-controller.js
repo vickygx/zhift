@@ -67,24 +67,6 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
     };
 
     /**
-     * Create a new schedule, save it to the database, and display it in the frontend.
-     * @param {String} scheduleName The name of the role to make a new schedule for.
-     */
-    $scope.createSchedule = function(scheduleName) {
-        $('.message-container').text('');
-
-        ScheduleService.createSchedule($scope.org, scheduleName, function(err, newSchedule) {
-            if (err) {
-                return $('.message-container').text(err);
-            }
-            newSchedule.shifts = [];
-            newSchedule.templateShifts = [];
-            $scope.schedules[newSchedule._id] = newSchedule;
-            $scope.$apply();
-        });
-    };
-
-    /**
      * Create a new shift from a template shift, save it to the database, and display it in the frontend.
      * @param {String} scheduleId The id of the schedule the new shift is on.
      * @param {Number} week       The week to generate the shift for (1 = 1 week from now, etc.).

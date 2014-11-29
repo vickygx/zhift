@@ -221,6 +221,24 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         }
         return hourString + ':00';
     };
+
+     /**
+     * Create a new schedule, save it to the database, and display it in the frontend.
+     * @param {String} scheduleName The name of the role to make a new schedule for.
+     */
+    $scope.createSchedule = function(scheduleName) {
+        $('.message-container').text('');
+
+        ScheduleService.createSchedule($scope.org, scheduleName, function(err, newSchedule) {
+            if (err) {
+                return $('.message-container').text(err);
+            }
+            // newSchedule.shifts = [];
+            // newSchedule.templateShifts = [];
+            // $scope.schedules[newSchedule._id] = newSchedule;
+            // $scope.$apply();
+        });
+    };
 })
 
 .directive('setCurrentSchedule', function() {
@@ -289,6 +307,19 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
                     employeeId, 
                     scope.currentScheduleId
                 );
+            });
+        }
+    };
+})
+
+.directive('createNewRole', function() {
+    return {
+        restrict: 'C',
+        link: function(scope, element, attrs) {
+            element.unbind('click');
+            element.bind('click', function(evt) {
+                var roleName = $('#role-name').val();
+                scope.createSchedule(roleName);
             });
         }
     };

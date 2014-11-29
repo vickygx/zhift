@@ -23,9 +23,7 @@ ZhiftApp.service('ScheduleService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(null, res);
             }).error(function(res){
-                // TODO: error handling
-                console.log(res.responseText);
-                callback(res);
+                callback(res.responseText);
             });
         },
 
@@ -37,8 +35,6 @@ ZhiftApp.service('ScheduleService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(null, res);
             }).error(function(res) {
-                // TODO: error handling
-                console.log(res.responseText);
                 callback(res.responseText);
             });
         },

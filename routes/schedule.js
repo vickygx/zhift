@@ -32,7 +32,7 @@ router.post('/', function(req, res) {
         ScheduleController.createSchedule(req.body.orgName, req.body.role, function(err, schedule) {
             if (err) {
                 // TODO: temporary error
-                return res.status(500).send(err);
+                return res.status(500).send(err.message);
             } 
             res.send(schedule);
         });
