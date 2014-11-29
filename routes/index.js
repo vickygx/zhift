@@ -56,6 +56,14 @@ module.exports = function(passport) {
 	});
 
 	/**
+	 * GET Edit Organization Page.
+	 * TODO: authorization
+	 */
+	router.get('/edit', authorization.isAuthenticated, function(req, res) {
+		res.render('manager/edit', {user: req.user});
+	});
+
+	/**
 	 * GET to sign out a user.
 	 */
 	router.get('/signout', function(req, res) {

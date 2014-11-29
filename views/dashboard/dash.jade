@@ -1,18 +1,16 @@
+//- Dashboard
+//- @author Lily Seropian
+
 extends ../layout
 
 block head
   script(type="text/javascript", src="/javascripts/controllers/dashboard-controller.js")
   script(type="text/javascript", src="/javascripts/services/record-service.js")
   script(type="text/javascript", src="/javascripts/services/schedule-service.js")
+  include ../navbar
 
 block navbar
-  span.navbar-right
-    a.navbar-brand(href="/home")
-      span.glyphicon.glyphicon-home(title="Home")
-    a.navbar-brand(href="/dashboard")
-      span.glyphicon.glyphicon-dashboard(title="Dashboard")
-    a.navbar-brand(href="/signout")
-      span.glyphicon.glyphicon-log-out(title="Sign Out")
+  +logged-in-navbar(user.schedule === undefined)
 
 block content
   h1 Dashboard

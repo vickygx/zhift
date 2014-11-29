@@ -6,18 +6,13 @@ extends layout
 block head
   include manager/manager.jade
   include employee/employee.jade
+  include navbar.jade
 
   script(type="text/javascript", src="/javascripts/services/shift-service.js")
   script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
 
 block navbar
-  span.navbar-right
-    a.navbar-brand(href="/home")
-      span.glyphicon.glyphicon-home(title="Home")
-    a.navbar-brand(href="/dashboard")
-      span.glyphicon.glyphicon-dashboard(title="Dashboard")
-    a.navbar-brand(href="/signout")
-      span.glyphicon.glyphicon-log-out(title="Sign Out")
+  +logged-in-navbar(user.schedule === undefined)
 
 block content
   h1 Welcome, #{user.name}!

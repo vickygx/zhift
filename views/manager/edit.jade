@@ -1,10 +1,18 @@
 //- Edit Organization: view and add roles
 //- author: @Lily Seropian
 
+extends ../layout
+
 block head
   script(type="text/javascript", src="/javascripts/controllers/manager-edit-controller.js")
+  script(type="text/javascript", src="/javascripts/services/schedule-service.js")
+  script(type="text/javascript", src="/javascripts/services/user-service.js")
+  include ../navbar
 
-mixin editUsers()
+block navbar
+  +logged-in-navbar(true)
+
+block content
   div(ng-controller="ManagerEditController", ng-init="init('#{user.org}')")
     div(ng-show="tab==='Managers'")
       input(type="submit", value="Employees", ng-click="tab='Employees'")
