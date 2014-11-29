@@ -4,16 +4,6 @@
 block head
   script(type="text/javascript", src="/javascripts/controllers/manager-edit-controller.js")
 
-mixin editRoles()
-  hr
-  h3 Existing Roles
-  div(ng-repeat="schedule in schedules")
-    li {{schedule.role}}
-  h3 Add Role
-  input(type="text", placeholder="Role Name", ng-model="roleName")
-  input(type="submit", ng-click="createSchedule(roleName)")
-  hr
-
 mixin editUsers()
   div(ng-controller="ManagerEditController", ng-init="init('#{user.org}')")
     div(ng-show="tab==='Managers'")
