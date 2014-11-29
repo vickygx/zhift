@@ -9,8 +9,9 @@
 var User = require('../models/user');
 var ManagerUser = require('../models/manager-user');
 var EmployeeUser = require('../models/employee-user');
-var OrgController   = require('../controllers/organization');
-var ScheduleController   = require('../controllers/schedule');
+var OrgController = require('../controllers/organization');
+var ScheduleController = require('../controllers/schedule');
+var RecordController = require('../controllers/record');
 var errors = require('../errors/errors');
 module.exports = {};
 
@@ -69,6 +70,7 @@ module.exports.createEmployee = function(name, email, password, org, role, callb
                             if (err) {
                                 return callback(err);
                             }
+                            RecordController.inviteEmployee(name, email, password, role, org);
                             callback(null, employee);
                         });
                     });
@@ -98,6 +100,8 @@ module.exports.createManager = function(name, email, password, org, callback) {
 
     // creating a manager associated with a new organization --> create that organization
     OrgController.retrieveOrg(org, function(err, retrievedOrg) {
+        var inviteManager = retrievedOrg !== undefined;
+
         if (err) {
             return callback(err);
         }
@@ -123,6 +127,9 @@ module.exports.createManager = function(name, email, password, org, callback) {
             newManager.save(function(err, manager) {
                 if (err) {
                     return callback(err);
+                }
+                if (inviteManager) {
+                    RecordController.inviteManager(name, email, password, org);
                 }
                 callback(null, manager);
             });

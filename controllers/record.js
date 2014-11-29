@@ -19,6 +19,8 @@ module.exports = {};
  */
 var FROM = '6170-zhift@mit.edu';
 
+var URL = 'zhift-seropian.rhcloud.com';
+
 /**
  * Get a string representation of a shift for use in records.
  * Example: 'Monday, November 22, 2014 shift from 02:00 to 04:00'.
@@ -257,3 +259,48 @@ module.exports.recordSwapAccepted = function(org, to, swap) {
         // sendgrid.send(email, console.log);
     });
 };
+
+/**
+ * Send an email inviting a manager to join an organization.
+ * @param {String} name     The name of the manager to invite.
+ * @param {String} email    The email to send the invite to.
+ * @param {String} password The password of the new manager.
+ * @param {String} org      The name of the org the new manager belongs to.
+ */
+module.exports.inviteManager = function(name, email, password, org) {
+    var email = {
+        to: email,
+        from: FROM,
+        subject: 'Welcome to ' + org,
+        text: 'You\'ve been invited to join ' + org + ' as a manager. Go to ' + URL +
+            ' to log in to your new account with the following credentials:\n' +
+            'Email: ' + email + '\n' +
+            'Organization: ' + org + '\n' +
+            'Password: ' + password
+    };
+    console.log(email);
+    // sendgrid.send(email, console.log)
+}
+
+/**
+ * Send an email inviting an employee to join an organization.
+ * @param {String} name     The name of the employee to invite.
+ * @param {String} email    The email to send the invite to.
+ * @param {String} password The password of the new employee.
+ * @param {String} role     The name of the role the new employee belongs to.
+ * @param {String} org      The name of the org the new employee belongs to.
+ */
+module.exports.inviteEmployee = function(name, email, password, role, org) {
+    var email = {
+        to: email,
+        from: FROM,
+        subject: 'Welcome to ' + org,
+        text: 'You\'ve been invited to join ' + org + ' as an employee in the ' + role + ' role. Go to ' + URL +
+            ' to log in to your new account with the following credentials:\n' +
+            'Email: ' + email + '\n' +
+            'Organization: ' + org + '\n' +
+            'Password: ' + password
+    };
+    console.log(email);
+    // sendgrid.send(email, console.log)
+}
