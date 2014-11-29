@@ -47,7 +47,7 @@ router.post('/manager', function(req, res) {
  *     {EmployeeUser} The created employee.
  */
 router.post('/employee', function(req, res) {
-    UserController.createEmployee(req.body.username, req.body.email, req.body.password, req.body.org, req.body.role, function(err, employee) {
+    UserController.createEmployee(req.body.username, req.body.email, req.body.org, req.body.role, function(err, employee) {
         if (err) {
             return res.status(403).send(err);
         }

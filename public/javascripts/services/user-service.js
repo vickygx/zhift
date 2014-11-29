@@ -80,7 +80,6 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 data: {
                     username: name,
                     email: email,
-                    password: email,
                     role: role,
                     org: org,
                 },
@@ -125,7 +124,6 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 data: {
                     username: name,
                     email: email,
-                    password: email,
                     org: org,
                 },
             }).success(function(res) {

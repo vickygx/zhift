@@ -13,18 +13,35 @@ var OrgController = require('../controllers/organization');
 var ScheduleController = require('../controllers/schedule');
 var RecordController = require('../controllers/record');
 var errors = require('../errors/errors');
+
+/**
+ * Generate a random password of 10 characters.
+ * Code from http://www.javascriptkit.com/script/script2/passwordgenerate.shtml.
+ * @return {String} The generated password.
+ */
+var generatePassword = function() {
+    var keylist = 'abcdefghijklmnopqrstuvwxyz123456789';
+    var password = '';
+    var PASSWORD_LENGTH = 10;
+    for (i = 0; i < PASSWORD_LENGTH; i++) {
+        password += keylist.charAt(Math.floor(Math.random() * keylist.length));
+    }
+    return password;
+};
+
 module.exports = {};
 
 /**
  * Create an employee.
  * @param  {String}   name     Employee full name.
  * @param  {String}   email    Employee email.
- * @param  {String}   password Employee password.
  * @param  {String}   org      Organization employee is part of.
  * @param  {String}   role     Employee role.
  * @param  {Function} callback Callback that takes (err, employee).
  */
-module.exports.createEmployee = function(name, email, password, org, role, callback) {
+module.exports.createEmployee = function(name, email, org, role, callback) {
+    var password = generatePassword();
+
     var userData = {
         name: name,
         email: email,
@@ -89,6 +106,8 @@ module.exports.createEmployee = function(name, email, password, org, role, callb
  * @param  {Function} callback Callback that takes (err, manager)
  */
 module.exports.createManager = function(name, email, password, org, callback) {
+    var password = password || generatePassword();
+
     var userData = {
         name: name,
         email: email,
@@ -100,7 +119,7 @@ module.exports.createManager = function(name, email, password, org, callback) {
 
     // creating a manager associated with a new organization --> create that organization
     OrgController.retrieveOrg(org, function(err, retrievedOrg) {
-        var inviteManager = retrievedOrg !== undefined;
+        var inviteManager = retrievedOrg !== null;
 
         if (err) {
             return callback(err);
