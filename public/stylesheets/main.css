@@ -6,6 +6,10 @@ a {
   color: #00B7FF;
 }
 
+.glyphicon {
+  line-height: 0;
+}
+
 .navbar-brand {
   font-family: 'Bitter';
   font-size: 2em;

@@ -6,10 +6,16 @@ block head
   script(type="text/javascript", src="/javascripts/services/schedule-service.js")
 
 block navbar
-  a.navbar-brand(href="/signout")
-    span.glyphicon.glyphicon-log-out
+  span.navbar-right
+    a.navbar-brand(href="/home")
+      span.glyphicon.glyphicon-home(title="Home")
+    a.navbar-brand(href="/dashboard")
+      span.glyphicon.glyphicon-dashboard(title="Dashboard")
+    a.navbar-brand(href="/signout")
+      span.glyphicon.glyphicon-log-out(title="Sign Out")
 
 block content
+  h1 Dashboard
   div(ng-controller="RecordController", ng-init="init('#{user.org}', '#{user.schedule}')")
     div(ng-repeat="record in records") {{record.role}}
       ul

@@ -11,13 +11,15 @@ block head
   script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
 
 block navbar
-  a.navbar-brand(href="/signout")
-    span.glyphicon.glyphicon-log-out
+  span.navbar-right
+    a.navbar-brand(href="/home")
+      span.glyphicon.glyphicon-home(title="Home")
+    a.navbar-brand(href="/dashboard")
+      span.glyphicon.glyphicon-dashboard(title="Dashboard")
+    a.navbar-brand(href="/signout")
+      span.glyphicon.glyphicon-log-out(title="Sign Out")
 
 block content
-  div
-    a(href="/dashboard", class="text-center") Dashboard
-
   h1 Welcome, #{user.name}!
   h2 Check your details below:
   ul
