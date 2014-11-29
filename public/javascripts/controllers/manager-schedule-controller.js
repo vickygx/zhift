@@ -233,6 +233,9 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             if (err) {
                 return $('.message-container').text(err);
             }
+            $scope.schedules.push(newSchedule);
+            $scope.setCurrentSchedule(newSchedule._id);
+            $scope.$apply();
             // newSchedule.shifts = [];
             // newSchedule.templateShifts = [];
             // $scope.schedules[newSchedule._id] = newSchedule;
@@ -319,6 +322,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             element.unbind('click');
             element.bind('click', function(evt) {
                 var roleName = $('#role-name').val();
+                $('#role-name').val('');
                 scope.createSchedule(roleName);
             });
         }
