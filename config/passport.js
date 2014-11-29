@@ -65,41 +65,16 @@ module.exports = function(passport) {
         usernameField: 'email',
         passReqToCallback: true
     }, function(req, email, password, done) {
-        // user inputs
         var name = req.body.name;
         var org = req.body.org;
-        var type = req.body.userType;
-        var role = req.body.userRole;
         password = createHash(password);
 
-        if (type === 'manager') {
-            // managers must not be associated with roles 
-            if (role) {
-                return done(null, false, req.flash('message', 'Managers are not associated with roles.'));                 
+        UserController.createManager(name, email, password, org, function(err, newManager) {
+            if (err) {
+                return done(null, false, req.flash('message', err.message));
             }
-            else {
-                UserController.createManager(name, email, password, org, function(err, newManager) {
-                    if (err) {
-                        return done(null, false, req.flash('message', err.message));
-                    }
-                    return done(null, newManager);
-                });
-            }
-        }
-        // employees must be associated with roles
-        if (type === 'employee') {
-            if (!role) {
-                return done(null, false, req.flash('message', 'Employees must be associated with roles.'));                 
-            }
-            else {
-                UserController.createEmployee(name, email, password, org, role, function(err, newEmployee) {
-                    if (err) {
-                        return done(null, false, req.flash('message', err.message));
-                    }
-                    return done(null, newEmployee);
-                });
-            }
-        }
+            return done(null, newManager);
+        });
     }));
 
     passport.use('login', new LocalStrategy({
