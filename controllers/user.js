@@ -1,8 +1,6 @@
 /**
  * All the functions related to manipulating and retrieving information from the User database.
- *
- * TODO: fix error handling
- * 
+ *  
  * @author: Anji Ren, Lily Seropian, Dylan Joss
  */
 
@@ -142,7 +140,7 @@ module.exports.retrieveUser = function(email, org, callback) {
             return callback(err);
         } 
         if (!user) {
-            return callback(err, {message: 'Incorrect name or organization.'})
+            return callback(err, {'Incorrect name or organization.'})
         } 
         callback(null, user);
     });
