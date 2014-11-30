@@ -9,8 +9,9 @@ block head
   script(type="text/javascript", src="/javascripts/services/schedule-service.js")
 
 mixin manager(user)
-  +shift-calendar(user.org)
+  div(ng-controller="ManagerController" ng-init="init('#{user.org}')")
+    +shift-calendar(user.org)
 
-  hr
-  +allShifts(user.org)
-  hr
+    hr
+    +allShifts(user.org)
+    hr
