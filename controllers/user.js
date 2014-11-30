@@ -7,25 +7,45 @@
 var User = require('../models/user');
 var ManagerUser = require('../models/manager-user');
 var EmployeeUser = require('../models/employee-user');
-var OrgController   = require('../controllers/organization');
-var ScheduleController   = require('../controllers/schedule');
+var OrgController = require('../controllers/organization');
+var ScheduleController = require('../controllers/schedule');
+var RecordController = require('../controllers/record');
 var errors = require('../errors/errors');
+var bCrypt = require('bcrypt-nodejs');
+
+
+/**
+ * Generate a random password of 10 characters.
+ * Code from http://www.javascriptkit.com/script/script2/passwordgenerate.shtml.
+ * @return {String} The generated password.
+ */
+var generatePassword = function() {
+    var keylist = 'abcdefghijklmnopqrstuvwxyz123456789';
+    var password = '';
+    var PASSWORD_LENGTH = 10;
+    for (i = 0; i < PASSWORD_LENGTH; i++) {
+        password += keylist.charAt(Math.floor(Math.random() * keylist.length));
+    }
+    return password;
+};
+
 module.exports = {};
 
 /**
  * Create an employee.
  * @param  {String}   name     Employee full name.
  * @param  {String}   email    Employee email.
- * @param  {String}   password Employee password.
  * @param  {String}   org      Organization employee is part of.
  * @param  {String}   role     Employee role.
  * @param  {Function} callback Callback that takes (err, employee).
  */
-module.exports.createEmployee = function(name, email, password, org, role, callback) {
+module.exports.createEmployee = function(name, email, org, role, callback) {
+    var password = generatePassword();
+
     var userData = {
         name: name,
         email: email,
-        password: password,
+        password: bCrypt.hashSync(password, bCrypt.genSaltSync(10)),
         org: org
     };
 
@@ -37,7 +57,7 @@ module.exports.createEmployee = function(name, email, password, org, role, callb
             return callback(err);
         }
         if (!retrievedOrg) {
-            return callback(new Error('Employee cannot be associated with a nonexistent organization.'));
+            return callback('Employee cannot be associated with a nonexistent organization.');
         }
         else {
             // employees cannot be associated with a nonexistent role (i.e. one for which there
@@ -47,7 +67,7 @@ module.exports.createEmployee = function(name, email, password, org, role, callb
                     return callback(err);                 
                 }
                 if (!schedule) {
-                    return callback(new Error('No schedule found for that organization and role'));
+                    return callback('No schedule found for that organization and role');
                 }
                 else {
                     newUser.save(function(err, user) {
@@ -67,6 +87,7 @@ module.exports.createEmployee = function(name, email, password, org, role, callb
                             if (err) {
                                 return callback(err);
                             }
+                            RecordController.inviteEmployee(name, email, password, role, org);
                             callback(null, employee);
                         });
                     });
@@ -85,10 +106,16 @@ module.exports.createEmployee = function(name, email, password, org, role, callb
  * @param  {Function} callback Callback that takes (err, manager)
  */
 module.exports.createManager = function(name, email, password, org, callback) {
+    var hashedPassword;
+    if (!password) {
+        password = generatePassword();
+        hashedPassword = bCrypt.hashSync(password, bCrypt.genSaltSync(10));
+    }
+
     var userData = {
         name: name,
         email: email,
-        password: password,
+        password: hashedPassword || password,
         org: org
     };
 
@@ -96,6 +123,8 @@ module.exports.createManager = function(name, email, password, org, callback) {
 
     // creating a manager associated with a new organization --> create that organization
     OrgController.retrieveOrg(org, function(err, retrievedOrg) {
+        var inviteManager = retrievedOrg !== null;
+
         if (err) {
             return callback(err);
         }
@@ -121,6 +150,9 @@ module.exports.createManager = function(name, email, password, org, callback) {
             newManager.save(function(err, manager) {
                 if (err) {
                     return callback(err);
+                }
+                if (inviteManager) {
+                    RecordController.inviteManager(name, email, password, org);
                 }
                 callback(null, manager);
             });
@@ -237,7 +269,7 @@ module.exports.retrieveEmployeesByScheduleId = function(id, callback) {
  * @param {String}   orgName   Name of organization.
  * @param {Function} callback  Callback that takes (err, user).
  */
-module.exports.isUserOfOrganization = function(userEmail, orgName, fn){
+module.exports.isUserOfOrganization = function(userEmail, orgName, fn) {
     User.findOne({email: userEmail, org: orgName}, function(err, user) {
         fn(err, !err && user);
     });
@@ -249,7 +281,7 @@ module.exports.isUserOfOrganization = function(userEmail, orgName, fn){
  * @param {String}   orgName   Name of organization.
  * @param {Function} callback  Callback that takes (err, user).
  */
-module.exports.isManagerOfOrganization = function(userEmail, orgName, fn){
+module.exports.isManagerOfOrganization = function(userEmail, orgName, fn) {
     ManagerUser.findOne({email: userEmail, org: orgName}, function(err, manager) {
         fn(err, !err && manager);
     });
@@ -261,8 +293,29 @@ module.exports.isManagerOfOrganization = function(userEmail, orgName, fn){
  * @param {String}   scheduleId The id of schedule.
  * @param {Function} callback   Callback that takes (err, user).
  */
-module.exports.isEmployeeOfRole = function(userEmail, scheduleId, fn){
+module.exports.isEmployeeOfRole = function(userEmail, scheduleId, fn) {
     EmployeeUser.findOne({email: userEmail, schedule: scheduleId}, function(err, employee) {
         fn(err, !err && employee);
+    });
+}
+
+/**
+ * Change the password of a user.
+ * @param {ObjectId} userId      The id of the user to change the password for.
+ * @param {String}   newPassword The new password the user desires.
+ * @param {Function} fn          Callback that takes (err, user).
+ */
+module.exports.changePassword = function(userId, newPassword, fn) {
+    var hashedPassword = bCrypt.hashSync(newPassword, bCrypt.genSaltSync(10));
+    User.findByIdAndUpdate(userId, {password: hashedPassword}, function(err, user) {
+        if (err) {
+            return fn(err);
+        }
+        if (user.schedule) { // is an employee
+            EmployeeUser.findByIdAndUpdate(userId, {password: hashedPassword}, fn);
+        }
+        else { // is a manager
+            ManagerUser.findByIdAndUpdate(userId, {password: hashedPassword}, fn);
+        }
     });
 }

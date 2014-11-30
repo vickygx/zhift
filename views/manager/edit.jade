@@ -1,0 +1,54 @@
+//- Edit Organization: view and add roles
+//- author: @Lily Seropian
+
+extends ../layout
+
+block head
+  script(type="text/javascript", src="/javascripts/controllers/manager-edit-controller.js")
+  script(type="text/javascript", src="/javascripts/services/schedule-service.js")
+  script(type="text/javascript", src="/javascripts/services/user-service.js")
+  include ../navbar
+
+block navbar
+  +logged-in-navbar(true)
+
+block content
+  div(ng-controller="ManagerEditController", ng-init="init('#{user.org}')", class="center")
+    div.btn-group
+      button(type="button", class="btn btn-default", ng-click="tab='Managers'") Managers
+        span.glyphicon.glyphicon-edit(class="edit-user", ng-click="showAddManager = !showAddManager")
+      button(type="button", class="btn btn-default", ng-click="tab='Employees'") Employees
+        span.glyphicon.glyphicon-edit(class="edit-user", ng-click="showAddEmployee = !showAddEmployee")
+    div(ng-show="tab==='Managers'")
+      div(ng-show="showAddManager")
+        input(type="text", placeholder="Name", ng-model="name")
+        input(type="text", placeholder="Email", ng-model="email")
+        input(type="submit", value="Submit", ng-click="showAddManager = false; createManager(name, email)")
+      table.center.edit-table
+        thead
+          tr
+            td Name
+            td Email
+        tbody
+          tr(ng-repeat="manager in managers")
+            td {{manager.name}}
+            td {{manager.email}}
+
+    div(ng-show="tab==='Employees'")
+      div(ng-show="showAddEmployee")
+        input(type="text", placeholder="Name", ng-model="name")
+        input(type="text", placeholder="Email", ng-model="email")
+        select(name="role", ng-model="role")
+          option(ng-repeat="(scheduleId, roleName) in schedules", ng-value="roleName") {{roleName}}
+        input(type="submit", value="Submit", ng-click="showAddEmployee = false; createEmployee(role)")
+      table.center.edit-table
+        thead
+          tr
+            td Name
+            td Email
+            td Role
+        tbody
+          tr(ng-repeat="employee in employees")
+            td {{employee.name}}
+            td {{employee.email}}
+            td {{schedules[employee.schedule]}}

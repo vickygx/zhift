@@ -15,6 +15,10 @@ Links
 
 [Test page for API functionality](http://zhift-vickyg.rhcloud.com/api)
 
+Testing
+=====
+The tests must be run locally, and restarted between runs to properly seed the database. Tests can be run from the root directory with <code>npm test</code>.
+
 Instructions
 =====
 Note: [if you want to see what a populated account looks like]

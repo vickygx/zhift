@@ -1,72 +1,18 @@
-//- Shift display: show all shifts for each schedule (shifts and template shifts)
+//- Shift display: show all shifts for each schedule
 //- author: @Lily Seropian
-
-mixin allTemplateShifts(org)
-  h2.title Template Shifts
-
-  div
-    h4 Add a new template shift
-    form(ng-init="day='Monday'; startTime='00:00'; endTime='00:00'")
-      input(type="radio", ng-model="day", value="Monday")
-      span M 
-      input(type="radio", ng-model="day", value="Tuesday")
-      span T 
-      input(type="radio", ng-model="day", value="Wednesday")
-      span W 
-      input(type="radio", ng-model="day", value="Thursday")
-      span R 
-      input(type="radio", ng-model="day", value="Friday")
-      span F 
-      input(type="radio", ng-model="day", value="Saturday")
-      span S 
-      input(type="radio", ng-model="day", value="Sunday")
-      span Su
-      input(type="text", placeholder="Start Time", ng-model="startTime")
-      input(type="text", placeholder="End Time", ng-model="endTime")
-      select(ng-model="scheduleId")
-        option(value="{{schedule._id}}", ng-repeat="schedule in schedules") {{schedule.role}}
-      select(ng-model="employeeId[scheduleId]")
-        option(value="{{employee._id}}", ng-repeat="employee in employees[scheduleId]") {{employee.name}}
-      input(type="submit", value="Add", ng-click="createTemplateShift(day, startTime, endTime, scheduleId, employeeId[scheduleId])")
-
-  ul(ng-repeat="schedule in schedules")
-    li {{schedule.role}}
-      ul(ng-repeat="templateShift in schedule.templateShifts")
-        li {{templateShift.dayOfWeek}}: {{templateShift.start}} - {{templateShift.end}} (employee {{templateShift.responsiblePerson}})
-      div(ng-if="schedule.templateShifts.length === 0") 
-        i None
-  div(ng-if="schedules.length === 0")
-    i None
 
 mixin allShifts(org)
   h2.title Shifts
+
+  //- TEMP (remove later)
   div
-    h4 Add a new shift
-    form(ng-init="shiftDay='Monday'; shiftStartTime='00:00'; shiftEndTime='00:00'")
-      input(type="radio", ng-model="shiftDay", value="Monday")
-      span M 
-      input(type="radio", ng-model="shiftDay", value="Tuesday")
-      span T 
-      input(type="radio", ng-model="shiftDay", value="Wednesday")
-      span W 
-      input(type="radio", ng-model="shiftDay", value="Thursday")
-      span R 
-      input(type="radio", ng-model="shiftDay", value="Friday")
-      span F 
-      input(type="radio", ng-model="shiftDay", value="Saturday")
-      span S 
-      input(type="radio", ng-model="shiftDay", value="Sunday")
-      span Su
-      input(type="text", placeholder="Date", ng-model="date")
-      input(type="text", placeholder="Start Time", ng-model="shiftStartTime")
-      input(type="text", placeholder="End Time", ng-model="shiftEndTime")
-      select(ng-model="scheduleId")
-        option(value="{{schedule._id}}", ng-repeat="schedule in schedules") {{schedule.role}}
-      select(ng-model="employeeId[scheduleId]")
-        option(value="{{employee._id}}", ng-repeat="employee in employees[scheduleId]") {{employee.name}}
+    h4 Add shift from template shift
+    form
       select(ng-model="templateShiftId[scheduleId]")
         option(value="{{templateShift}}", ng-repeat="templateShift in templateShifts[scheduleId]") {{templateShift}}
-      input(type="submit", value="Add", ng-click="createShift(shiftDay, shiftStartTime, shiftEndTime, scheduleId, employeeId[scheduleId], date, templateShiftId[scheduleId])")
+      input(type="number" placeholder="week to create from [1,2,3..]" ng-model="week" min="1", max="3")
+      input(type="submit" ng-click="createShift(scheduleId, week)")
+  //- END TEMP
 
   ul(ng-repeat="schedule in schedules")
     li {{schedule.role}}

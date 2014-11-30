@@ -31,8 +31,7 @@ router.post('/', function(req, res, next) {
             return next(err);
         } 
 
-        RecordController.recordShiftUpForSwap(req.session.managerEmails, req.user.name, swap.shiftUpForSwap);
-
+        RecordController.recordShiftUpForSwap(req.user.org, [], req.user.name, swap.shiftUpForSwap);
         res.send(swap);
     });
 });
@@ -84,23 +83,18 @@ router.put('/:id', function(req, res, next) {
             } 
 
             swap.shiftOfferedInReturn.responsiblePerson.name = req.user.name;
-            RecordController.recordSwapProposal(req.session.managerEmails, swap);
-
+            RecordController.recordSwapProposal(req.user.org, [swap.shiftUpForSwap.responsiblePerson.email], swap);
             res.send(swap);
         });
     }
     else {
-        var emails = req.session.managerEmails.slice(0);
-
         if (req.body.acceptSwap === 'true') {
             SwapController.acceptSwap(req.param('id'), function(err, swap) {
                 if (err) {
                     return next(err);
                 }
-                emails.push(swap.shiftOfferedInReturn.responsiblePerson.email);
                 swap.shiftUpForSwap.responsiblePerson.name = req.user.name;
-                RecordController.recordSwapAccepted(emails, swap);
-
+                RecordController.recordSwapAccepted(req.user.org, [swap.shiftOfferedInReturn.responsiblePerson.email], swap);
                 res.send(swap);
             });
         }
@@ -109,10 +103,8 @@ router.put('/:id', function(req, res, next) {
                 if (err) {
                     return next(err);
                 }
-                emails.push(swap.shiftOfferedInReturn.responsiblePerson.email);
                 swap.shiftUpForSwap.responsiblePerson.name = req.user.name;
-                RecordController.recordSwapRejected(emails, swap);
-
+                RecordController.recordSwapRejected(req.user.org, [swap.shiftOfferedInReturn.responsiblePerson.email], swap);
                 res.send(swap);
             });
         }

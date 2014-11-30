@@ -27,7 +27,7 @@ var errorChecking = require('../errors/error-checking');
  *     {ManagerUser} The created manager.
  */
 router.post('/manager', function(req, res) {
-    UserController.createUser(req.body.username, req.body.email, req.body.password, req.body.org, null, function(err, manager) {
+    UserController.createManager(req.body.username, req.body.email, req.body.password, req.body.org, function(err, manager) {
         if (err) {
             return res.send(err);
         }
@@ -47,17 +47,11 @@ router.post('/manager', function(req, res) {
  *     {EmployeeUser} The created employee.
  */
 router.post('/employee', function(req, res) {
-    // need to get the scheduleID in order to create employee
-    ScheduleController.retrieveScheduleByOrgAndRole(req.body.org, req.body.role, function(err, schedule) {
+    UserController.createEmployee(req.body.username, req.body.email, req.body.org, req.body.role, function(err, employee) {
         if (err) {
-            return res.send(err);
+            return res.status(403).send(err);
         }
-        UserController.createUser(req.body.username, req.body.email, req.body.password, req.body.org, schedule._id, function(err, employee) {
-            if (err) {
-                return res.send(err);
-            }
-            res.send(employee);
-        });  
+        res.send(employee);
     });
 });
 
@@ -92,20 +86,15 @@ router.get('/employee/:id', function(req, res) {
 });
 
 /**
- * PUT to change the password of a manager.
+ * PUT to change the password of a user.
  */
-router.put('/manager/:id', function(req, res) {
-    // TODO: not for MVP
-    throw new Error('PUT /manager/:id not implemented');
-});
-
-/**
- * PUT to change the password of an employee.
- */
-router.put('/employee/:id', function(req, res) {
-    // TODO: not for MVP
-    throw new Error('PUT /employee/:id not implemented');
-    
+router.put('/:id', function(req, res) {
+    UserController.changePassword(req.param('id'), req.body.password, function(err, employee) {
+        if (err) {
+            return res.status(403).send(err);
+        }
+        res.send(employee);
+    });
 });
 
 /**

@@ -5,7 +5,7 @@
  * 
  * @author: Lily Seropian, Vicky Gong
  */
-
+ 
 var express = require('express');
 var router = express.Router();
 
@@ -22,42 +22,24 @@ router.get('/', function(req, res, next) {
 });
 
 /**
- * POST to create a new shift.
+ * POST to create a new shift for a template shift for the next X week.
  * Request body should contain:
- *     {String}   day             [REMOVE]
- *     {String}   startTime       [REMOVE]
- *     {String}   endTime         [REMOVE]
- *     {ObjectId} employeeId      [REMOVE]
- *     {ObjectId} scheduleId      [REMOVE]
- *     {ObjectId} templateShiftId The id of the template shift from which to generate the shift.
- *     {Date}     date            The date on which the shift occurs.
+ *     {Integer}   week        The week to create the next template shift     
+ *  
  * Response body contains:
  *     {Shift} The created shift.
  */
-router.post('/', function(req, res, next) {
-    // Checking if permissions are correct
-    // TODO: replace with req.session.isManager
+router.post('/:templateid', function(req, res, next) {
     UserController.isManagerOfOrganization(req.user.email, req.user.org, function(err, isManager) {
-        if (isManager) {
-            // TODO: generate from template shift, don't require day/startTime/endTime/employeeId/schedulEid
-            day = req.body.day;
-            startTime = req.body.startTime;
-            endTime = req.body.endTime;
-            employee = req.body.employeeId;
-            schedule = req.body.scheduleId;
-            templateShift = req.body.templateShiftId;
-            date = req.body.date;
-
-            ShiftController.createShift(day, startTime, endTime, employee, schedule, templateShift, date, function(err, shift) {
-                if (err) {
-                    return next(err);
-                }
-                res.send(shift);
-            });
+        if (!isManager) {
+            return res.status(403).send({message: 'error: you are not a manager. cannot create shift'});
         }
-        else {
-            res.status(403).send({message: 'error: you are not a manager. cannot create shift'});
-        }
+        ShiftController.createShiftFromTemplateShift(req.param('templateid'), req.body.week, new Date(), function(err, shift) {
+            if (err) {
+                return next(err);
+            }
+            res.send(shift);
+        });
     });
 });
 
@@ -87,11 +69,7 @@ router.get('/:id', function(req, res, next) {
  */
 router.get('/user/:id', function(req, res, next) {
     // Checking if logged in user is userid
-    console.log(req.user.schedule);
     if(req.param('id') !== req.user._id.toString() && req.user.schedule !== undefined) {
-        console.log(req.param('id'));
-        console.log(req.user._id.toString());
-        console.log(req.user.schedule);
         return res.status(403).send({message: 'error: you are not a manager or the owner of this shift. cannot get'});
     }
 
@@ -149,7 +127,7 @@ router.put('/upForGrabs/:id', function(req, res, next) {
         if (!shift) {
             return next(errors.shifts.invalidShiftId);
         }
-        RecordController.recordShiftUpForGrabs(req.session.managerEmails, req.user.name, shift);
+        RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
         res.send(shift);
     });
 });
@@ -205,11 +183,22 @@ router.put('/claim/:id', function(req, res, next) {
         if (!shift) {
             return next(errors.schedules.invalidShiftId);
         }
-        var emails = req.session.managerEmails.slice(0);
-        emails.push(originalOwner.email, req.user.email);
-        RecordController.recordShiftClaim(emails, originalOwner.name, req.user.name, shift);
-
+        RecordController.recordShiftClaim(req.user.org, [originalOwner.email, req.user.email], originalOwner.name, req.user.name, shift);
         res.send(shift);
+    });
+});
+
+/**
+ * DELETE all shifts that have already happened. Only called by cron.
+ * No request body parameters required.
+ * No response body contents on success.
+ */
+router.delete('/old', function(req, res, next) {
+    ShiftController.deleteOldShifts(function(err, numDeleted) {
+        if (err) {
+            return next(err);
+        }
+        res.send({});
     });
 });
 

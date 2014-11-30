@@ -25,12 +25,15 @@ var schedule = require('./routes/schedule');
 var organization = require('./routes/organization');
 var record = require('./routes/record');
 
+var authorization = require('./errors/authorization');
+
 // Set up app
 var app = express();
 app.use(session({
     secret: 'WAH505ECRET',
     resave: true,
-    saveUninitialized: true}));
+    saveUninitialized: true
+}));
 
 var db;
 // Connecting to OpenShift if in openshift
@@ -40,18 +43,27 @@ if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
           process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
           process.env.OPENSHIFT_MONGODB_DB_PORT + '/zhift';
     db = require('mongoose').connect(dbURL, function() {
-        console.log("Successfully connected to MongoDB at: \n", dbURL);
+        console.log('Successfully connected to MongoDB at: \n', dbURL);
     });
 }
-// Mongoose connection to MongoLab DB.
 else {
-    var MONGOLAB_CONNECTION_STRING = 'zhifty:6170@ds051110.mongolab.com:51110/zhift';
-    mongoose.connect('mongodb://' + MONGOLAB_CONNECTION_STRING);
-
+    var MONGOLAB_CONNECTION_STRING = 'mongodb://zhifty:6170@ds051110.mongolab.com:51110/zhift';
+    if (app.get('env') === 'test') {
+        MONGOLAB_CONNECTION_STRING = 'mongodb://zhifty:6170@ds051990.mongolab.com:51990/zhift-test';
+    }
+    mongoose.connect(MONGOLAB_CONNECTION_STRING);
     db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function callback () {
-        console.log("Database ready.");
+        console.log('Database ready.');
+        if (app.get('env') === 'test') {
+            require('./tests/clear-db')(db, function(err) {
+                if (err) {
+                    return console.log(err);
+                }
+                require('./tests/seed-db')(db);
+            });
+        }
     });
 }
 
@@ -69,15 +81,16 @@ app.set('view engine', 'jade');
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'tests')));
 app.use(flash());
 
 app.use('/', routes);
 app.use('/user', user);
-app.use('/shift', shift);
-app.use('/shift/template', templateShift);
+app.use('/shift', authorization.isAuthenticated, shift);
+app.use('/template', templateShift);
 app.use('/schedule', schedule);
 app.use('/org', organization);
 app.use('/swap', swap);
@@ -94,7 +107,7 @@ app.use(function(req, res, next) {
 // Error middleware 
 app.use(function(err, req, res, next) {
     if (err.status === 400) {
-        console.log("errormessage: ", err.message); 
+        console.log('errormessage: ', err.message); 
         res.status(400).send(err.message);
     } 
     else if (err.status === 401) {
@@ -118,8 +131,7 @@ app.use(function(err, req, res, next) {
 if (app.get('env') === 'development') {
     app.use(errorHandler({ dumpExceptions: true, showStack: true }));
 }
-// production error handler
-else {
+else {// production error handler
     app.use(function(err, req, res, next) {
         app.use(errorHandler());
     });

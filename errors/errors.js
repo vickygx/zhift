@@ -4,6 +4,7 @@
 */
 
 // Any specific errors go into their own object
+module.exports.org = {};
 module.exports.users = {};
 module.exports.shifts = {};
 module.exports.schedules = {};
@@ -25,6 +26,12 @@ module.exports.invalidIdError = {
 };
 
 
+//================== Org error functions =================//
+module.exports.org.invalidId = {
+    status: 404,
+    message: "The given organization does not exist"
+};
+
 //================== User error functions =================//
 
 module.exports.users.invalidUserId = {
@@ -45,6 +52,18 @@ module.exports.shifts.notOwnerOfShift = {
     status: 400,
     name: "Bad permissions",
     message: "User is not owner of shift. Cannot put up for grabs."
+};
+
+module.exports.shifts.shiftForWeekAlreadyCreated = {
+    status: 400,
+    name: "Bad Input",
+    message: "Shift associated with this template shift and week already exists! Try another week!"
+};
+
+module.exports.shifts.templateShiftDoesNotExist = {
+    status: 400,
+    name: "Bad Input",
+    message: "Cannot create shift from this template shift. Id doesn't exist."
 }
 
 //================== Schedule error functions =================//

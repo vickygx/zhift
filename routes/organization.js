@@ -12,7 +12,6 @@ var router = express.Router();
 // Controllers
 var OrgController = require('../controllers/organization');
 var errors = require('../errors/errors');
-var errorChecking = require('../errors/error-checking');
 
 /**
  * POST to create a new organization.
@@ -24,7 +23,7 @@ var errorChecking = require('../errors/error-checking');
 router.post('/', function(req, res, next) {
     OrgController.createOrg(req.body.name, function(err, org) {
         if (err) {
-            return next(err);
+            res.status(403).send(err.err);
         }
         res.send(org);
     });
@@ -41,6 +40,9 @@ router.get('/:id', function(req, res, next) {
         if (err) {
             return next(err);
         } 
+        if (!org) {
+            return next(errors.org.invalidId);
+        }
         res.send(org);
     });
 });

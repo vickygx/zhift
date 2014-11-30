@@ -7,6 +7,8 @@
  *     See all template shifts
  *     See all shifts
  *
+ * TODO: find better, more standardized way to display errors
+ *
  * @author: Lily Seropian
  */
 
@@ -17,7 +19,7 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
     
     /**
      * Get roles, shifts, and template shifts from database.
-     * @param  {String} org The name of the organization from which to get data.
+     * @param {String} org The name of the organization from which to get data.
      */
     $scope.init = function(org) {
         $scope.org = org;
@@ -27,7 +29,11 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
         $scope.templateShifts = {};
         $scope.templateShiftId = {};
 
-        ScheduleService.getSchedules($scope.org, function(schedules) {
+        ScheduleService.getSchedules($scope.org, function(err, schedules) {
+            if (schedules.length === 0) {
+                return;
+            }
+
             $scope.scheduleId = schedules[0]._id;
 
             schedules.forEach(function(schedule) {
@@ -49,7 +55,7 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
                 });
 
 
-                UserService.getEmployeesForSchedule(schedule._id, function(employees) {
+                UserService.getEmployeesForSchedule(schedule._id, function(err, employees) {
                     $scope.employees[schedule._id] = employees;
                     if (employees.length === 0) {
                         $scope.employees[schedule._id] = [{name: 'None', _id: 'None'}];
@@ -61,35 +67,17 @@ ZhiftApp.controller('ManagerController', function($scope, ScheduleService, Shift
     };
 
     /**
-     * Create a new schedule, save it to the database, and display it in the frontend.
+     * Create a new shift from a template shift, save it to the database, and display it in the frontend.
+     * @param {String} scheduleId The id of the schedule the new shift is on.
+     * @param {Number} week       The week to generate the shift for (1 = 1 week from now, etc.).
      */
-    $scope.createSchedule = function(scheduleName) {
-        ScheduleService.createSchedule($scope.org, scheduleName, function(err, newSchedule) {
-            // TODO: if err, do something
-            if (!err){
-                newSchedule.shifts = [];
-                newSchedule.templateShifts = [];
-                $scope.schedules[newSchedule._id] = newSchedule;
-                $scope.$apply();
+    $scope.createShift = function(scheduleId, week) {
+        $('.message-container').text('');
+
+        ShiftService.createShift($scope.templateShiftId[scheduleId], week, function(err, shift) {
+            if (err) {
+                return $('.message-container').text(err);
             }
-        });
-    };
-
-    /**
-     * Create a new template shift, save it to the database, and display it in the frontend.
-     */
-    $scope.createTemplateShift = function(day, startTime, endTime, scheduleId, employeeId) {
-        TemplateShiftService.createTemplateShift(day, startTime, endTime, employeeId, scheduleId, function(templateShift) {
-            $scope.schedules[scheduleId].templateShifts.push(templateShift);
-            $scope.$apply();
-        });
-    };
-
-    /**
-     * Create a new shift, save it to the database, and display it in the frontend.
-     */
-    $scope.createShift = function(day, startTime, endTime, scheduleId, employeeId, date, templateShiftId) {
-        ShiftService.createShift(day, startTime, endTime, employeeId, scheduleId, date, templateShiftId, function(shift) {
             $scope.schedules[scheduleId].shifts.push(shift);
             $scope.$apply();
         });

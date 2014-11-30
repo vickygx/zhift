@@ -2,7 +2,6 @@
 //- @author Lily Seropian
 
 block head    
-  include edit-org.jade
   include home.jade
   include shift-calendar.jade
 
@@ -10,17 +9,9 @@ block head
   script(type="text/javascript", src="/javascripts/services/schedule-service.js")
 
 mixin manager(user)
-  +shift-calendar(user.org)
   div(ng-controller="ManagerController" ng-init="init('#{user.org}')")
-    input(type="submit", ng-click="currentPage = 'Home'", ng-show="currentPage !== 'Home'", value="Home")
-    input(type="submit", ng-click="currentPage = 'Edit'", ng-show="currentPage !== 'Edit'", value="Edit Organization")
+    +shift-calendar(user.org)
 
-    div(ng-switch on="currentPage")
-      div(ng-switch-when="Home")
-        hr
-        +allTemplateShifts(user.org)
-        hr
-        +allShifts(user.org)
-        hr
-      div(ng-switch-when="Edit")
-        +editOrg(user.org)
+    hr
+    +allShifts(user.org)
+    hr

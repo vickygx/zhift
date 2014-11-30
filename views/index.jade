@@ -6,24 +6,16 @@ extends layout
 block head
   include manager/manager.jade
   include employee/employee.jade
+  include navbar.jade
 
   script(type="text/javascript", src="/javascripts/services/shift-service.js")
   script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
 
-block content
-  div
-    a(href="/signout", class="text-center") Sign Out
-  div
-    a(href="/dashboard", class="text-center") Dashboard
+block navbar
+  +logged-in-navbar(user.schedule === undefined)
 
+block content
   h1 Welcome, #{user.name}!
-  h2 Check your details below:
-  ul
-    li Name: #{user.name}
-    li Email: #{user.email}
-    li Organization: #{user.org}
-    if user.schedule
-      li Schedule ID: #{user.schedule}
 
   if user.schedule
     +employee(user)

@@ -23,9 +23,7 @@ ZhiftApp.service('ScheduleService', ['$rootScope', function($rootScope) {
             }).success(function(res) {
                 callback(null, res);
             }).error(function(res){
-                // TODO: error handling
-                console.log(res.responseText);
-                callback(res);
+                callback(res.responseText);
             });
         },
 
@@ -35,10 +33,8 @@ ZhiftApp.service('ScheduleService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: '/schedule/all/' + orgName,
             }).success(function(res) {
-                callback(res);
+                callback(null, res);
             }).error(function(res) {
-                // TODO: error handling
-                console.log(res.responseText);
                 callback(res.responseText);
             });
         },
@@ -49,7 +45,7 @@ ZhiftApp.service('ScheduleService', ['$rootScope', function($rootScope) {
                 type: 'GET',
                 url: '/schedule/' + scheduleId,
             }).success(function(res) {
-                callback(res);
+                callback(null, res);
             }).error(function(res) {
                 callback(res.responseText);
             });

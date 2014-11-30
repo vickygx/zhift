@@ -10,7 +10,7 @@
 
 var ZhiftApp = angular.module('ZhiftApp');
 
-ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleService, ShiftService) {
+ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService) {
 
     /**
      * Get roles, shifts, and template shifts from database.

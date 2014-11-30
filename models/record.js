@@ -8,7 +8,8 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var RecordSchema = new mongoose.Schema({
     schedule: {type: ObjectId, ref: 'Schedule', required: true},
-    content: {type: String, required: true}
+    content: {type: String, required: true},
+    dateAbout: {type: Date, required: true}
 });
 
 module.exports = mongoose.model('Record', RecordSchema);
