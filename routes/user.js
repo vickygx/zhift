@@ -86,20 +86,15 @@ router.get('/employee/:id', function(req, res) {
 });
 
 /**
- * PUT to change the password of a manager.
+ * PUT to change the password of a user.
  */
-router.put('/manager/:id', function(req, res) {
-    // TODO: not for MVP
-    throw new Error('PUT /manager/:id not implemented');
-});
-
-/**
- * PUT to change the password of an employee.
- */
-router.put('/employee/:id', function(req, res) {
-    // TODO: not for MVP
-    throw new Error('PUT /employee/:id not implemented');
-    
+router.put('/:id', function(req, res) {
+    UserController.changePassword(req.param('id'), req.body.password, function(err, employee) {
+        if (err) {
+            return res.status(403).send(err);
+        }
+        res.send(employee);
+    });
 });
 
 /**

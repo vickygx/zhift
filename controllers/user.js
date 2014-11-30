@@ -271,7 +271,7 @@ module.exports.retrieveEmployeesByScheduleId = function(id, callback) {
  * @param {String}   orgName   Name of organization.
  * @param {Function} callback  Callback that takes (err, user).
  */
-module.exports.isUserOfOrganization = function(userEmail, orgName, fn){
+module.exports.isUserOfOrganization = function(userEmail, orgName, fn) {
     User.findOne({email: userEmail, org: orgName}, function(err, user) {
         fn(err, !err && user);
     });
@@ -283,7 +283,7 @@ module.exports.isUserOfOrganization = function(userEmail, orgName, fn){
  * @param {String}   orgName   Name of organization.
  * @param {Function} callback  Callback that takes (err, user).
  */
-module.exports.isManagerOfOrganization = function(userEmail, orgName, fn){
+module.exports.isManagerOfOrganization = function(userEmail, orgName, fn) {
     ManagerUser.findOne({email: userEmail, org: orgName}, function(err, manager) {
         fn(err, !err && manager);
     });
@@ -295,8 +295,29 @@ module.exports.isManagerOfOrganization = function(userEmail, orgName, fn){
  * @param {String}   scheduleId The id of schedule.
  * @param {Function} callback   Callback that takes (err, user).
  */
-module.exports.isEmployeeOfRole = function(userEmail, scheduleId, fn){
+module.exports.isEmployeeOfRole = function(userEmail, scheduleId, fn) {
     EmployeeUser.findOne({email: userEmail, schedule: scheduleId}, function(err, employee) {
         fn(err, !err && employee);
+    });
+}
+
+/**
+ * Change the password of a user.
+ * @param {ObjectId} userId      The id of the user to change the password for.
+ * @param {String}   newPassword The new password the user desires.
+ * @param {Function} fn          Callback that takes (err, user).
+ */
+module.exports.changePassword = function(userId, newPassword, fn) {
+    var hashedPassword = bCrypt.hashSync(newPassword, bCrypt.genSaltSync(10));
+    User.findByIdAndUpdate(userId, {password: hashedPassword}, function(err, user) {
+        if (err) {
+            return fn(err);
+        }
+        if (user.schedule) { // is an employee
+            EmployeeUser.findByIdAndUpdate(userId, {password: hashedPassword}, fn);
+        }
+        else { // is a manager
+            ManagerUser.findByIdAndUpdate(userId, {password: hashedPassword}, fn);
+        }
     });
 }

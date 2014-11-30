@@ -1,17 +1,23 @@
 extends ../layout
 
 block head
-    include ../navbar
+  include ../navbar
+  script(type="text/javascript", src="/javascripts/controllers/user-controller.js")
+  script(type="text/javascript", src="/javascripts/services/user-service.js")
 
 block navbar
-    +logged-in-navbar(user.schedule === undefined)
+  +logged-in-navbar(user.schedule === undefined)
 
 block content
+  div(ng-controller="UserController", ng-init="init('#{user._id}')")
     h1 User Settings
-    h2 Check your details below:
-      ul
-        li Name: #{user.name}
-        li Email: #{user.email}
-        li Organization: #{user.org}
-        if user.schedule
-          li Schedule ID: #{user.schedule}
+    h3 Check your details below:
+    ul
+      li Name: #{user.name}
+      li Email: #{user.email}
+      li Organization: #{user.org}
+      if user.schedule
+        li Schedule ID: #{user.schedule}
+    h3 Change your password:
+    input(type="password", placeholder="New Password", ng-model="password")
+    input(type="submit", value="Save", ng-click="changePassword(password)")

@@ -8,7 +8,7 @@
 
 var ZhiftApp = angular.module('ZhiftApp');
 
-ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
+ZhiftApp.service('UserService', function() {
     var service = {
         /**
          * GET /user/employee/[employeeId].
@@ -42,7 +42,7 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 fn(null, res);
             }).error(function(res) {
                 // TODO: error handling
-                fn(res.responseText, null);
+                fn(res.responseText);
             });
         },
 
@@ -87,7 +87,7 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 fn(null, res);
             }).error(function(res) {
                 // TODO: error handling
-                fn(res.responseText, null);
+                fn(res.responseText);
             });
         },
 
@@ -105,7 +105,7 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 fn(null, res);
             }).error(function(res) {
                 // TODO: error handling
-                fn(res.responseText, null);
+                fn(res.responseText);
             });
         },
 
@@ -130,10 +130,32 @@ ZhiftApp.service('UserService', ['$rootScope', function($rootScope) {
                 fn(null, res);
             }).error(function(res) {
                 // TODO: error handling
-                fn(res.responseText, null);
+                fn(res.responseText);
             });
-        }
+        },
+
+        /**
+         * PUT /user/[userId]
+         * @param {String}   id       The id of the user to update the password of.
+         * @param {String}   password The new password.
+         * @param {Function} fn       Callback that takes (err, user).
+         */
+        changePassword: function(id, password, fn) {
+            $.ajax({
+                datatype: 'json',
+                type: 'PUT',
+                url: '/user/' + id,
+                data: {
+                    password: password,
+                },
+            }).success(function(res) {
+                fn(null, res);
+            }).error(function(res) {
+                // TODO: error handling
+                fn(res.responseText);
+            });
+        },
     };
   
     return service;
-}]);
+});
