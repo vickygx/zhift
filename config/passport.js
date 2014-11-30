@@ -18,6 +18,8 @@ var UserController     = require('../controllers/user');
 var OrgController      = require('../controllers/organization');
 var ScheduleController = require('../controllers/schedule');
 var bCrypt             = require('bcrypt-nodejs');
+var validator          = require('validator');
+
 
 module.exports = function(passport) {
 
@@ -81,7 +83,10 @@ module.exports = function(passport) {
         usernameField: 'email',
         passReqToCallback: true
     }, function(req, email, password, done) {
+        
         UserController.retrieveUser(email, req.body.org, function(err, user) {
+            console.log('checking whether user input email is a valid email');
+            console.log(validator.isEmail(email));
             if (err) {
                 return done(null, false, req.flash('message', err));
             }

@@ -39,6 +39,11 @@ module.exports.isAuthenticated = function (req, res, next) {
     }
 };
 
+/**
+ * Check whether the logged in user is an employee of the given org
+ * @param  {String}  org The name of the organization
+ * @return {Boolean}     
+ */
 module.exports.isEmployeeOfOrg = function(org) {
     return function(req, res, next) {
         if (req.user.org === org) {
