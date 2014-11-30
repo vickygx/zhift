@@ -6,6 +6,33 @@ a {
   color: #00B7FF;
 }
 
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.edit-table {
+  border: 1px solid #ffc40f;
+  margin-top: 1em;
+  text-align: left;
+  width: 35em;
+}
+
+.edit-table thead {
+  font-family: 'Bitter';
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.edit-table td {
+  padding: .5em 1em;
+}
+
+.edit-user {
+  margin-left: 1em;
+}
+
 .glyphicon {
   line-height: 0;
 }
@@ -26,6 +53,7 @@ a {
   text-align: center;
   vertical-align: middle;
 }
+
 .form-container {
   padding: 10px 50px 0 50px;
 }
