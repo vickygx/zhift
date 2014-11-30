@@ -172,7 +172,7 @@ module.exports.retrieveUser = function(email, org, callback) {
             return callback(err);
         } 
         if (!user) {
-            return callback(err, {'Incorrect name or organization.'})
+            return callback('Incorrect name or organization.');
         } 
         callback(null, user);
     });
