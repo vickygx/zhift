@@ -10,5 +10,7 @@ mixin logged-in-navbar(isManager)
     if isManager
       a.navbar-brand(href="/edit")
         span.glyphicon.glyphicon-edit
+    a.navbar-brand(href="/settings")
+      span.glyphicon.glyphicon-user
     a.navbar-brand(href="/signout")
       span.glyphicon.glyphicon-log-out(title="Sign Out")

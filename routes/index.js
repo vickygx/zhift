@@ -57,10 +57,17 @@ module.exports = function(passport) {
 
 	/**
 	 * GET Edit Organization Page.
-	 * TODO: authorization
+	 * TODO: authorization - must be manager
 	 */
 	router.get('/edit', authorization.isAuthenticated, function(req, res) {
 		res.render('manager/edit', {user: req.user});
+	});
+
+	/**
+	 * GET User Settings Page.
+	 */
+	router.get('/settings', authorization.isAuthenticated, function(req, res) {
+		res.render('account-management/settings', {user: req.user});
 	});
 
 	/**

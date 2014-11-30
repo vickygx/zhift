@@ -13,6 +13,8 @@ var OrgController = require('../controllers/organization');
 var ScheduleController = require('../controllers/schedule');
 var RecordController = require('../controllers/record');
 var errors = require('../errors/errors');
+var bCrypt = require('bcrypt-nodejs');
+
 
 /**
  * Generate a random password of 10 characters.
@@ -45,7 +47,7 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
     var userData = {
         name: name,
         email: email,
-        password: password,
+        password: bCrypt.hashSync(password, bCrypt.genSaltSync(10)),
         org: org
     };
 
@@ -106,12 +108,16 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
  * @param  {Function} callback Callback that takes (err, manager)
  */
 module.exports.createManager = function(name, email, password, org, callback) {
-    var password = password || generatePassword();
+    var hashedPassword;
+    if (!password) {
+        password = generatePassword();
+        hashedPassword = bCrypt.hashSync(password, bCrypt.genSaltSync(10));
+    }
 
     var userData = {
         name: name,
         email: email,
-        password: password,
+        password: hashedPassword || password,
         org: org
     };
 

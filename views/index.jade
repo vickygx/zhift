@@ -16,13 +16,6 @@ block navbar
 
 block content
   h1 Welcome, #{user.name}!
-  h2 Check your details below:
-  ul
-    li Name: #{user.name}
-    li Email: #{user.email}
-    li Organization: #{user.org}
-    if user.schedule
-      li Schedule ID: #{user.schedule}
 
   if user.schedule
     +employee(user)

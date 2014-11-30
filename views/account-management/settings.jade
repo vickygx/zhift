@@ -1,0 +1,17 @@
+extends ../layout
+
+block head
+    include ../navbar
+
+block navbar
+    +logged-in-navbar(user.schedule === undefined)
+
+block content
+    h1 User Settings
+    h2 Check your details below:
+      ul
+        li Name: #{user.name}
+        li Email: #{user.email}
+        li Organization: #{user.org}
+        if user.schedule
+          li Schedule ID: #{user.schedule}
