@@ -73,7 +73,10 @@ module.exports = function(passport) {
 
         UserController.createManager(name, email, password, org, function(err, newManager) {
             if (err) {
-                return done(null, false, req.flash('message', err.message));
+                return done(null, false, req.flash('message', err));
+            }
+            if (!validator.isEmail(email)) {
+                return done(null, false, req.flash('message', 'Invalid email address.'));
             }
             return done(null, newManager);
         });
@@ -85,8 +88,6 @@ module.exports = function(passport) {
     }, function(req, email, password, done) {
         
         UserController.retrieveUser(email, req.body.org, function(err, user) {
-            console.log('checking whether user input email is a valid email');
-            console.log(validator.isEmail(email));
             if (err) {
                 return done(null, false, req.flash('message', err));
             }
