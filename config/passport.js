@@ -91,9 +91,6 @@ module.exports = function(passport) {
             if (err) {
                 return done(null, false, req.flash('message', err));
             }
-            if (!user) {
-                return done(null, false, req.flash('message', 'User with that email and organization not found.'));
-            }
             if (!isCorrectPassword(user, password)) {
                 return done(null, false, req.flash('message', 'Incorrect password.'));
             }
