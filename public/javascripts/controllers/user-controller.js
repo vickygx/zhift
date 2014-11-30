@@ -8,18 +8,26 @@
 
 var ZhiftApp = angular.module('ZhiftApp');
 
-ZhiftApp.controller('UserController', function($scope, UserService) {
-    $scope.init = function(userId) {
-        console.log('init');
+ZhiftApp.controller('UserController', function($scope, UserService, ScheduleService) {
+    $scope.init = function(userId, scheduleId) {
         $scope.userId = userId;
-    }
+
+        if (scheduleId !== 'undefined') { // if the user is an employee
+            ScheduleService.getSchedule(scheduleId, function(err, schedule) {
+                if (err) {
+                    return $('.message-container').text(err);
+                }
+                $scope.role = schedule.role;
+                $scope.$apply();
+            });
+        }
+    };
 
     /**
      * Put up a shift for swap.
      * @param {ObjectId} shiftId The id of the shift to put up for swap.
      */
     $scope.changePassword = function(newPassword) {
-        console.log('changing password');
         UserService.changePassword($scope.userId, newPassword, function(err, user) {
             if (err) {
                 $('.message-container').text(err);
