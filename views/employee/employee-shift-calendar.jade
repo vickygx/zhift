@@ -59,7 +59,7 @@ mixin employee-shift-calendar(org, scheduleId)
                                 data-start-time="{{hour}}" 
                                 data-end-time="{{hour+1}}"
                                 class="set-active-shift-info") CLAIM
-                            button(ng-if="shift.upForSwap"
+                            button(ng-if="!isMyShift(shift.responsiblePerson.name) && shift.upForSwap"
                                 data-toggle="modal"
                                 data-target="#offerSwapShiftModal"
                                 data-shift-id="{{shift._id}}"
@@ -68,6 +68,15 @@ mixin employee-shift-calendar(org, scheduleId)
                                 data-end-time="{{hour+1}}"
                                 data-swap-id="{{availableShiftsForSwap[shift._id].swapId}}"
                                 class="set-active-swap-info") OFFER SWAP
+                            button(ng-if="isMyShift(shift.responsiblePerson.name) && shift.upForSwap"
+                                data-toggle="modal"
+                                data-target="#viewSwapOffersModal"
+                                data-shift-id="{{shift._id}}"
+                                data-day-week="{{day}}"
+                                data-start-time="{{hour}}" 
+                                data-end-time="{{hour+1}}"
+                                data-swap-id="{{availableShiftsForSwap[shift._id].swapId}}"
+                                class="set-active-swap-info") VIEW OFFERS
         div.modal.fade#putUpShiftModal
             div.modal-dialog
                 div.modal-content
@@ -108,4 +117,19 @@ mixin employee-shift-calendar(org, scheduleId)
                     div.modal-footer
                         button.btn.btn-default(type="button" class="offer-swap-for-shift" data-dismiss="modal") Send offer
                         button.btn.btn-default(type="button" data-dismiss="modal") Close
+        div.modal.fade#viewSwapOffersModal
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button(type="button" class="close" data-dismiss="modal")
+                            span(aria-hidden="true") &times;
+                            span.sr-only Close 
+                        h4.modal-title Current offer
+                    div.modal-body
+                        form.form-horizontal
+                            div.form-group
+                                div.col-lg-10 In exchange for your {{swapProposals[activeSwapId].shiftUpForSwap.dayOfWeek}} {{swapProposals[activeSwapId].shiftUpForSwap.start}} - {{swapProposals[activeSwapId].shiftUpForSwap.end}} shift:
+                                div.col-lg-10 {{swapProposals[activeSwapId].shiftOfferedInReturn.dayOfWeek}} {{swapProposals[activeSwapId].shiftOfferedInReturn.start}} - {{swapProposals[activeSwapId].shiftOfferedInReturn.end}} 
+                                input(type="submit", value="Accept", ng-click="acceptSwap(activeSwapId)")
+                                input(type="submit", value="Reject", ng-click="rejectSwap(activeSwapId)")
        

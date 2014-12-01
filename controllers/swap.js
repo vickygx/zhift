@@ -45,7 +45,10 @@ module.exports.createSwap = function(shiftId, employeeId, scheduleId, fn) {
  * @param {Function} fn      Callback that takes (err, swap).
  */
 module.exports.getSwapForShift = function(shiftId, fn) {
-    Swap.findOne({shiftUpForSwap: shiftId}, fn);
+    Swap.findOne({shiftUpForSwap: shiftId}).populate('shiftUpForSwap')
+    .populate('shiftOfferedInReturn').exec(function(err, swap) {
+        return fn(err, swap);
+    });
 }
 
 /**
