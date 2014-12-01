@@ -16,26 +16,23 @@ module.exports = {};
  * @param {Function} fn      Callback that takes (err, schedule).
  */
 module.exports.createSchedule = function(orgName, role, fn) {
-    // Make sure role doesn't exist for given organization
+    // make sure role doesn't exist for given organization
     Schedule.findOne({org: orgName, role: role}, function(err, schedule){
-        // If error occured
+        // if error occured
         if (err){
             fn(err);
         }
-        // If schedule exists, just return error
-        else if (schedule){
-            // TODO: change error later
-            fn({message: 'cannot create schedule, role exists'});
+        // if schedule exists, just return error
+        else if (schedule) {
+            fn({message: 'Cannot create schedule for given role, role already exists.'});
         }
-        // If schedule doesn't exist, create schedule
+        // if schedule doesn't exist, create schedule
         else {
-            // Create new Schedule
             var schedule = new Schedule({
                org: orgName,
                role: role
             });
 
-            // Add to database
             schedule.save(fn);
         }
 
