@@ -25,7 +25,7 @@ module.exports.isAuthenticated = function (req, res, next) {
         return next();
     }
 
-    redirect(req);    
+    redirect(req, res);
 };
 
 /**
@@ -46,7 +46,7 @@ module.exports.isManager = function(req, res, next) {
  * @param  {HTTP Request} req
  * @return {HTTP Response}     
  */
-var redirect = function(req) {
+var redirect = function(req, res) {
     // 
     if (req.method === 'GET') {
         return res.redirect('/');
