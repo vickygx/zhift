@@ -36,6 +36,30 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        getMyShifts: function(userId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'GET',
+                url: 'shift/user/' + userId,
+            }).success(function(res) {
+                callback(null, res);
+            }).error(function(res){
+                callback(res);
+            });
+        },
+
+        getWeekOfShifts: function(scheduleId, dateFrom, callback){
+            $.ajax({
+                datatype: 'json',
+                type: 'GET',
+                url: 'shift/week/' + scheduleId + '/' + dateFrom
+            }).success(function(res) {
+                callback(null,res);
+            }).error(function(res){
+                callback(res);
+            });
+        },
+
         getShiftsFor: function(employeeId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -77,6 +101,21 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
                 datatype: 'json',
                 type: 'PUT',
                 url: 'shift/upForGrabs/' + shiftId,
+            }).success(function(res) {
+                callback(res);
+            }).error(function(res) {
+                if (res.status === 401) {
+                    return window.location = res.responseText;
+                }
+                callback(res);
+            });
+        },
+
+        putUpForTrade: function(shiftId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'PUT',
+                url: 'shift/upForSwap/' + shiftId,
             }).success(function(res) {
                 callback(res);
             }).error(function(res) {
