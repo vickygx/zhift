@@ -1,3 +1,5 @@
+var validator = require('validator');
+
 /**
  * Authentication middleware: redirect the user to '/' if they are not authenticated.
  */
@@ -28,4 +30,18 @@ module.exports.isAuthenticated = function (req, res, next) {
     if (req.method === 'PUT') {
         return res.status(401).send('/');
     }
+};
+
+module.exports.sanitize = function(req, res, next) {
+    Object.keys(req.body).forEach(function(key) {
+        req.body[key] = validator.toString(req.body[key]);
+
+        // allowing @ in email and various special characters in password
+        // password is hashed before insertion in DB
+        if (key !== 'email' && key !== 'password') {
+            req.body[key] = validator.whitelist(req.body[key], '/^[\w\s_-]+$/');
+        }
+    });
+
+    return next();
 };

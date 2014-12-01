@@ -25,7 +25,7 @@ var schedule = require('./routes/schedule');
 var organization = require('./routes/organization');
 var record = require('./routes/record');
 
-var authorization = require('./errors/authorization');
+var security = require('./errors/security');
 
 // Set up app
 var app = express();
@@ -89,7 +89,7 @@ app.use(flash());
 
 app.use('/', routes);
 app.use('/user', user);
-app.use('/shift', authorization.isAuthenticated, shift);
+app.use('/shift', security.isAuthenticated, shift);
 app.use('/template', templateShift);
 app.use('/schedule', schedule);
 app.use('/org', organization);
