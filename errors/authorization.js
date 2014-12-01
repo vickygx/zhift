@@ -1,12 +1,3 @@
-
-
-// TODO put all this on module.exports then require it in whatever file uses it
-// 
-// isEmployee
-// isManager
-// 
-// isEmployeeOfOrg cannot be done in middleware
-
 /**
  * Authentication middleware: redirect the user to '/' if they are not authenticated.
  */
@@ -36,19 +27,5 @@ module.exports.isAuthenticated = function (req, res, next) {
     }
     if (req.method === 'PUT') {
         return res.status(401).send('/');
-    }
-};
-
-/**
- * Check whether the logged in user is an employee of the given org
- * @param  {String}  org The name of the organization
- * @return {Boolean}     
- */
-module.exports.isEmployeeOfOrg = function(org) {
-    return function(req, res, next) {
-        if (req.user.org === org) {
-            return next();
-        }
-        res.redirect('/');
     }
 };

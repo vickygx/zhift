@@ -69,6 +69,14 @@ module.exports = function(passport) {
     }, function(req, email, password, done) {
         var name = req.body.name;
         var org = req.body.org;
+
+        if (!name) {
+            return done(null, false, req.flash('message', 'Name field is required.'));
+        }
+        if (!org) {
+            return done(null, false, req.flash('message', 'Organization field is required.'));
+        }
+ 
         password = createHash(password);
 
         UserController.createManager(name, email, password, org, function(err, newManager) {
