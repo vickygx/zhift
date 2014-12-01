@@ -338,6 +338,13 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
         });
     };
 
+    $scope.setCurrentWeek = function(date){
+        getShifts($scope.currentScheduleId, new Date(date), function(err){
+            if (!err)
+                $scope.$apply();
+        })
+    };
+
    
 })
 
