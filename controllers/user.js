@@ -100,7 +100,7 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
             });
         }
     });
-}
+};
 
 
 var createManagerHelper = function(userData, inviteManager, callback) {
@@ -126,7 +126,7 @@ var createManagerHelper = function(userData, inviteManager, callback) {
             callback(null, manager);
         });
     });
-}
+};
 
 /**
  * Create a manager.
@@ -160,14 +160,10 @@ module.exports.createManager = function(name, email, password, org, callback) {
     OrgController.retrieveOrg(org, function(err, retrievedOrg) {
         var inviteManager = retrievedOrg !== null;
 
-        console.log('about to retrieve org');
-
         if (err) {
             return callback(err.message);
         }
         if (!retrievedOrg) {
-
-            console.log('about to create new org');
             OrgController.createOrg(org, function(err, newOrg) {
                 if (err) {
                     return callback('Invalid organization name.'); 
@@ -179,7 +175,7 @@ module.exports.createManager = function(name, email, password, org, callback) {
             createManagerHelper(userData, true, callback);
         }
     });
-}
+};
 
 /**
  * Retrieve existing user.
@@ -190,7 +186,7 @@ module.exports.createManager = function(name, email, password, org, callback) {
 module.exports.retrieveUser = function(email, org, callback) {
     User.findOne({email: email, org: org}, function(err, user) {
         if (err) {
-            return callback(err);
+            return callback(err.message);
         } 
         if (!user) {
             return callback('Incorrect name or organization.');
@@ -210,7 +206,7 @@ module.exports.retrieveEmployeeById = function(id, callback) {
             return callback(err);
         } 
         if (!employeeUser) {
-            return callback(null, false, {message: 'Incorrect employee id.'})
+            return callback('Incorrect employee id.');
         } 
         callback(null, employeeUser);
     });
@@ -227,7 +223,7 @@ module.exports.retrieveManagerById = function(id, callback) {
             return callback(err);
         } 
         if (!managerUser) {
-            return callback(null, false, {message: 'Incorrect manager id.'})
+            return callback('Incorrect manager id.');
         } 
         callback(null, managerUser);
     });
@@ -244,7 +240,7 @@ module.exports.retrieveEmployeesByOrgId = function(id, callback) {
             return callback(err);
         } 
         if (!employeeUsers) {
-            return callback(null, false, {message: 'Incorrect org id.'})
+            return callback('Incorrect org id.');
         } 
         callback(null, employeeUsers);
     });
@@ -261,7 +257,7 @@ module.exports.retrieveManagersByOrgId = function(id, callback) {
             return callback(err);
         } 
         if (!managerUsers) {
-            return callback(null, false, {message: 'Incorrect org id.'})
+            return callback('Incorrect org id.');
         } 
         callback(null, managerUsers);
     });
@@ -278,7 +274,7 @@ module.exports.retrieveEmployeesByScheduleId = function(id, callback) {
             return callback(err);
         } 
         if (!employeeUsers) {
-            return callback(null, false, {message: 'Incorrect schedule id.'})
+            return callback('Incorrect schedule id.');
         } 
         callback(null, employeeUsers);
     });
@@ -288,49 +284,49 @@ module.exports.retrieveEmployeesByScheduleId = function(id, callback) {
  * Check if given user is in the organization.
  * @param {ObjectId} userEmail User email.
  * @param {String}   orgName   Name of organization.
- * @param {Function} callback  Callback that takes (err, user).
+ * @param {Function} fn        Callback that takes (err, user).
  */
 module.exports.isUserOfOrganization = function(userEmail, orgName, fn) {
     User.findOne({email: userEmail, org: orgName}, function(err, user) {
-        fn(err, !err && user);
+        fn(err, user !== null);
     });
-}
+};
 
 /** 
  * Check if given user is a manager of the organization.
  * @param {ObjectId} userEmail User email.
  * @param {String}   orgName   Name of organization.
- * @param {Function} callback  Callback that takes (err, user).
+ * @param {Function} fn        Callback that takes (err, isUser).
  */
 module.exports.isManagerOfOrganization = function(userEmail, orgName, fn) {
     ManagerUser.findOne({email: userEmail, org: orgName}, function(err, manager) {
-        fn(err, !err && manager);
+        fn(err, manager !== null);
     });
-}
+};
 
 /** 
  * Check if given user is a manager of the organization.
  * @param {ObjectId} userEmail User email.
  * @param {String}   orgName   Name of organization.
- * @param {Function} callback  Callback that takes (err, user).
+ * @param {Function} fn        Callback that takes (err, user).
  */
 module.exports.isEmployeeOfOrganization = function(userEmail, orgName, fn) {
     EmployeeUser.findOne({email: userEmail, org: orgName}, function(err, employee) {
-        fn(err, !err && employee);
+        fn(err, employee !== null);
     });
-}
+};
 
 /** 
  * Check if given user is a member of the schedule.
  * @param {ObjectId} userEmail  User email.
  * @param {String}   scheduleId The id of schedule.
- * @param {Function} callback   Callback that takes (err, user).
+ * @param {Function} fn         Callback that takes (err, user).
  */
 module.exports.isEmployeeOfRole = function(userEmail, scheduleId, fn) {
     EmployeeUser.findOne({email: userEmail, schedule: scheduleId}, function(err, employee) {
-        fn(err, !err && employee);
+        fn(err, employee !== null);
     });
-}
+};
 
 /**
  * Change the password of a user.
@@ -351,4 +347,4 @@ module.exports.changePassword = function(userId, newPassword, fn) {
             ManagerUser.findByIdAndUpdate(userId, {password: hashedPassword}, fn);
         }
     });
-}
+};
