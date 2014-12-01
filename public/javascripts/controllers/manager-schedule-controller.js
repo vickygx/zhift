@@ -185,6 +185,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
                     return console.log(err);
                 }
                 var scopeDayHour = $scope.templateShiftsByDay[newTemplateShift.dayOfWeek];
+                console.log(newTemplateShift);
                 var templateHour = getHour(newTemplateShift.start);
                 if (!scopeDayHour[templateHour]) {
                     scopeDayHour[templateHour] = [];
@@ -285,6 +286,12 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             element.unbind('click');
             element.bind('click', function(evt) {
                 var employeeId = $('select[name="addShiftEmployee"]').children(':selected').attr('id');
+                console.log(
+                    scope.activeShift['day'],
+                    scope.activeShift['startTime'],
+                    scope.activeShift['endTime'],
+                    employeeId,
+                    scope.currentScheduleId)
                 scope.createTemplateShift(
                     scope.activeShift['day'],
                     scope.activeShift['startTime'],

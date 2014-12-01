@@ -128,8 +128,8 @@ mixin employee-shift-calendar(org, scheduleId)
                     div.modal-body
                         form.form-horizontal
                             div.form-group
-                                div.col-lg-10 In exchange for your {{swapProposals[activeSwapId].shiftUpForSwap.dayOfWeek}} {{swapProposals[activeSwapId].shiftUpForSwap.start}} - {{swapProposals[activeSwapId].shiftUpForSwap.end}} shift:
-                                div.col-lg-10 {{swapProposals[activeSwapId].shiftOfferedInReturn.dayOfWeek}} {{swapProposals[activeSwapId].shiftOfferedInReturn.start}} - {{swapProposals[activeSwapId].shiftOfferedInReturn.end}} 
+                                div.col-lg-10 In exchange for your {{swapProposals[activeSwapId].shiftUpForSwap.dayOfWeek}} {{swapProposals[activeSwapId].shiftUpForSwap.dateScheduled}} {{swapProposals[activeSwapId].shiftUpForSwap.start}} - {{swapProposals[activeSwapId].shiftUpForSwap.end}} shift:
+                                div.col-lg-10 {{swapProposals[activeSwapId].shiftOfferedInReturn.dayOfWeek}} {{swapProposals[activeSwapId].shiftOfferedInReturn.dateScheduled}} {{swapProposals[activeSwapId].shiftOfferedInReturn.start}} - {{swapProposals[activeSwapId].shiftOfferedInReturn.end}} 
                                 input(type="submit", value="Accept", ng-click="acceptSwap(activeSwapId)")
                                 input(type="submit", value="Reject", ng-click="rejectSwap(activeSwapId)")
        
