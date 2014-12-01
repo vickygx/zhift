@@ -11,13 +11,26 @@ var ZhiftApp = angular.module('ZhiftApp');
 
 ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
     var service = {
+
+        getShift: function(shiftId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'GET',
+                url: 'shift/one/' + shiftId,
+            }).success(function(res) {
+                callback(null, res);
+            }).error(function(res){
+                callback(res);
+            });            
+        },
+
         getShifts: function(scheduleId, callback) {
             $.ajax({
                 datatype: 'json',
                 type: 'GET',
                 url: 'shift/all/' + scheduleId,
             }).success(function(res) {
-                callback(null,res);
+                callback(null, res);
             }).error(function(res){
                 callback(res);
             });
