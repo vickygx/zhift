@@ -18,8 +18,6 @@ var UserController     = require('../controllers/user');
 var OrgController      = require('../controllers/organization');
 var ScheduleController = require('../controllers/schedule');
 var bCrypt             = require('bcrypt-nodejs');
-var validator          = require('validator');
-
 
 module.exports = function(passport) {
 
@@ -83,9 +81,6 @@ module.exports = function(passport) {
             if (err) {
                 return done(null, false, req.flash('message', err));
             }
-            if (!validator.isEmail(email)) {
-                return done(null, false, req.flash('message', 'Invalid email address.'));
-            }
             return done(null, newManager);
         });
     }));
@@ -94,7 +89,6 @@ module.exports = function(passport) {
         usernameField: 'email',
         passReqToCallback: true
     }, function(req, email, password, done) {
-        
         UserController.retrieveUser(email, req.body.org, function(err, user) {
             if (err) {
                 return done(null, false, req.flash('message', err));

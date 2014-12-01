@@ -12,6 +12,7 @@ var ScheduleController = require('../controllers/schedule');
 var RecordController = require('../controllers/record');
 var errors = require('../errors/errors');
 var bCrypt = require('bcrypt-nodejs');
+var validator = require('validator');
 
 
 /**
@@ -40,6 +41,10 @@ module.exports = {};
  * @param  {Function} callback Callback that takes (err, employee).
  */
 module.exports.createEmployee = function(name, email, org, role, callback) {
+    if (!validator.isEmail(email)) {
+        return callback('Invalid email address.');
+    }
+
     var password = generatePassword();
 
     var userData = {
@@ -132,7 +137,12 @@ var createManagerHelper = function(userData, inviteManager, callback) {
  * @param  {Function} callback Callback that takes (err, manager)
  */
 module.exports.createManager = function(name, email, password, org, callback) {
+    if (!validator.isEmail(email)) {
+        return callback('Invalid email address.');
+    }
+
     var hashedPassword;
+    
     if (!password) {
         password = generatePassword();
         hashedPassword = bCrypt.hashSync(password, bCrypt.genSaltSync(10));
