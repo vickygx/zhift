@@ -36,6 +36,21 @@ var createShift = function(day, startTime, endTime, employeeId, scheduleId, temp
 };
 
 /**
+* Find a shift based on id.
+* @param {ObjectId} shiftId The id of the shift.
+* @param {Function} fn              Callback that takes (err, shift).
+*/
+module.exports.getShift = function(shiftId, fn) {
+    Shift.findById(shiftId).populate('responsiblePerson').exec(function(err, shift) {
+        if (err || !shift) {
+            return fn(err);
+        } else {
+            return fn(null, shift);
+        }
+    });
+};
+
+/**
 * Delete all shifts based on the same template shift.
 * @param {ObjectId} templateShiftId The id of the template shift.
 * @param {Function} fn              Callback that takes (err, shift).

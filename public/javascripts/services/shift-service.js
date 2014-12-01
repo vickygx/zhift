@@ -16,7 +16,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             $.ajax({
                 datatype: 'json',
                 type: 'GET',
-                url: 'shift/' + shiftId,
+                url: 'shift/one/' + shiftId,
             }).success(function(res) {
                 callback(null, res);
             }).error(function(res){

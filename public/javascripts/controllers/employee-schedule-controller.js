@@ -17,18 +17,18 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService)
      * @param  {String} org The name of the organization from which to get data.
      *         {String} username The name of the user currently logged in
      */        
-    $scope.init = function(username, org, scheduleId) {
+    $scope.init = function(userId, username, org, scheduleId) {
+        $scope.currentUserId = userId;
         $scope.username = username;
         $scope.org = org;
         $scope.currentScheduleId = scheduleId;
+        $scope.activeShift = {}
         resetShifts();
 
         // Populating templates based on current schedule
         getShifts($scope.currentScheduleId, function(err) {
             $scope.$apply();
         });
-       
-
     };
 
     /*  Gets template shifts associated with the scheduleId and 
@@ -85,43 +85,64 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService)
             'Saturday': {},
             'Sunday': {}};
     }
+
+    $scope.setActiveShiftInfo = function(id, day, startTime, endTime) {
+        $scope.activeShift = {
+            shiftId: id,
+            day: day,
+            startTime: hourToHHMM(startTime),
+            endTime: hourToHHMM(endTime)
+        }
+        $scope.$apply();
+    }
+
     /*  Returns the hour of "HH:MM" */
     var getHour = function(string){
         return parseInt(string.split(":")[0]);
     }
 
-    $scope.isMyShift = function(shiftOwnerName) {
-        return shiftOwnerName == $scope.username;
-    }
-
-    $scope.isUpForGrabs = function(shiftOwnerName, shiftId) {
-        if (!$scope.isMyShift(shiftOwnerName)) {
-            ShiftService.getShift(shiftId, function(err, shift) {
-                if (!err) {
-                    return shfit.upForGrabs;
-                }
-            })
+    var hourToHHMM = function(hour) {
+        // If hour is single digit
+        var hourString = String(hour);
+        if (hour < 10 && hour >= 0) {
+            hourString = '0' + hourString;
         }
-    }
+        return hourString + ':00';
+    };
+
+    $scope.isMyShift = function(shiftOwnerName, shiftId) {
+        return (shiftOwnerName == $scope.username);
+    };
+
+    $scope.isUpForGrabs = function(shiftId) {
+        ShiftService.getShift(shiftId, function(err, shift) {
+            if (shift) {
+                return shift.upForGrabs;
+            }
+        })     
+    };
 
     $scope.tradeShift = function(){
 
     }
 
-    $scope.putUpShift = function(shiftId){
+    $scope.putUpShift = function(shiftId) {
         ShiftService.putUpForGrabs(shiftId, function(err, shift) {
+            if (!err) {
+            }
+        })
+    }
+
+    $scope.claimShift = function(shiftId, employeeId) {
+        ShiftService.claim(shiftId, employeeId, function(err, shift) {
             if (!err) {
 
             }
         })
     }
-
-    $scope.grabShift = function(){
-
-    }
-   
 })
-.directive('temp', function(){
+
+.directive('temp', function() {
     return {
         restrict: 'C', 
         link: function(scope, element, attrs) {
@@ -131,16 +152,55 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService)
             });
         }
     };
-});
+})
 
-.directive('TEMPputUpShift', function() {
+.directive('setActiveShiftInfo', function() {
     return {
         restrict: 'C', 
         link: function(scope, element, attrs) {
             element.unbind('click');
             element.bind('click', function(evt) {
-                scope.createTemplateShift(
-                    scope.activeShift['id'],
+                // Store information of clicked shift
+                scope.setActiveShiftInfo(
+                    evt.currentTarget.dataset.shiftId, 
+                    evt.currentTarget.dataset.dayWeek, 
+                    evt.currentTarget.dataset.startTime,
+                    evt.currentTarget.dataset.endTime
+                );
+                console.log(
+                    evt.currentTarget.dataset.shiftId, 
+                    evt.currentTarget.dataset.dayWeek, 
+                    evt.currentTarget.dataset.startTime,
+                    evt.currentTarget.dataset.endTime
+                );
+            });
+        }
+    };
+})
+
+.directive('putUpShift', function() {
+    return {
+        restrict: 'C', 
+        link: function(scope, element, attrs) {
+            element.unbind('click');
+            element.bind('click', function(evt) {
+                scope.putUpShift(
+                    scope.activeShift['shiftId']
+                );
+            });
+        }
+    };
+})
+
+.directive('claimShift', function() {
+    return {
+        restrict: 'C', 
+        link: function(scope, element, attrs) {
+            element.unbind('click');
+            element.bind('click', function(evt) {
+                scope.claimShift(
+                    scope.activeShift['shiftId'],
+                    scope.currentUserId
                 );
             });
         }

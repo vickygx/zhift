@@ -49,13 +49,14 @@ router.post('/:templateid', function(req, res, next) {
  * Response body contains:
  *     {Shift} The retrieved shift.
  */
-router.get('/:id', function(req, res, next) {
-    ShiftController.getShift(req.param('id'), function(err, shift) {
+router.get('/one/:shiftId', function(req, res, next) {
+    ShiftController.getShift(req.param('shiftId'), function(err, shift) {
         if (err) {
             return next(err);
         }
         if (shift.responsiblePerson.org !== req.user.org) {
-            return res.status(403).send({message: 'error: you are not a user of this org. cannot get shift'});
+            console.log(shift.responsiblePerson.org, req.user.org)
+            return res.status(403).send({message: 'error: you are not a user of this org. cannot get shift' + shift.responsiblePerson.org + req.user.org});
         }
         res.send(shift);
     });
@@ -127,7 +128,7 @@ router.put('/upForGrabs/:id', function(req, res, next) {
         if (!shift) {
             return next(errors.shifts.invalidShiftId);
         }
-        RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
+        //RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
         res.send(shift);
     });
 });
@@ -183,7 +184,7 @@ router.put('/claim/:id', function(req, res, next) {
         if (!shift) {
             return next(errors.schedules.invalidShiftId);
         }
-        RecordController.recordShiftClaim(req.user.org, [originalOwner.email, req.user.email], originalOwner.name, req.user.name, shift);
+        //RecordController.recordShiftClaim(req.user.org, [originalOwner.email, req.user.email], originalOwner.name, req.user.name, shift);
         res.send(shift);
     });
 });
