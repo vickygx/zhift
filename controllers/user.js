@@ -59,7 +59,7 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
     // employees cannot be associated with a nonexistent organization
     OrgController.retrieveOrg(org, function(err, retrievedOrg) {
         if (err) {
-            return callback(err);
+            return callback(err.message);
         }
         if (!retrievedOrg) {
             return callback('Employee cannot be associated with a nonexistent organization.');
@@ -69,7 +69,7 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
             // is no associated schedule)
             ScheduleController.retrieveScheduleByOrgAndRole(org, role, function(err, schedule) {
                 if (err) {
-                    return callback(err);                 
+                    return callback(err.message);                 
                 }
                 if (!schedule) {
                     return callback('No schedule found for that organization and role');
@@ -77,7 +77,7 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
                 else {
                     newUser.save(function(err, user) {
                         if (err) {
-                            return callback(err);
+                            return callback(err.message);
                         }
 
                         // ensure that the ID of User saved to the User database is same as that of 
@@ -90,7 +90,7 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
 
                         newEmployee.save(function(err, employee) {
                             if (err) {
-                                return callback(err);
+                                return callback(err.message);
                             }
                             RecordController.inviteEmployee(name, email, password, role, org);
                             callback(null, employee);
@@ -108,7 +108,7 @@ var createManagerHelper = function(userData, inviteManager, callback) {
 
     newUser.save(function(err, user) {
         if (err) {
-            return callback(err);
+            return callback(err.message);
         }
         // ensure that the ID of User saved to the User database is same as that of 
         // Manager saved to the ManagerUser database
@@ -118,7 +118,7 @@ var createManagerHelper = function(userData, inviteManager, callback) {
 
         newManager.save(function(err, manager) {
             if (err) {
-                return callback(err);
+                return callback(err.message);
             }
             if (inviteManager) {
                 RecordController.inviteManager(manager.name, manager.email, manager.password, manager.org);

@@ -10,6 +10,7 @@ var sendgrid = require('sendgrid')('zhift', 'shifty6170');
 
 var Record = require('../models/record');
 var UserController = require('../controllers/user');
+var errorChecking = require('../errors/error-checking');
 
 module.exports = {};
 
