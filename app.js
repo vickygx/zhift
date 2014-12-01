@@ -95,7 +95,7 @@ app.use('/schedule', schedule);
 app.use('/org', organization);
 app.use('/swap', swap);
 app.use('/record', record);
-
+app.use('*', security.sanitize);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

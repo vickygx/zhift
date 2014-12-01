@@ -1,3 +1,9 @@
+/**
+ * Functions related to security
+ *
+ * @author: Dylan Joss 
+ */
+
 var validator = require('validator');
 
 /**
@@ -32,12 +38,15 @@ module.exports.isAuthenticated = function (req, res, next) {
     }
 };
 
+/**
+ * Sanitize all text input to mitigate the possibility of injection attacks
+ */
 module.exports.sanitize = function(req, res, next) {
     Object.keys(req.body).forEach(function(key) {
         req.body[key] = validator.toString(req.body[key]);
 
-        // allowing @ in email and various special characters in password
-        // password is hashed before insertion in DB
+        // we allow @ in email; email is also validated separately with validator.isEmail
+        // we allow various special characters in password as password is hashed before insertion in DB
         if (key !== 'email' && key !== 'password') {
             req.body[key] = validator.whitelist(req.body[key], '/^[\w\s_-]+$/');
         }
