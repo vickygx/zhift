@@ -22,7 +22,7 @@ module.exports.shifts = {};
  */
 module.exports.invalidId = function(id) {
   return !ObjectId.isValid(id);
-}
+};
 
 /*  Checks to see if given value is of proper day of week format
     
@@ -35,7 +35,7 @@ module.exports.invalidId = function(id) {
 */
 module.exports.shifts.isProperDayOfWeek = function(value) {
     return /Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday/i.test(value);
-}
+};
 
 
 /*  Checks to see if given value is of proper day of HH:MM format
@@ -60,4 +60,13 @@ module.exports.shifts.isProperTime = function(value) {
     var isProperTime = (hour >= 0 && hour < 24 && minute >= 0 && minute < 60);
    
     return isProperFormat && isProperTime;
-}
+};
+
+/**
+ * Regex for valid text input (one or more alphanumeric, space, hyphen, underscore).
+ * @param  {String}  string Input text.
+ * @return {Boolean}        
+ */
+module.exports.isValidText = function(string) {
+    return /^[\w\s_-]+$/.test(string);
+};

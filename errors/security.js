@@ -1,11 +1,10 @@
+/**
+ * Functions related to security
+ *
+ * @author: Dylan Joss 
+ */
 
-
-// TODO put all this on module.exports then require it in whatever file uses it
-// 
-// isEmployee
-// isManager
-// 
-// isEmployeeOfOrg cannot be done in middleware
+var validator = require('validator');
 
 /**
  * Authentication middleware: redirect the user to '/' if they are not authenticated.
@@ -40,15 +39,18 @@ module.exports.isAuthenticated = function (req, res, next) {
 };
 
 /**
- * Check whether the logged in user is an employee of the given org
- * @param  {String}  org The name of the organization
- * @return {Boolean}     
+ * Sanitize all text input to mitigate the possibility of injection attacks
  */
-module.exports.isEmployeeOfOrg = function(org) {
-    return function(req, res, next) {
-        if (req.user.org === org) {
-            return next();
+module.exports.sanitize = function(req, res, next) {
+    Object.keys(req.body).forEach(function(key) {
+        req.body[key] = validator.toString(req.body[key]);
+
+        // we allow @ in email; email is also validated separately with validator.isEmail
+        // we allow various special characters in password as password is hashed before insertion in DB
+        if (key !== 'email' && key !== 'password') {
+            req.body[key] = validator.whitelist(req.body[key], '\\w\\s_-');
         }
-        res.redirect('/');
-    }
+    });
+
+    return next();
 };

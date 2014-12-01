@@ -7,6 +7,8 @@ var Shift = require('../models/shift');
 var TemplateShift = require('../models/template-shift');
 var errors = require('../errors/errors');
 var datejs = require('../public/javascripts/libraries/date');
+var errorChecking = require('../errors/error-checking');
+
 module.exports = {};
 
 /**

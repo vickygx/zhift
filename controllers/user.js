@@ -12,6 +12,7 @@ var ScheduleController = require('../controllers/schedule');
 var RecordController = require('../controllers/record');
 var errors = require('../errors/errors');
 var bCrypt = require('bcrypt-nodejs');
+var validator = require('validator');
 
 
 /**
@@ -40,6 +41,10 @@ module.exports = {};
  * @param  {Function} callback Callback that takes (err, employee).
  */
 module.exports.createEmployee = function(name, email, org, role, callback) {
+    if (!validator.isEmail(email)) {
+        return callback('Invalid email address.');
+    }
+
     var password = generatePassword();
 
     var userData = {
@@ -54,7 +59,7 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
     // employees cannot be associated with a nonexistent organization
     OrgController.retrieveOrg(org, function(err, retrievedOrg) {
         if (err) {
-            return callback(err);
+            return callback(err.message);
         }
         if (!retrievedOrg) {
             return callback('Employee cannot be associated with a nonexistent organization.');
@@ -64,7 +69,7 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
             // is no associated schedule)
             ScheduleController.retrieveScheduleByOrgAndRole(org, role, function(err, schedule) {
                 if (err) {
-                    return callback(err);                 
+                    return callback(err.message);                 
                 }
                 if (!schedule) {
                     return callback('No schedule found for that organization and role');
@@ -72,7 +77,7 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
                 else {
                     newUser.save(function(err, user) {
                         if (err) {
-                            return callback(err);
+                            return callback(err.message);
                         }
 
                         // ensure that the ID of User saved to the User database is same as that of 
@@ -85,7 +90,7 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
 
                         newEmployee.save(function(err, employee) {
                             if (err) {
-                                return callback(err);
+                                return callback(err.message);
                             }
                             RecordController.inviteEmployee(name, email, password, role, org);
                             callback(null, employee);
@@ -94,6 +99,32 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
                 }
             });
         }
+    });
+}
+
+
+var createManagerHelper = function(userData, inviteManager, callback) {
+    var newUser = new User(userData);
+
+    newUser.save(function(err, user) {
+        if (err) {
+            return callback(err.message);
+        }
+        // ensure that the ID of User saved to the User database is same as that of 
+        // Manager saved to the ManagerUser database
+        userData._id = user._id;
+
+        var newManager = new ManagerUser(userData);
+
+        newManager.save(function(err, manager) {
+            if (err) {
+                return callback(err.message);
+            }
+            if (inviteManager) {
+                RecordController.inviteManager(manager.name, manager.email, manager.password, manager.org);
+            }
+            callback(null, manager);
+        });
     });
 }
 
@@ -106,7 +137,12 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
  * @param  {Function} callback Callback that takes (err, manager)
  */
 module.exports.createManager = function(name, email, password, org, callback) {
+    if (!validator.isEmail(email)) {
+        return callback('Invalid email address.');
+    }
+
     var hashedPassword;
+    
     if (!password) {
         password = generatePassword();
         hashedPassword = bCrypt.hashSync(password, bCrypt.genSaltSync(10));
@@ -119,44 +155,29 @@ module.exports.createManager = function(name, email, password, org, callback) {
         org: org
     };
 
-    var newUser = new User(userData);
 
     // creating a manager associated with a new organization --> create that organization
     OrgController.retrieveOrg(org, function(err, retrievedOrg) {
         var inviteManager = retrievedOrg !== null;
 
+        console.log('about to retrieve org');
+
         if (err) {
-            return callback(err);
+            return callback(err.message);
         }
         if (!retrievedOrg) {
+
+            console.log('about to create new org');
             OrgController.createOrg(org, function(err, newOrg) {
                 if (err) {
-                    return callback(err); 
+                    return callback('Invalid organization name.'); 
                 }
+                createManagerHelper(userData, false, callback);
             }); 
         }
-        
-        newUser.save(function(err, user) {
-            if (err) {
-                return callback(err);
-            }
-
-            // ensure that the ID of User saved to the User database is same as that of 
-            // Manager saved to the ManagerUser database
-            userData._id = user._id;
-
-            var newManager = new ManagerUser(userData);
-
-            newManager.save(function(err, manager) {
-                if (err) {
-                    return callback(err);
-                }
-                if (inviteManager) {
-                    RecordController.inviteManager(name, email, password, org);
-                }
-                callback(null, manager);
-            });
-        });
+        else {
+            createManagerHelper(userData, true, callback);
+        }
     });
 }
 
@@ -284,6 +305,18 @@ module.exports.isUserOfOrganization = function(userEmail, orgName, fn) {
 module.exports.isManagerOfOrganization = function(userEmail, orgName, fn) {
     ManagerUser.findOne({email: userEmail, org: orgName}, function(err, manager) {
         fn(err, !err && manager);
+    });
+}
+
+/** 
+ * Check if given user is a manager of the organization.
+ * @param {ObjectId} userEmail User email.
+ * @param {String}   orgName   Name of organization.
+ * @param {Function} callback  Callback that takes (err, user).
+ */
+module.exports.isEmployeeOfOrganization = function(userEmail, orgName, fn) {
+    EmployeeUser.findOne({email: userEmail, org: orgName}, function(err, employee) {
+        fn(err, !err && employee);
     });
 }
 
