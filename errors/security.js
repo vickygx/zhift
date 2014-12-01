@@ -25,11 +25,15 @@ module.exports.isAuthenticated = function (req, res, next) {
         return next();
     }
 
+    // not authenticated
     redirect(req, res);
 };
 
 /**
  * Authorization middleware: check whether the logged in user is a manager.
+ * Managers have functionality that employees do not, but not vice versa
+ *
+ * TODO: may not be needed for final
  */
 module.exports.isManager = function(req, res, next) {
     // managers do not have schedules, employees do
@@ -37,7 +41,8 @@ module.exports.isManager = function(req, res, next) {
         return next();
     }
 
-    redirect(req);
+    // not authorized
+    redirect(req, res);
 };
 
 /**
@@ -74,7 +79,7 @@ module.exports.sanitize = function(req, res, next) {
         // we allow @ in email; email is also validated separately with validator.isEmail
         // we allow various special characters in password as password is hashed before insertion in DB
         if (key !== 'email' && key !== 'password') {
-            req.body[key] = validator.whitelist(req.body[key], '\\w\\s_-');
+            req.body[key] = validator.whitelist(req.body[key], '\\w\\s_:-');
         }
     });
 
