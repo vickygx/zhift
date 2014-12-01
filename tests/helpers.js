@@ -56,3 +56,48 @@ var unexpectedSuccess = function(assert, title) {
         QUnit.start();
     };
 };
+
+/**
+ * Send a request to clear and seed the test database.
+ */
+function clearAndSeed() {
+    console.log('clearing');
+    $.ajax({
+        url: '/test',
+        method: 'DELETE',
+        success: function() {
+            console.log('deleted');
+            $.ajax({
+                url: '/test',
+                method: 'POST',
+                success: function() {
+                    console.log('posted');
+                    $.ajax({
+                        url: '/login',
+                        type: 'POST',
+                        data: {
+                            email: 'test@zhift.com',
+                            password: 'uepxcqkmxr3w7grs4qew',
+                            org: 'ZhiftTest'
+                        },
+                        success: function() {
+                            console.log('testing routes');
+                            testOrganizationRoutes();
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(jqXHR.status, errorThrown);
+                        }
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.status, errorThrown);
+                }
+            });
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.status, errorThrown);
+        }
+    });
+}
+
+clearAndSeed();

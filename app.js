@@ -56,14 +56,6 @@ else {
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function callback () {
         console.log('Database ready.');
-        if (app.get('env') === 'test') {
-            require('./tests/clear-db')(db, function(err) {
-                if (err) {
-                    return console.log(err);
-                }
-                require('./tests/seed-db')(db);
-            });
-        }
     });
 }
 
@@ -95,6 +87,28 @@ app.use('/schedule', security.sanitize, security.isAuthenticated, schedule);
 app.use('/org', security.sanitize, security.isAuthenticated, organization);
 app.use('/swap', security.sanitize, security.isAuthenticated, swap);
 app.use('/record', security.sanitize, security.isAuthenticated, record);
+
+if (app.get('env') === 'test') {
+
+    app.delete('/test', function(req, res) {
+        require('./tests/clear-db')(function(err) {
+            if (err) {
+                return res.status(500).send(err);
+            }
+            res.status(200).send({});
+        });
+    });
+
+    app.post('/test', function(req, res) {
+        require('./tests/seed-db')(function(err) {
+            console.log('seeding done', err);
+            if (err) {
+                return res.status(500).send(err);
+            }
+            res.status(200).send({});
+        });
+    });
+}
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
