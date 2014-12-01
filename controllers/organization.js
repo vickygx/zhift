@@ -5,6 +5,8 @@
 
 var Organization = require('../models/organization');
 var errors = require('../errors/errors');
+var errorChecking = require('../errors/error-checking');
+
 module.exports = {};
 
 /**  

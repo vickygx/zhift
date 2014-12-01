@@ -5,7 +5,7 @@
 
 var express = require('express');
 var router = express.Router();
-var authorization = require('../errors/authorization');
+var security = require('../errors/security');
 
 module.exports = function(passport) {
 	/**
@@ -51,22 +51,22 @@ module.exports = function(passport) {
 	/**
 	 * GET Home Page.
 	 */
-	router.get('/home', authorization.isAuthenticated, function(req, res) {
+	router.get('/home', security.isAuthenticated, function(req, res) {
 		res.render('index', {user: req.user});
 	});
 
 	/**
 	 * GET Edit Organization Page.
-	 * TODO: authorization - must be manager
+	 * TODO: security - must be manager
 	 */
-	router.get('/edit', authorization.isAuthenticated, function(req, res) {
+	router.get('/edit', security.isAuthenticated, function(req, res) {
 		res.render('manager/edit', {user: req.user});
 	});
 
 	/**
 	 * GET User Settings Page.
 	 */
-	router.get('/settings', authorization.isAuthenticated, function(req, res) {
+	router.get('/settings', security.isAuthenticated, function(req, res) {
 		res.render('account-management/settings', {user: req.user});
 	});
 
@@ -81,14 +81,14 @@ module.exports = function(passport) {
 	/**
 	 * GET shift test page.
 	 */
-	router.get('/shifts', authorization.isAuthenticated, function(req, res) {
+	router.get('/shifts', security.isAuthenticated, function(req, res) {
     	res.render('shift/test_shift', {title: 'shift calendar testing', user: req.user});
 	});
 
 	/**
 	 * GET dashboard page.
 	 */
-	router.get('/dashboard', authorization.isAuthenticated, function(req, res) {
+	router.get('/dashboard', security.isAuthenticated, function(req, res) {
 		res.render('dashboard/dash', {user: req.user});
 	});
 

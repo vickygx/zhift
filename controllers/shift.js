@@ -7,6 +7,8 @@ var Shift = require('../models/shift');
 var TemplateShift = require('../models/template-shift');
 var errors = require('../errors/errors');
 var datejs = require('../public/javascripts/libraries/date');
+var errorChecking = require('../errors/error-checking');
+
 module.exports = {};
 
 /**
@@ -33,6 +35,21 @@ var createShift = function(day, startTime, endTime, employeeId, scheduleId, temp
         upForSwap: false
     });
     shift.save(fn);
+};
+
+/**
+* Find a shift based on id.
+* @param {ObjectId} shiftId The id of the shift.
+* @param {Function} fn              Callback that takes (err, shift).
+*/
+module.exports.getShift = function(shiftId, fn) {
+    Shift.findById(shiftId).populate('responsiblePerson').exec(function(err, shift) {
+        if (err || !shift) {
+            return fn(err);
+        } else {
+            return fn(null, shift);
+        }
+    });
 };
 
 /**

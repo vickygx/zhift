@@ -7,6 +7,8 @@ var Swap = require('../models/swap');
 var Shift = require('../models/shift');
 var ShiftController = require('./shift');
 var errors = require('../errors/errors');
+var errorChecking = require('../errors/error-checking');
+
 module.exports = {};
 
 /**

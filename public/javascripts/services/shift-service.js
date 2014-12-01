@@ -11,13 +11,38 @@ var ZhiftApp = angular.module('ZhiftApp');
 
 ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
     var service = {
+
+        getShift: function(shiftId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'GET',
+                url: 'shift/one/' + shiftId,
+            }).success(function(res) {
+                callback(null, res);
+            }).error(function(res){
+                callback(res);
+            });            
+        },
+
         getShifts: function(scheduleId, callback) {
             $.ajax({
                 datatype: 'json',
                 type: 'GET',
                 url: 'shift/all/' + scheduleId,
             }).success(function(res) {
-                callback(null,res);
+                callback(null, res);
+            }).error(function(res){
+                callback(res);
+            });
+        },
+
+        getMyShifts: function(userId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'GET',
+                url: 'shift/user/' + userId,
+            }).success(function(res) {
+                callback(null, res);
             }).error(function(res){
                 callback(res);
             });
@@ -76,6 +101,21 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
                 datatype: 'json',
                 type: 'PUT',
                 url: 'shift/upForGrabs/' + shiftId,
+            }).success(function(res) {
+                callback(res);
+            }).error(function(res) {
+                if (res.status === 401) {
+                    return window.location = res.responseText;
+                }
+                callback(res);
+            });
+        },
+
+        putUpForTrade: function(shiftId, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'PUT',
+                url: 'shift/upForSwap/' + shiftId,
             }).success(function(res) {
                 callback(res);
             }).error(function(res) {

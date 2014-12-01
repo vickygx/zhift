@@ -5,6 +5,8 @@
 
 var TemplateShift = require('../models/template-shift');
 var errors = require('../errors/errors');
+var errorChecking = require('../errors/error-checking');
+
 module.exports = {};
 
 /**

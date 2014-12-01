@@ -9,7 +9,7 @@
 var sendgrid = require('sendgrid')('zhift', 'shifty6170');
 
 var Record = require('../models/record');
-var UserController = require('../controllers/user');
+var errorChecking = require('../errors/error-checking');
 
 module.exports = {};
 
@@ -42,7 +42,8 @@ var logErrors = function(err) {
 };
 
 var getManagerEmails = function(org, fn) {
-    UserController.retrieveManagersByOrgId(org, function(err, managers) {
+    // need to require it here because circular dependency
+    require('../controllers/user').retrieveManagersByOrgId(org, function(err, managers) {
         fn(err, managers.map(function(manager) {
             return manager.email;
         }));

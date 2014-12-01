@@ -31,7 +31,7 @@ router.post('/', function(req, res, next) {
             return next(err);
         } 
 
-        RecordController.recordShiftUpForSwap(req.user.org, [], req.user.name, swap.shiftUpForSwap);
+        //RecordController.recordShiftUpForSwap(req.user.org, [], req.user.name, swap.shiftUpForSwap);
         res.send(swap);
     });
 });
@@ -83,7 +83,7 @@ router.put('/:id', function(req, res, next) {
             } 
 
             swap.shiftOfferedInReturn.responsiblePerson.name = req.user.name;
-            RecordController.recordSwapProposal(req.user.org, [swap.shiftUpForSwap.responsiblePerson.email], swap);
+            //RecordController.recordSwapProposal(req.user.org, [swap.shiftUpForSwap.responsiblePerson.email], swap);
             res.send(swap);
         });
     }
@@ -104,7 +104,7 @@ router.put('/:id', function(req, res, next) {
                     return next(err);
                 }
                 swap.shiftUpForSwap.responsiblePerson.name = req.user.name;
-                RecordController.recordSwapRejected(req.user.org, [swap.shiftOfferedInReturn.responsiblePerson.email], swap);
+                //RecordController.recordSwapRejected(req.user.org, [swap.shiftOfferedInReturn.responsiblePerson.email], swap);
                 res.send(swap);
             });
         }

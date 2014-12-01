@@ -3,7 +3,7 @@
  * 
  * TODO: error handling, permissions.
  * 
- * @author: Lily Seropian, Vicky Gong
+ * @author: Lily Seropian, Vicky Gong, Anji Ren
  */
  
 var express = require('express');
@@ -49,13 +49,14 @@ router.post('/:templateid', function(req, res, next) {
  * Response body contains:
  *     {Shift} The retrieved shift.
  */
-router.get('/:id', function(req, res, next) {
-    ShiftController.getShift(req.param('id'), function(err, shift) {
+router.get('/one/:shiftId', function(req, res, next) {
+    ShiftController.getShift(req.param('shiftId'), function(err, shift) {
         if (err) {
             return next(err);
         }
         if (shift.responsiblePerson.org !== req.user.org) {
-            return res.status(403).send({message: 'error: you are not a user of this org. cannot get shift'});
+            console.log(shift.responsiblePerson.org, req.user.org)
+            return res.status(403).send({message: 'error: you are not a user of this org. cannot get shift' + shift.responsiblePerson.org + req.user.org});
         }
         res.send(shift);
     });
@@ -73,10 +74,13 @@ router.get('/user/:id', function(req, res, next) {
         return res.status(403).send({message: 'error: you are not a manager or the owner of this shift. cannot get'});
     }
 
+    // If the logged in user is a manager, seeing if he/she is the right manager
     if (!req.user.schedule) {
         UserController.retrieveEmployeeById(req.param('id'), function(err, employee) {
-            if (req.session.org !== employee.org) {
-                return res.status(403).send({message: 'error: you are not a manager for this employee. cannot get'});
+            if (employee){
+                if (req.session.org !== employee.org) {
+                    return res.status(403).send({message: 'error: you are not a manager for this employee. cannot get'});
+                }
             }
         });
     }
@@ -149,7 +153,7 @@ router.put('/upForGrabs/:id', function(req, res, next) {
         if (!shift) {
             return next(errors.shifts.invalidShiftId);
         }
-        RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
+        //RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
         res.send(shift);
     });
 });
@@ -192,6 +196,26 @@ router.get('/upForSwap/:scheduleid', function(req, res, next) {
 });
 
 /**
+ * PUT shift up for swap.
+ * No request body parameters required.
+ * Response body contains:
+ *     {Shift} The shift put up for swap.
+ */
+router.put('/upForSwap/:id', function(req, res, next) {
+    // putUpForGrabs checks that current user is owner of the shift
+    ShiftController.putUpForTrade(req.param('id'), function(err, shift) {
+        if (err) {
+            return next(err);
+        }
+        if (!shift) {
+            return next(errors.shifts.invalidShiftId);
+        }
+        //RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
+        res.send(shift);
+    });
+});
+
+/**
  * PUT claim a given shift.
  * No request body parameters required.
  * Response body contains:
@@ -205,7 +229,7 @@ router.put('/claim/:id', function(req, res, next) {
         if (!shift) {
             return next(errors.schedules.invalidShiftId);
         }
-        RecordController.recordShiftClaim(req.user.org, [originalOwner.email, req.user.email], originalOwner.name, req.user.name, shift);
+        //RecordController.recordShiftClaim(req.user.org, [originalOwner.email, req.user.email], originalOwner.name, req.user.name, shift);
         res.send(shift);
     });
 });
