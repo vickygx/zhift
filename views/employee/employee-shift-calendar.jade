@@ -25,24 +25,19 @@ mixin employee-shift-calendar(org, scheduleId)
                             //- TODO: add shift ID to shift. Add person id somewhere too
                             p End: {{shift.end}}
                             p Responsible: {{shift.responsiblePerson.name}}
-                            button(ng-if="isMyShift(shift.responsiblePerson.name)") GIVE UP
-                            button(ng-if="isUpForGrabs(shift.responsiblePerson.name, shift._id)") CLAIM
-
-        div.modal.fade#reassignShiftModal
+                            button(ng-if="isMyShift(shift.responsiblePerson.name)"
+                                data-toggle="modal"
+                                data-target="#putUpShiftModal") GIVE UP
+        div.modal.fade#putUpShiftModal
             div.modal-dialog
                 div.modal-content
                     div.modal-header
                         button(type="button" class="close" data-dismiss="modal")
                             span(aria-hidden="true") &times;
                             span.sr-only Close 
-                        h4.modal-title Reassign shift to:
-                    div.modal-body
-                        form.form-horizontal
-                            div.form-group
-                                div.col-lg-10
-                                    select.form-control
-                                        option(data-ng-repeat="employee in ['Mary', 'Mark', 'Rachel']") {{employee}}
+                        h4.modal-title Give up this shift?
                     div.modal-footer
+                        button.btn.btn-default(type="button" class="put-up-shift" data-dismiss="modal") Give up
                         button.btn.btn-default(type="button" data-dismiss="modal") Close
 
        

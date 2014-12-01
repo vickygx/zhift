@@ -12,7 +12,7 @@ var ZhiftApp = angular.module('ZhiftApp');
 ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
     var service = {
 
-        getShift: function(shiftId) {
+        getShift: function(shiftId, callback) {
             $.ajax({
                 datatype: 'json',
                 type: 'GET',

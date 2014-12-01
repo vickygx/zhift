@@ -108,8 +108,12 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService)
 
     }
 
-    $scope.putUpShift = function(){
+    $scope.putUpShift = function(shiftId){
+        ShiftService.putUpForGrabs(shiftId, function(err, shift) {
+            if (!err) {
 
+            }
+        })
     }
 
     $scope.grabShift = function(){
@@ -128,3 +132,17 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService)
         }
     };
 });
+
+.directive('TEMPputUpShift', function() {
+    return {
+        restrict: 'C', 
+        link: function(scope, element, attrs) {
+            element.unbind('click');
+            element.bind('click', function(evt) {
+                scope.createTemplateShift(
+                    scope.activeShift['id'],
+                );
+            });
+        }
+    };
+})
