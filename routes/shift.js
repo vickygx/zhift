@@ -74,10 +74,13 @@ router.get('/user/:id', function(req, res, next) {
         return res.status(403).send({message: 'error: you are not a manager or the owner of this shift. cannot get'});
     }
 
+    // If the logged in user is a manager, seeing if he/she is the right manager
     if (!req.user.schedule) {
         UserController.retrieveEmployeeById(req.param('id'), function(err, employee) {
-            if (req.session.org !== employee.org) {
-                return res.status(403).send({message: 'error: you are not a manager for this employee. cannot get'});
+            if (employee){
+                if (req.session.org !== employee.org) {
+                    return res.status(403).send({message: 'error: you are not a manager for this employee. cannot get'});
+                }
             }
         });
     }
@@ -102,6 +105,28 @@ router.get('/user/:id', function(req, res, next) {
  */
 router.get('/all/:id', function(req, res, next) {
     ShiftController.getAllShiftsOnASchedule(req.param('id'), function(err, shifts) {
+        if (err) {
+            return next(err);
+        }
+        if (!shifts) {
+            return next(errors.schedules.invalidScheduleId);
+        }
+        res.send(shifts);
+    });
+});
+
+/**
+ * GET all shifts within 7 days of a given date
+ * associated with a schedule.
+ * 
+ * Request Param: None
+ * Response body contains:
+ *     {Shift[]} The retrieved shifts.
+ */
+router.get('/week/:id/:date', function(req, res, next) {
+    console.log("date:" + req.param('date'));
+    var date = new Date(req.param('date'));
+    ShiftController.getAWeekShiftsOnASchedule(req.param('id'), date, function(err, shifts) {
         if (err) {
             return next(err);
         }

@@ -64,3 +64,15 @@
 #role-name-label {
     margin-right: 1em;
 }
+
+#weekPicker {
+    text-align: center;
+    font-family: 'Bitter';
+    font-weight: 500;
+    font-size: 16pt;
+    margin-bottom: 10px;
+}
+
+#weekPicker .dropdown{
+    display: inline-block;
+}

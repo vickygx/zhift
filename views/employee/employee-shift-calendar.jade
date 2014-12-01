@@ -1,15 +1,32 @@
 block head
     link(rel="stylesheet", href="stylesheets/shift-calendar/shift-calendar.css")
+    script(type="text/javascript", src="/javascripts/libraries/date.js")
     script(type="text/javascript", src="/javascripts/controllers/employee-schedule-controller.js")
     script(type="text/javascript", src="/javascripts/services/schedule-service.js")
     script(type="text/javascript", src="/javascripts/services/shift-service.js")
     script(type="text/javascript", src="/javascripts/services/swap-service.js")
-    //- TODO: move this to layout?
 
 mixin employee-shift-calendar(org, scheduleId)
     div(id="shift-calendar" ng-controller="EmployeeScheduleController" ng-init="init('#{user._id}', '#{user.name}', '#{org}', '#{scheduleId}')")
         div.date-tabs-container
             //- should be a tab to change date range
+        div(id="weekPicker")
+            div.dropdown
+                button.btn.btn-default.dropdown-toggle(type="button"
+                    id="dropdownMenu" data-toggle="dropdown"
+                    aria-expanded="true" data-ng-bind="currentWeek.toDateString()")
+                    span.caret
+                ul.dropdown-menu(role="menu" aria-labelledby="dropdownMenu")
+                    li(role="week" data-ng-repeat="day in availableWeeks")
+                        a(role="menuitem" tabindex="-1" href="#") {{day.toDateString()}}
+
+        //- TODO: only for manager
+        div.schedule-tabs-container
+            div.btn-group(id="schedule-tabs")
+                button.btn.btn-default(type="button"
+                    data-ng-repeat="schedule in schedules"
+                    id="{{schedule._id}}"
+                    class="set-current-schedule") {{schedule.role}} 
         div(id="shift-schedule")
             div.cal-column
                 div.cal-col-title 
@@ -24,8 +41,7 @@ mixin employee-shift-calendar(org, scheduleId)
                         //- TODO: if shift is not own shift, + is put up, add ability to pop up (GRAB/TRADE) modal
                         div.shift(data-ng-repeat="shift in shiftsByDay[day][hour]")
                             //- TODO: add shift ID to shift. Add person id somewhere too
-                            p End: {{shift.end}}
-                            p Responsible: {{shift.responsiblePerson.name}}
+                            p {{shift.responsiblePerson.name}}
                             button(ng-if="isMyShift(shift.responsiblePerson.name) && !shift.upForGrabs && !shift.upForSwap"
                                 data-toggle="modal"
                                 data-target="#putUpShiftModal"
