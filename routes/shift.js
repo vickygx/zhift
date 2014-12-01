@@ -3,7 +3,7 @@
  * 
  * TODO: error handling, permissions.
  * 
- * @author: Lily Seropian, Vicky Gong
+ * @author: Lily Seropian, Vicky Gong, Anji Ren
  */
  
 var express = require('express');
@@ -167,6 +167,26 @@ router.get('/upForSwap/:scheduleid', function(req, res, next) {
             return next(errors.schedules.invalidScheduleId);
         }
         res.send(shifts);
+    });
+});
+
+/**
+ * PUT shift up for swap.
+ * No request body parameters required.
+ * Response body contains:
+ *     {Shift} The shift put up for swap.
+ */
+router.put('/upForSwap/:id', function(req, res, next) {
+    // putUpForGrabs checks that current user is owner of the shift
+    ShiftController.putUpForTrade(req.param('id'), function(err, shift) {
+        if (err) {
+            return next(err);
+        }
+        if (!shift) {
+            return next(errors.shifts.invalidShiftId);
+        }
+        //RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
+        res.send(shift);
     });
 });
 
