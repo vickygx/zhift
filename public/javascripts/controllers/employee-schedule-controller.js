@@ -10,7 +10,7 @@
 
 var ZhiftApp = angular.module('ZhiftApp');
 
-ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService) {
+ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleService, ShiftService) {
 
     /**
      * Get roles, shifts, and template shifts from database.
@@ -18,15 +18,43 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService)
      */
     $scope.init = function(org, scheduleId) {
         $scope.org = org;
-        $scope.currentScheduleId = scheduleId;
+        $scope.schedules = [];
+        $scope.currentWeek = Date.today();
+        $scope.availableWeeks = [];
         resetShifts();
 
-        // Populating templates based on current schedule
-        getShifts($scope.currentScheduleId, function(err) {
-            $scope.$apply();
-        });
-       
+        //TODO: make isManager a param
+        var isManager = true;
 
+        if (isManager){
+            // Populating schedules + setting current schedule
+            getAllSchedules($scope.org, function(){
+                if ($scope.schedules.length === 0) {
+                    return;
+                }
+
+                // Setting current schedule
+                $scope.currentScheduleId = $scope.schedules[0]._id;
+                $scope.$apply();
+
+                // Populating shifts based on current schedule
+                getShifts($scope.currentScheduleId, Date.today(), function(err) {
+                    $scope.$apply();
+                });
+            });
+        }
+        else {
+            $scope.currentScheduleId = scheduleId;
+            // Populating shifts based on current schedule
+            getShifts($scope.currentScheduleId, Date.today(), function(err) {
+                $scope.$apply();
+            });
+        }
+
+        // Setting the available weeks to pick from
+        setAvailableWeeks(function(){
+            $scope.$apply();
+        })
     };
 
     /*  Gets template shifts associated with the scheduleId and 
@@ -46,11 +74,21 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService)
     *   @param {function} callback          callback function that takes err if there is an error, or null 
     *
     */
-    var getShifts = function(scheduleId, callback){
-        //TODO: make sure it's organized by DATE also
-        ShiftService.getShifts(scheduleId, function(err, shifts){
+    var getShifts = function(scheduleId, date, callback){       
+        var dateFrom = date;
+
+        // If not sunday, get last sunday
+        if (! dateFrom.is().sunday()){
+            dateFrom = dateFrom.last().sunday();
+        }
+
+        $scope.currentWeek = dateFrom;
+
+        // Getting that week of shifts
+        ShiftService.getWeekOfShifts(scheduleId, dateFrom, function(err, shifts){
             if (!err){
                 resetShifts();
+                
                 // Go through template shifts
                 for (var i = 0; i < shifts.length; i++){
                     var templateDay = shifts[i].dayOfWeek;
@@ -83,10 +121,43 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService)
             'Saturday': {},
             'Sunday': {}};
     }
+
     /*  Returns the hour of "HH:MM" */
     var getHour = function(string){
         return parseInt(string.split(":")[0]);
     }
+
+    /*  Sets the available weeks. 
+    *   This is at most 3 weeks from the given date.
+    *   (The current week of the current day, and then two weeks after)
+    */
+    var setAvailableWeeks = function(callback){
+        var currentWeek = Date.today();
+
+        // If not sunday, get last sunday
+        if (! currentWeek.is().sunday()){
+            currentWeek = currentWeek.last().sunday();
+        }
+
+        // Get next 2 weeks
+        var week2 = new Date(currentWeek);
+        week2.next().sunday();
+
+        var week3 = new Date(week2);
+        week3.next().sunday();
+
+        $scope.availableWeeks = [currentWeek, week2, week3];
+
+    }
+
+    /*  Gets all the schedules associated with the organization 
+    */
+    var getAllSchedules = function(orgId, callback) {
+        ScheduleService.getSchedules(orgId, function(err, schedules) {
+            $scope.schedules = schedules;
+            callback();
+        });
+    };
 
     $scope.tradeShift = function(){
 
@@ -99,16 +170,31 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService)
     $scope.grabShift = function(){
 
     }
+
+    /*  Sets the current schedule to the new schedule
+    *   And updates the shifts
+    */
+    $scope.setCurrentSchedule = function(scheduleId) {
+        $scope.currentScheduleId = scheduleId;
+        getShifts(scheduleId, Date.today(), function(err){
+            if (!err)
+                $scope.$apply();
+        });
+    };
+
    
 })
-.directive('temp', function(){
+
+.directive('setCurrentSchedule', function() {
     return {
         restrict: 'C', 
         link: function(scope, element, attrs) {
             element.unbind('click');
             element.bind('click', function(evt) {
                 evt.stopPropagation();
+                var scheduleId = evt.currentTarget.id;
+                scope.setCurrentSchedule(scheduleId);
             });
         }
     };
-});
+})

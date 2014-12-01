@@ -23,6 +23,18 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        getWeekOfShifts: function(scheduleId, dateFrom, callback){
+            $.ajax({
+                datatype: 'json',
+                type: 'GET',
+                url: 'shift/week/' + scheduleId + '/' + dateFrom
+            }).success(function(res) {
+                callback(null,res);
+            }).error(function(res){
+                callback(res);
+            });
+        },
+
         getShiftsFor: function(employeeId, callback) {
             $.ajax({
                 datatype: 'json',

@@ -195,6 +195,27 @@ module.exports.getAllShiftsOnASchedule = function(scheduleId, fn) {
 };
 
 /**
+ * Get all shifts within a week from the given date
+ * associated with a schedule 
+ *
+ * @param {ObjectId} scheduleId The id of the schedule.
+ * @param {Date} dateFrom       The date from to get within 7 days of
+ * @param {Function} fn         Callback that takes (err, shift[]).
+ */
+module.exports.getAWeekShiftsOnASchedule = function(scheduleId, dateFrom, fn){
+    var end = new Date(dateFrom);
+    end.next().sunday();
+    console.log("this is dateFrom:", dateFrom);
+    console.log("this is end:", end);
+
+    Shift.find({'schedule': scheduleId,
+                'dateScheduled': {"$gte": dateFrom, "$lt": end}
+               })
+        .populate('responsiblePerson', 'name')
+        .exec(fn);
+}
+
+/**
  * Get all shifts currently on open offer.
  * @param {ObjectId} scheduleId The id of the schedule to get shifts for.
  * @param {Function} fn         Callback that takes (err, shift[]).

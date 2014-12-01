@@ -111,6 +111,28 @@ router.get('/all/:id', function(req, res, next) {
     });
 });
 
+/**
+ * GET all shifts within 7 days of a given date
+ * associated with a schedule.
+ * 
+ * Request Param: None
+ * Response body contains:
+ *     {Shift[]} The retrieved shifts.
+ */
+router.get('/week/:id/:date', function(req, res, next) {
+    console.log("date:" + req.param('date'));
+    var date = new Date(req.param('date'));
+    ShiftController.getAWeekShiftsOnASchedule(req.param('id'), date, function(err, shifts) {
+        if (err) {
+            return next(err);
+        }
+        if (!shifts) {
+            return next(errors.schedules.invalidScheduleId);
+        }
+        res.send(shifts);
+    });
+});
+
 
 /**
  * PUT shift up for grabs.
