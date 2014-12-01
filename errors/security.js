@@ -1,11 +1,6 @@
 /**
- * Functions related to security
- *
- * employee is member of role for shifts (controller)
- * user is manager (here)
- * user is member of org (controller)
+ * Functions related to security: authentication, authorization, input sanitization
  * 
- *
  * @author: Dylan Joss 
  */
 
@@ -30,8 +25,29 @@ module.exports.isAuthenticated = function (req, res, next) {
         return next();
     }
 
-    // TODO: delete
-    // if the user is not authenticated then redirect them to the login page
+    redirect(req);    
+};
+
+/**
+ * Authorization middleware: check whether the logged in user is a manager.
+ */
+module.exports.isManager = function(req, res, next) {
+    // managers do not have schedules, employees do
+    if (!req.user.schedule) {
+        return next();
+    }
+
+    redirect(req);
+};
+
+/**
+ * If the user is not authorized, then send a 401 (Unauthorized) if necessary and 
+ * redirect them to the login page.
+ * @param  {HTTP Request} req
+ * @return {HTTP Response}     
+ */
+var redirect = function(req) {
+    // 
     if (req.method === 'GET') {
         return res.redirect('/');
     }
@@ -41,10 +57,15 @@ module.exports.isAuthenticated = function (req, res, next) {
     if (req.method === 'PUT') {
         return res.status(401).send('/');
     }
+    if (req.method === 'DELETE') {
+        return res.status(401).send('/');
+    }
 };
 
 /**
- * Sanitize all text input to mitigate the possibility of injection attacks
+ * Sanitize all text input to mitigate the possibility of injection attacks.
+ * We allow only alphanumeric, space, underscore, and hyphen characters for most fields 
+ * (see below for exceptions).
  */
 module.exports.sanitize = function(req, res, next) {
     Object.keys(req.body).forEach(function(key) {
