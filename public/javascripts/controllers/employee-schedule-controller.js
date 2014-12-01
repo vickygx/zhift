@@ -20,6 +20,7 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
      */        
     $scope.init = function(userId, username, org, scheduleId) {
         // Org + Schedule + Week variables
+        $scope.isManager = scheduleId === 'undefined';
         $scope.currentUserId = userId;
         $scope.username = username;
         $scope.org = org;
@@ -37,20 +38,9 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
 
         resetShifts();
 
-        // TODO: move this into employee only
-        // get the current user's shifts
-        ShiftService.getShiftsFor($scope.currentUserId, function(shifts) {
-            $scope.myShifts = {};
-            for (var i = 0; i < shifts.length; i++) {
-                $scope.myShifts[shifts[i]._id] = shifts[i];
-            }
-            $scope.$apply();
-        });
-
-        //TODO: make isManager a param
-        var isManager = true;
-
-        if (isManager){
+        // If logged in user is a manager
+        if ($scope.isManager){
+            console.log(" IS MANAGER ASDJODS");
             // Populating schedules + setting current schedule
             getAllSchedules($scope.org, function(){
                 if ($scope.schedules.length === 0) {
@@ -67,8 +57,19 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
                 });
             });
         }
+        // If logged in user is an employee
         else {
+            console.log(" IS EMPLOYEE ADSAD");
             $scope.currentScheduleId = scheduleId;
+
+            // get the current user's shifts
+            ShiftService.getShiftsFor($scope.currentUserId, function(shifts) {
+                $scope.myShifts = {};
+                for (var i = 0; i < shifts.length; i++) {
+                    $scope.myShifts[shifts[i]._id] = shifts[i];
+                }
+                $scope.$apply();
+            });
 
             // Populating shifts based on current schedule
             getShifts($scope.currentScheduleId, Date.today(), function(err) {

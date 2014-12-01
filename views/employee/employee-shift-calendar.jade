@@ -7,7 +7,7 @@ block head
     script(type="text/javascript", src="/javascripts/services/swap-service.js")
 
 mixin employee-shift-calendar(org, scheduleId)
-    div(id="shift-calendar" ng-controller="EmployeeScheduleController" ng-init="init('#{user._id}', '#{user.name}', '#{org}', '#{scheduleId}')")
+    div(id="shift-calendar" ng-controller="EmployeeScheduleController" ng-init="init('#{user._id}', '#{user.name}', '#{org}','#{scheduleId}')")
         div.date-tabs-container
             //- should be a tab to change date range
         div(id="weekPicker")
@@ -27,6 +27,7 @@ mixin employee-shift-calendar(org, scheduleId)
                     data-ng-repeat="schedule in schedules"
                     id="{{schedule._id}}"
                     class="set-current-schedule") {{schedule.role}} 
+        div(ng-if="!isManager") employee (will remove later)
         div(id="shift-schedule")
             div.cal-column
                 div.cal-col-title 
