@@ -6,7 +6,7 @@ block head
     //- TODO: move this to layout?
 
 mixin employee-shift-calendar(org, scheduleId)
-    div(id="shift-calendar" ng-controller="EmployeeScheduleController" ng-init="init('#{org}', '#{scheduleId}')")
+    div(id="shift-calendar" ng-controller="EmployeeScheduleController" ng-init="init('#{user.name}', '#{org}', '#{scheduleId}')")
         div.date-tabs-container
             //- should be a tab to change date range
         div(id="shift-schedule")
@@ -25,6 +25,8 @@ mixin employee-shift-calendar(org, scheduleId)
                             //- TODO: add shift ID to shift. Add person id somewhere too
                             p End: {{shift.end}}
                             p Responsible: {{shift.responsiblePerson.name}}
+                            button(ng-if="isMyShift(shift.responsiblePerson.name)") GIVE UP
+                            button(ng-if="isUpForGrabs(shift.responsiblePerson.name, shift._id)") CLAIM
 
         div.modal.fade#reassignShiftModal
             div.modal-dialog

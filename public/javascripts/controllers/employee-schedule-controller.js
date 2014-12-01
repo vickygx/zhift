@@ -15,8 +15,10 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService)
     /**
      * Get roles, shifts, and template shifts from database.
      * @param  {String} org The name of the organization from which to get data.
-     */
-    $scope.init = function(org, scheduleId) {
+     *         {String} username The name of the user currently logged in
+     */        
+    $scope.init = function(username, org, scheduleId) {
+        $scope.username = username;
         $scope.org = org;
         $scope.currentScheduleId = scheduleId;
         resetShifts();
@@ -86,6 +88,20 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ShiftService)
     /*  Returns the hour of "HH:MM" */
     var getHour = function(string){
         return parseInt(string.split(":")[0]);
+    }
+
+    $scope.isMyShift = function(shiftOwnerName) {
+        return shiftOwnerName == $scope.username;
+    }
+
+    $scope.isUpForGrabs = function(shiftOwnerName, shiftId) {
+        if (!$scope.isMyShift(shiftOwnerName)) {
+            ShiftService.getShift(shiftId, function(err, shift) {
+                if (!err) {
+                    return shfit.upForGrabs;
+                }
+            })
+        }
     }
 
     $scope.tradeShift = function(){
