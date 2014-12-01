@@ -87,15 +87,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'tests')));
 app.use(flash());
 
-app.use('/', routes);
-app.use('/user', user);
-app.use('/shift', security.isAuthenticated, shift);
-app.use('/template', templateShift);
-app.use('/schedule', schedule);
-app.use('/org', organization);
-app.use('/swap', swap);
-app.use('/record', record);
-app.use('*', security.sanitize);
+app.use('/', security.sanitize, routes);
+app.use('/user', security.sanitize, user);
+app.use('/shift', security.sanitize, security.isAuthenticated, shift);
+app.use('/template', security.sanitize, templateShift);
+app.use('/schedule', security.sanitize, schedule);
+app.use('/org', security.sanitize, organization);
+app.use('/swap', security.sanitize, swap);
+app.use('/record', security.sanitize, record);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
