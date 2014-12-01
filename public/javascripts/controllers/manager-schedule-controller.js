@@ -108,6 +108,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             'Saturday': {},
             'Sunday': {}};
     };
+    
     /*  Returns the hour of "HH:MM" */
     var getHour = function(string){
         return parseInt(string.split(':')[0]);
@@ -173,6 +174,7 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         }
         $scope.$apply();
     };
+
     /*  Function to create a template shift 
     */
     $scope.createTemplateShift = function(day, startTime, endTime, employeeId, scheduleId) {
