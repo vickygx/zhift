@@ -1,6 +1,11 @@
 /**
  * Functions related to security
  *
+ * employee is member of role for shifts (controller)
+ * user is manager (here)
+ * user is member of org (controller)
+ * 
+ *
  * @author: Dylan Joss 
  */
 
