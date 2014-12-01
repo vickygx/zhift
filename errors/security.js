@@ -48,7 +48,7 @@ module.exports.sanitize = function(req, res, next) {
         // we allow @ in email; email is also validated separately with validator.isEmail
         // we allow various special characters in password as password is hashed before insertion in DB
         if (key !== 'email' && key !== 'password') {
-            req.body[key] = validator.whitelist(req.body[key], '/^[\w\s_-]+$/');
+            req.body[key] = validator.whitelist(req.body[key], '\\w\\s_-');
         }
     });
 
