@@ -9,6 +9,7 @@ block head
     //- TODO: move this to layout?
 
 mixin shift-calendar(org)
+    h3.title Template Shifts for #{user.org}
     div(id="shift-calendar" ng-controller="ManagerScheduleController" ng-init="init('#{org}')")
         div.schedule-tabs-container
             div.btn-group(id="schedule-tabs")
