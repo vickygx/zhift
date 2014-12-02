@@ -1,9 +1,7 @@
 /**
  * Swap routes.
  * 
- * TODO: Error handling, permissions
- * 
- * @author: Vicky Gong, Lily Seropian
+ * @author: Vicky Gong, Lily Seropian, Dylan Joss
  */
 
 var express = require('express');
@@ -11,7 +9,8 @@ var router = express.Router();
 
 var SwapController = require('../controllers/swap');
 var RecordController = require('../controllers/record');
-
+var UserController = require('../controllers/user');
+var ShiftController = require('../controllers/shift');
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
 
@@ -25,14 +24,22 @@ var errorChecking = require('../errors/error-checking');
  *     {Swap} The created swap.
  */
 router.post('/', function(req, res, next) {
-    // createSwap checks that the current user owns the shift for which to create a swap
-    SwapController.createSwap(req.body.shiftId, req.user._id, req.body.scheduleId, function(err, swap) {
+    UserController.isEmployeeOfRole(req.user.email, req.body.scheduleId, function(err, isEmployeeOfRole) {
         if (err) {
-            return next(err);
-        } 
+            return res.send(err);
+        }
+        if (!isEmployeeOfRole) {
+            return res.status(403).send('Unauthorized, you are not an employee of the appropriate schedule.');
+        }
+        // createSwap checks that the current user owns the shift for which to create a swap
+        SwapController.createSwap(req.body.shiftId, req.user._id, req.body.scheduleId, function(err, swap) {
+            if (err) {
+                return next(err);
+            } 
 
-        //RecordController.recordShiftUpForSwap(req.user.org, [], req.user.name, swap.shiftUpForSwap);
-        res.send(swap);
+            //RecordController.recordShiftUpForSwap(req.user.org, [], req.user.name, swap.shiftUpForSwap);
+            res.send(swap);
+        });
     });
 });
 
@@ -76,42 +83,54 @@ router.get('/schedule/:id', function(req, res, next) {
  *     {Swap} The affected swap.
  */
 router.put('/:id', function(req, res, next) {
-    if (req.body.shiftId !== undefined) {
-        SwapController.offerShiftForSwap(req.param('id'), req.body.shiftId, function(err, swap) {
-            if (err) {
-                return next(err);
-            } 
+    var id = req.param('id');
 
-            swap.shiftOfferedInReturn.responsiblePerson.name = req.user.name;
-            //RecordController.recordSwapProposal(req.user.org, [swap.shiftUpForSwap.responsiblePerson.email], swap);
-            res.send(swap);
-        });
-    }
-    else {
-        if (req.body.acceptSwap === 'true') {
-            SwapController.acceptSwap(req.param('id'), function(err, swap) {
+    ShiftController.getShift(req.body.shiftId, function(err, shift) {
+        if (err) {
+            return res.send(err);
+        }
+        // proposing a shift to swap
+        if (req.body.shiftId !== undefined) {
+            if (shift.schedule.toString() !== req.user.schedule.toString()) {
+                return res.status(400).send('Unauthorized, you are not an employee of the appropriate schedule.');
+            }
+            SwapController.offerShiftForSwap(id, req.body.shiftId, function(err, swap) {
                 if (err) {
                     return next(err);
-                }
-                swap.shiftUpForSwap.responsiblePerson.name = req.user.name;
-                RecordController.recordSwapAccepted(req.user.org, [swap.shiftOfferedInReturn.responsiblePerson.email], swap);
+                } 
+
+                swap.shiftOfferedInReturn.responsiblePerson.name = req.user.name;
+                //RecordController.recordSwapProposal(req.user.org, [swap.shiftUpForSwap.responsiblePerson.email], swap);
                 res.send(swap);
             });
         }
-        else if (req.body.acceptSwap === 'false') {
-            SwapController.resetOfferedShiftInSwap(req.param('id'), function(err, swap) {
-                if (err) {
-                    return next(err);
-                }
-                swap.shiftUpForSwap.responsiblePerson.name = req.user.name;
-                //RecordController.recordSwapRejected(req.user.org, [swap.shiftOfferedInReturn.responsiblePerson.email], swap);
-                res.send(swap);
-            });
-        }
+        // accepting or rejecting a proposed swap
         else {
-            res.status(400).send('Unidentified request.');
+            if (req.body.acceptSwap === 'true') {
+                SwapController.acceptSwap(id, function(err, swap) {
+                    if (err) {
+                        return next(err);
+                    }
+                    swap.shiftUpForSwap.responsiblePerson.name = req.user.name;
+                    RecordController.recordSwapAccepted(req.user.org, [swap.shiftOfferedInReturn.responsiblePerson.email], swap);
+                    res.send(swap);
+                });
+            }
+            else if (req.body.acceptSwap === 'false') {
+                SwapController.resetOfferedShiftInSwap(id, function(err, swap) {
+                    if (err) {
+                        return next(err);
+                    }
+                    swap.shiftUpForSwap.responsiblePerson.name = req.user.name;
+                    //RecordController.recordSwapRejected(req.user.org, [swap.shiftOfferedInReturn.responsiblePerson.email], swap);
+                    res.send(swap);
+                });
+            }
+            else {
+                res.status(400).send('Unidentified request.');
+            }
         }
-    }
+    });
 });
 
 module.exports = router;
