@@ -3,16 +3,22 @@
  * @author Lily Seropian
  */
 
-QUnit.module('Record');
+function testRecordRoutes(data) {
+    var records = data.Record;
+    var schedule = data.Schedule[0];
 
-QUnit.asyncTest('GET', function(assert) {
-    
-});
+    QUnit.module('Record');
 
-QUnit.asyncTest('GET schedule', function(assert) {
-    
-});
+    QUnit.asyncTest('GET /scheduleId', function(assert) {
+        $.ajax({
+            url: '/record/schedule/' + schedule._id,
+            type: 'GET',
+            success: expectedSuccess(assert, 'Existing record', records),
+            error: unexpectedError(assert, 'Existing record')
+        });
+    });
 
-QUnit.asyncTest('DELETE', function(assert) {
-    
-});
+    QUnit.asyncTest('DELETE', function(assert) {
+        QUnit.start();
+    });
+}
