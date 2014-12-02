@@ -79,13 +79,6 @@ module.exports = function(passport) {
 	});
 
 	/**
-	 * Get 'shift test' page.
-	 */
-	router.get('/shifts', security.isAuthenticated, function(req, res) {
-    	res.render('shift/test_shift', {title: 'shift calendar testing', user: req.user});
-	});
-
-	/**
 	 * Get 'Dashboard' page.
 	 */
 	router.get('/dashboard', security.isAuthenticated, function(req, res) {
