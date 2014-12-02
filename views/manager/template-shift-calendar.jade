@@ -1,5 +1,9 @@
-//- Shift display: show all shifts for each schedule (shifts and template shifts)
+//- Template shift display
+//-     Show all template shifts for each schedule 
+//-     Can create, edit, remove template shifts and assign to employees
 //- author: @Anji Ren, Vicky Gong
+
+
 block head
     link(rel="stylesheet", href="stylesheets/shift-calendar/shift-calendar.css")
     script(type="text/javascript", src="/javascripts/controllers/manager-schedule-controller.js")
@@ -8,7 +12,7 @@ block head
     script(type="text/javascript", src="/javascripts/services/user-service.js")
     //- TODO: move this to layout?
 
-mixin shift-calendar(org)
+mixin template-shift-calendar(org)
     h3.title Template Shifts for #{user.org}
     div(id="shift-calendar" ng-controller="ManagerScheduleController" ng-init="init('#{org}')")
         div.schedule-tabs-container
