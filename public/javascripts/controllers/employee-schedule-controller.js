@@ -372,15 +372,17 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
     $scope.setCurrentSchedule = function(scheduleId) {
         $scope.currentScheduleId = scheduleId;
         getShifts(scheduleId, $scope.currentWeek, function(err){
-            if (!err)
+            if (!err) {
                 $scope.$apply();
+            }
         });
     };
 
     $scope.setCurrentWeek = function(date){
         getShifts($scope.currentScheduleId, new Date(date), function(err){
-            if (!err)
+            if (!err) {
                 $scope.$apply();
+            }
         })
     };
 
@@ -442,13 +444,6 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
                 scope.setActiveSwapInfo(
                     evt.currentTarget.dataset.swapId
                 );
-
-                console.log(
-                    evt.currentTarget.dataset.shiftId, 
-                    evt.currentTarget.dataset.dayWeek, 
-                    evt.currentTarget.dataset.startTime,
-                    evt.currentTarget.dataset.endTime
-                );
             });
         }
     };
@@ -463,6 +458,7 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
                 scope.putShiftUpForGrabs(
                     scope.activeShift['shiftId']
                 );
+                window.location.reload();
             });
         }
     };
@@ -478,6 +474,7 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
                     scope.activeShift['shiftId'],
                     scope.currentScheduleId
                 );
+                window.location.reload();
             });
         }
     };
@@ -493,6 +490,7 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
                     scope.activeShift['shiftId'],
                     scope.currentUserId
                 );
+                window.location.reload();
             });
         }
     };
@@ -509,6 +507,7 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
                     scope.activeSwapId,
                     shiftId
                 );
+                window.location.reload();
             });
         }
     };
