@@ -4,7 +4,7 @@
  */
 
 function testScheduleRoutes() {
-    QUnit.module('TemplateShift');
+    QUnit.module('Schedule');
 
     var scheduleId = null; 
 
