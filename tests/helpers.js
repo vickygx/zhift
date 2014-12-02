@@ -68,7 +68,7 @@ function clearAndSeed() {
             $.ajax({
                 url: '/test',
                 method: 'POST',
-                success: function() {
+                success: function(data, textStatus, jqXHR) {
                     $.ajax({
                         url: '/login',
                         type: 'POST',
