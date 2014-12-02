@@ -45,10 +45,13 @@ module.exports.createSwap = function(shiftId, employeeId, scheduleId, fn) {
  * @param {Function} fn      Callback that takes (err, swap).
  */
 module.exports.getSwapForShift = function(shiftId, fn) {
-    Swap.findOne({shiftUpForSwap: shiftId}).populate('shiftUpForSwap')
-    .populate('shiftOfferedInReturn').exec(function(err, swap) {
-        return fn(err, swap);
-    });
+    Swap.findOne({shiftUpForSwap: shiftId}).populate('shiftUpForSwap shiftOfferedInReturn').exec(function(err, swap) {
+        if (!err) {
+            return fn(null, swap);
+        } else {
+            return fn(err);
+        }
+    })
 }
 
 /**
@@ -84,10 +87,12 @@ module.exports.resetOfferedShiftInSwap = function(swapId, fn) {
         var shiftOfferedInReturn = swap.shiftOfferedInReturn;
         swap.shiftOfferedInReturn = null;
         swap.save(function(err, swap) {
-            shiftOfferedInReturn.populate('responsiblePerson', function(err) {
-                swap.shiftOfferedInReturn = shiftOfferedInReturn;
-                return fn(err, swap);
-            });
+            if (shiftOfferedInReturn) {
+                shiftOfferedInReturn.populate('responsiblePerson', function(err) {
+                    swap.shiftOfferedInReturn = shiftOfferedInReturn;
+                });
+            }
+            return fn(err, swap);
         });
     });
 };

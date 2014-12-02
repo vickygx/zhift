@@ -1,23 +1,23 @@
 /**
  * Script to seed the test database.
- * @author Lily Seropian
+ * @author Lily Seropian, Anji Ren
  */
 
-var EmployeeUser = require('../models/employee-user');
-var ManagerUser = require('../models/manager-user');
-var Organization = require('../models/organization');
-var Record = require('../models/record');
-var Schedule = require('../models/schedule');
-var Shift = require('../models/shift');
-var Swap = require('../models/swap');
-var TemplateShift = require('../models/template-shift');
-var User = require('../models/user');
+var EmployeeUser            = require('../models/employee-user');
+var ManagerUser             = require('../models/manager-user');
+var Organization            = require('../models/organization');
+var Record                  = require('../models/record');
+var Schedule                = require('../models/schedule');
+var Shift                   = require('../models/shift');
+var Swap                    = require('../models/swap');
+var TemplateShift           = require('../models/template-shift');
+var User                    = require('../models/user');
 
 var TemplateShiftController = require('../controllers/template-shift');
-var ShiftController = require('../controllers/shift');
-var RecordController = require('../controllers/record');
+var ShiftController         = require('../controllers/shift');
+var RecordController        = require('../controllers/record');
 
-var bCrypt = require('bcrypt-nodejs');
+var bCrypt                  = require('bcrypt-nodejs');
 
 var fn = function(err) {
     if (err) {
@@ -55,10 +55,10 @@ module.exports = function(fn) {
         new User(user).save(done);
     });
 
-    // CC Organization
+    // Organization: 'CC'
     new Organization({_id: 'CC'}).save(done);
 
-    // Manager Lily
+    // Manager: 'Lily'
     new ManagerUser({
         name: 'Lily Seropian',
         email: 'lilyseropian@gmail.com',
@@ -68,12 +68,12 @@ module.exports = function(fn) {
         new User(user).save(done);
     });
 
-    // Crocheter Role
+    // Role/Schedule: 'Crocheter'
     new Schedule({
         org: 'CC',
         role: 'Crocheter',
     }).save(function(err, schedule) {
-        // Crocheter Employee Jane
+        // Employee: 'Jane' with Role: 'Crocheter' 
         new EmployeeUser({
             name: 'Jane Doe',
             email: 'jane@mit.edu',
@@ -96,7 +96,7 @@ module.exports = function(fn) {
             }));
         });
 
-        // Crocheter Employee John
+        // Employee: 'John'
         new EmployeeUser({
             name: 'John Doe',
             email: 'lilyseropian@gmail.edu',
@@ -105,6 +105,6 @@ module.exports = function(fn) {
             schedule: schedule._id,
         }).save(function(err, user) {
             new User(user).save(done);
-        }); 
+        });
     });
 };
