@@ -1,7 +1,7 @@
 /**
- * Tests for Template Shift routes.
- * @author Anji Ren
- */
+* Tests for Template Shift routes.
+* @author Anji Ren
+*/
 QUnit.config.reorder = false; // Prevent QUnit from running test not in order.
 
 function testTemplateShiftRoutes() {
@@ -11,21 +11,21 @@ function testTemplateShiftRoutes() {
     var scheduleId = null;
     var templateShiftId = null;
 
-    assignEmployeeId = function(employee) {
+    var assignEmployeeId = function(employee) {
         employeeId = employee._id;
     }
 
-    assignScheduleId = function(schedule) {
+    var assignScheduleId = function(schedule) {
         scheduleId = schedule._id;
     };
 
-    assignTemplateShiftId = function(templateShift) {
+    var assignTemplateShiftId = function(templateShift) {
         templateShiftId = templateShift._id;
     };
+
     // POST
     QUnit.asyncTest('POST', function(assert) {
-
-    // POST Create new Schedule/Role: 'Kung Fu Fighter 2' for Organization 'ZhiftTest'
+        // POST Create new Schedule/Role: 'Kung Fu Fighter 2' for Organization 'ZhiftTest'
         $.ajax({
             url: '/schedule',
             type: 'POST',
@@ -36,8 +36,9 @@ function testTemplateShiftRoutes() {
             success: function(resObj, textStatus, jqXHR) {
                 expectedSuccess(assert, 'Valid schedule', {role: 'Kung Fu Fighter 2'})(resObj, textStatus, jqXHR);
                 assignScheduleId(resObj);
+
+                // POST Create new Employee 'Bobby Dylan' for Organization 'ZhiftTest' and Role 'Kung Fu Fighter 2'
                 QUnit.stop();
-            // POST Create new Employee 'Bobby Dylan' for Organization 'ZhiftTest' and Role 'Kung Fu Fighter 2'
                 $.ajax({
                     url: 'user/employee',
                     type: 'POST',
@@ -52,10 +53,12 @@ function testTemplateShiftRoutes() {
                             name: 'Bobby Dylan', 
                             email: 'renalele@gmail.com',
                             org: 'ZhiftTest', 
-                            role: 'Kung Fu Fighter 2'})(resObj, textStatus, jqXHR);
+                            role: 'Kung Fu Fighter 2'
+                        })(resObj, textStatus, jqXHR);
                         assignEmployeeId(resObj);
+
+                        // POST Create new Template Shift: Thursday 10:00 - 11:00
                         QUnit.stop();
-                    // POST Create new Template Shift: Thursday 10:00 - 11:00
                         $.ajax({
                             url: '/template',
                             type: 'POST',
@@ -69,16 +72,15 @@ function testTemplateShiftRoutes() {
                             success: function(resObj, textStatus, jqXHR) {
                                 expectedSuccess(assert, 'Valid template shift', {role: 'Kung Fu Fighter 2'})(resObj, textStatus, jqXHR);
                                 assignTemplateShiftId(resObj);
-                                //QUnit.stop();
-                            // REASSIGN TEMPLATE SHIFT
+                                // REASSIGN TEMPLATE SHIFT
                             },
                             error: unexpectedError(assert, 'Valid template shift')
                         });
                     },
                     error: unexpectedError(assert, 'Valid employee')
-                })
+                });
             },
             error: unexpectedError(assert, 'Valid schedule')
         });
-    })
+    });
 }
