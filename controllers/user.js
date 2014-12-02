@@ -155,7 +155,6 @@ module.exports.createManager = function(name, email, password, org, callback) {
         org: org
     };
 
-
     // creating a manager associated with a new organization --> create that organization
     OrgController.retrieveOrg(org, function(err, retrievedOrg) {
         var inviteManager = retrievedOrg !== null;
