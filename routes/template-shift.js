@@ -44,7 +44,7 @@ router.post('/', function(req, res) {
 });
 
 /**
- * GET all template shifts in the database. Should only be accessiblie by cron.
+ * GET all template shifts in the database. Should only be accessible by cron.
  * TODO: permissions
  * No request body parameters required.
  * Response body contains:
