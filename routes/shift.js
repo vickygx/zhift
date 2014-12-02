@@ -55,7 +55,6 @@ router.get('/one/:shiftId', function(req, res, next) {
             return next(err);
         }
         if (shift.responsiblePerson.org !== req.user.org) {
-            console.log(shift.responsiblePerson.org, req.user.org)
             return res.status(403).send({message: 'error: you are not a user of this org. cannot get shift' + shift.responsiblePerson.org + req.user.org});
         }
         res.send(shift);
@@ -130,7 +129,6 @@ router.get('/all/:id', function(req, res, next) {
  *     {Shift[]} The retrieved shifts.
  */
 router.get('/week/:id/:date', function(req, res, next) {
-    console.log("date:" + req.param('date'));
     var date = new Date(req.param('date'));
     ShiftController.getAWeekShiftsOnASchedule(req.param('id'), date, function(err, shifts) {
         if (err) {
