@@ -60,15 +60,6 @@ module.exports.getRecordsForSchedule = function(scheduleId, fn) {
 };
 
 /**
- * Get a specific record.
- * @param {ObjectId} recordId The id of the record to get.
- * @param {Function} fn       Callback that takes (err, record).
- */
-module.exports.getRecord = function(recordId, fn) {
-    Record.findOneById(recordId, fn);
-};
-
-/**
  * Delete all records pertaining to shifts that have already occurred.
  * @param {Function} fn Callback that takes (err, numDeleted).
  */

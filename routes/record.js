@@ -28,21 +28,6 @@ router.get('/schedule/:id', function(req, res, next) {
 });
 
 /**
- * GET a specific record.
- * No request body parameters required.
- * Response body contains:
- *     {Record} The found record.
- */
-router.get('/:id', function(req, res, next) {
-    RecordController.getRecord(req.param('id'), function(err, record) {
-        if (err) {
-            return next(err);
-        } 
-        res.send(record);
-    });
-});
-
-/**
  * DELETE all records about changes that have already occurred.
  * No request body parameters requires.
  * No response body contents on success.
