@@ -86,15 +86,10 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
 
                     (function(shiftId) {
                         SwapService.getSwapForShift(shiftId, function(swap) {
-                            console.log(swap);
-                            console.log($scope.myShifts);
                             $scope.availableShiftsForSwap[shiftId].swapId = swap._id;
                             $scope.$apply();
-                            console.log($scope.myShifts[shiftId] !== undefined);
-                            console.log(swap.shiftOfferedInReturn);
                             if ($scope.myShifts[shiftId] !== undefined && swap.shiftOfferedInReturn) {
                                 $scope.swapProposals[swap._id] = swap;
-                                console.log($scope.swapProposals);
                                 $scope.$apply();
                             }
                         });
@@ -174,15 +169,10 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
 
                     (function(shiftId) {
                         SwapService.getSwapForShift(shiftId, function(swap) {
-                            console.log(swap);
-                            console.log($scope.myShifts);
                             $scope.availableShiftsForSwap[shiftId].swapId = swap._id;
                             $scope.$apply();
-                            console.log($scope.myShifts[shiftId] !== undefined);
-                            console.log(swap.shiftOfferedInReturn);
                             if ($scope.myShifts[shiftId] !== undefined && swap.shiftOfferedInReturn) {
                                 $scope.swapProposals[swap._id] = swap;
-                                console.log($scope.swapProposals);
                                 $scope.$apply();
                             }
                         });
@@ -214,7 +204,6 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
 
     $scope.setActiveSwapInfo = function(swapId) {
         $scope.activeSwapId = swapId;
-        console.log(swapId);
         $scope.$apply();
     }
 
@@ -411,12 +400,6 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
             element.bind('click', function(evt) {
                 // Store information of clicked shift
                 scope.setActiveShiftInfo(
-                    evt.currentTarget.dataset.shiftId, 
-                    evt.currentTarget.dataset.dayWeek, 
-                    evt.currentTarget.dataset.startTime,
-                    evt.currentTarget.dataset.endTime
-                );
-                console.log(
                     evt.currentTarget.dataset.shiftId, 
                     evt.currentTarget.dataset.dayWeek, 
                     evt.currentTarget.dataset.startTime,

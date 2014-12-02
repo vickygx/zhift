@@ -1,17 +1,12 @@
-//- Manager Home Page: choose to view shifts or edit organization
-//- @author Lily Seropian
+//- Manager Home Page
+//- @author Lily Seropian, Vicky Gong
 
 block head    
-  include home.jade
-  include shift-calendar.jade
+  include ../calendar/template-shift-calendar.jade
 
   script(type="text/javascript", src="/javascripts/controllers/manager-controller.js")
   script(type="text/javascript", src="/javascripts/services/schedule-service.js")
 
 mixin manager(user)
   div(ng-controller="ManagerController" ng-init="init('#{user.org}')")
-    +shift-calendar(user.org)
-
-    hr
-    +allShifts(user.org)
-    hr
+    +template-shift-calendar(user.org)

@@ -85,7 +85,6 @@ module.exports.recordShiftUpForGrabs = function(org, to, owner, shift, fn) {
             subject: 'Shift Up For Grabs',
             text: owner + ' put their ' + shiftToString(shift) + ' up for grabs.',
         };
-        console.log(email);
 
         new Record({
             content: email.text,
@@ -120,7 +119,6 @@ module.exports.recordShiftClaim = function(org, to, originalOwner, newOwner, shi
             subject: 'Shift Claimed',
             text: newOwner + ' has claimed ' + originalOwner + '\'s ' + shiftToString(shift) + '.',
         };
-        console.log(email);
 
         new Record({
             content: email.text,
@@ -155,7 +153,7 @@ module.exports.recordShiftUpForSwap = function(org, to, owner, shift, fn) {
             text: 'Shift up for swap.' + shift,
             text: owner + ' put their ' + shiftToString(shift) + ' up for swap.',
         };
-        console.log(email);
+        
 
         new Record({
             content: email.text,
@@ -198,7 +196,6 @@ module.exports.recordSwapProposal = function(org, to, swap, fn) {
             subject: 'Swap Proposed',
             text: proposer + ' has offered their ' + shiftToString(proposedShift) + ' in exchange for ' + owner + '\'s ' + shiftToString(originalShift) + '.',
         };
-        console.log(email);
 
         new Record({
             content: email.text,
@@ -241,7 +238,6 @@ module.exports.recordSwapRejected = function(org, to, swap, fn) {
             subject: 'Swap Proposal Rejected',
             text: owner + ' has rejected ' + proposer + '\'s proposal to swap their ' + shiftToString(proposedShift) + ' with ' + owner + '\'s ' + shiftToString(originalShift) + '.',
         };
-        console.log(email);
 
         new Record({
             content: email.text,
@@ -284,7 +280,6 @@ module.exports.recordSwapAccepted = function(org, to, swap, fn) {
             subject: 'Swap Occurred',
             text: owner + ' has accepted ' + proposer + '\'s proposal to swap their ' + shiftToString(proposedShift) + ' with ' + owner + '\'s ' + shiftToString(originalShift) + '.',
         };
-        console.log(email);
 
         new Record({
             content: email.text,
@@ -320,7 +315,6 @@ module.exports.inviteManager = function(name, email, password, org) {
             'Organization: ' + org + '\n' +
             'Password: ' + password
     };
-    console.log(email);
     // sendgrid.send(email, console.log)
 }
 
@@ -343,6 +337,5 @@ module.exports.inviteEmployee = function(name, email, password, role, org) {
             'Organization: ' + org + '\n' +
             'Password: ' + password
     };
-    console.log(email);
     // sendgrid.send(email, console.log)
 }

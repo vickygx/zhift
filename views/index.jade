@@ -5,19 +5,16 @@ extends layout
 
 block head
   include manager/manager.jade
-  include employee/employee-shift-calendar.jade
+  include employee/employee.jade
   include navbar.jade
-
-  script(type="text/javascript", src="/javascripts/services/shift-service.js")
-  script(type="text/javascript", src="/javascripts/services/template-shift-service.js")
 
 block navbar
   +logged-in-navbar(user.schedule === undefined)
 
 block content
-  h1 Welcome, #{user.name}!
+  h2 Welcome, #{user.name}!
 
   if user.schedule
-    +employee-shift-calendar(user.org, user.schedule)
+    +employee(user)
   else
     +manager(user)
