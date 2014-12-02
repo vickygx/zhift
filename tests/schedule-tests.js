@@ -3,7 +3,7 @@
  * @author Anji Ren
  */
 
-function testTemplateShiftRoutes() {
+function testScheduleRoutes() {
     QUnit.module('TemplateShift');
 
     var scheduleId = null; 
@@ -90,5 +90,5 @@ function testTemplateShiftRoutes() {
             success: unexpectedSuccess(assert, 'Nonexistent schedule'),
             error: expectedError(assert, 'Nonexistent schedule', 404)
         });
-
+    });
 }
