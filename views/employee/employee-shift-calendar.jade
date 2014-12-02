@@ -130,7 +130,7 @@ mixin employee-shift-calendar(org, scheduleId)
                     div.modal-body
                         form.form-horizontal
                             div.form-group
-                                div(ng-model="$parent.swapProposals" ng-if="swapProposals[activeSwapId]").col-lg-10 In exchange for your {{swapProposals[activeSwapId].shiftUpForSwap.dayOfWeek}} {{swapProposals[activeSwapId].shiftUpForSwap.dateScheduled.substring(0, 10)}} {{swapProposals[activeSwapId].shiftUpForSwap.start}} - {{swapProposals[activeSwapId].shiftUpForSwap.end}} shift:
+                                div(ng-model="$parent.swapProposals" ng-if="swapProposals[activeSwapId]").col-lg-10 For your {{swapProposals[activeSwapId].shiftUpForSwap.dayOfWeek}} {{swapProposals[activeSwapId].shiftUpForSwap.dateScheduled.substring(0, 10)}} {{swapProposals[activeSwapId].shiftUpForSwap.start}} - {{swapProposals[activeSwapId].shiftUpForSwap.end}} shift:
                                 div(ng-model="$parent.swapProposals" ng-if="swapProposals[activeSwapId]").col-lg-10 {{swapProposals[activeSwapId].shiftOfferedInReturn.dayOfWeek}} {{swapProposals[activeSwapId].shiftOfferedInReturn.dateScheduled.substring(0, 10)}} {{swapProposals[activeSwapId].shiftOfferedInReturn.start}} - {{swapProposals[activeSwapId].shiftOfferedInReturn.end}} 
                                 input(ng-model="$parent.swapProposals" ng-if="swapProposals[activeSwapId]" type="submit", value="Accept", ng-click="acceptSwap(activeSwapId)")
                                 input(ng-model="$parent.swapProposals" ng-if="swapProposals[activeSwapId]" type="submit", value="Reject", ng-click="rejectSwap(activeSwapId)")

@@ -75,7 +75,20 @@ function testTemplateShiftRoutes() {
     });
 
     // DELETE
-    
-    // GET ALL
+    QUnit.asyncTest('DELETE', function(assert) {
+    // DELETE Remove existing Schedule/Role: 'Kung Fu Fighter' for Organization 'CC'
+        $.ajax({
+            url: '/schedule/' + scheduleId,
+            type: 'DELETE',
+            success: expectedSuccess(assert, 'Existing schedule', {_id: scheduleId, org: 'CC', role: 'Kung Fu Fighter'}),
+            error: unexpectedError(assert, 'Existing schedule')
+        });
+        QUnit.stop();
+    // DELETE Remove non-existing Schedule/Role for Organization 'CC'
+        $.ajax('/schedule/ffff', {
+            type: 'DELETE',
+            success: unexpectedSuccess(assert, 'Nonexistent schedule'),
+            error: expectedError(assert, 'Nonexistent schedule', 404)
+        });
 
 }
