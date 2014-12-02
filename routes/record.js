@@ -32,12 +32,12 @@ router.get('/schedule/:id', function(req, res) {
  * No request body parameters requires.
  * No response body contents on success.
  */
-router.delete('/old', function(req, res, next) {
+router.delete('/old', function(req, res) {
     RecordController.deleteOldRecords(function(err, numDeleted) {
         if (err) {
-            return next(err);
+            return res.status(403).send(err.message);
         }
-        res.send({});
+        res.send({deleted: numDeleted});
     });
 });
 

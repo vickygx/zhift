@@ -64,7 +64,9 @@ module.exports.getRecordsForSchedule = function(scheduleId, fn) {
  * @param {Function} fn Callback that takes (err, numDeleted).
  */
 module.exports.deleteOldRecords = function(fn) {
-    Record.remove({dateAbout: {$lt: new Date()}}, fn);
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    Record.remove({dateAbout: {$lt: today}}, fn);
 };
 
 /**
