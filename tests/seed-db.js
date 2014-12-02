@@ -1,6 +1,6 @@
 /**
  * Script to seed the test database.
- * @author Lily Seropian, Anji Ren
+ * @author Lily Seropian
  */
 
 var EmployeeUser            = require('../models/employee-user');
@@ -25,22 +25,32 @@ var fn = function(err) {
     }
 };
 
-var TOTAL_TO_COMPLETE = 9;
+var TOTAL_TO_COMPLETE = 17;
 var counter = {
     numDone: 0,
     err: [],
 };
+var body = {};
 
 module.exports = function(fn) {
     counter.numDone = 0;
-    var done = function(err) {
+    body = {};
+    var done = function(err, data) {
         if (err) {
             counter.err.push(err);
+        }
+        if (data) {
+            if (body[data.constructor.modelName]) {
+                body[data.constructor.modelName].push(data);
+            }
+            else {
+                body[data.constructor.modelName] = [data];
+            }
         }
 
         counter.numDone += 1;
         if (counter.numDone === TOTAL_TO_COMPLETE) {
-            fn(counter.err.length === 0 ? null : counter.err);
+            fn(counter.err.length === 0 ? null : counter.err, body);
         }
     }
 
@@ -52,46 +62,41 @@ module.exports = function(fn) {
         password: bCrypt.hashSync('uepxcqkmxr3w7grs4qew', bCrypt.genSaltSync(10)),
         org: 'ZhiftTest',
     }).save(function(err, user) {
-        new User(user).save(done);
-    });
-
-    // Organization: 'CC'
-    new Organization({_id: 'CC'}).save(done);
-
-    // Manager: 'Lily'
-    new ManagerUser({
-        name: 'Lily Seropian',
-        email: 'lilyseropian@gmail.com',
-        password: bCrypt.hashSync('lily', bCrypt.genSaltSync(10)),
-        org: 'CC',
-    }).save(function(err, user) {
+        done(err, user);
         new User(user).save(done);
     });
 
     // Role/Schedule: 'Crocheter'
     new Schedule({
-        org: 'CC',
+        org: 'ZhiftTest',
         role: 'Crocheter',
     }).save(function(err, schedule) {
+        done(err, schedule);
         // Employee: 'Jane' with Role: 'Crocheter' 
         new EmployeeUser({
             name: 'Jane Doe',
             email: 'jane@mit.edu',
             password: bCrypt.hashSync('jane', bCrypt.genSaltSync(10)),
-            org: 'CC',
+            org: 'ZhiftTest',
             schedule: schedule._id,
         }).save(function(err, user) {
+            done(err, user);
             new User(user).save(done);
             // Jane's Monday Template Shift
             TemplateShiftController.createShift('Monday', '02:00', '04:00', user._id, schedule._id, (function(err, templateShift) {
+                done(err, templateShift);
+                // Shift for next 3 weeks
                 [1, 2, 3].forEach(function(next) {
                     ShiftController.createShiftFromTemplateShift(templateShift._id, next, new Date(), function(err, shift) {
-                        if (err) {
-                            return done(err);
-                        }
-                        RecordController.recordShiftUpForGrabs('CC', [], 'Jane Doe', shift);
-                        done();
+                        done(err, shift);
+                        RecordController.recordShiftUpForGrabs('ZhiftTest', [], 'Jane Doe', shift, done);
                     });
+                });
+
+                // Old Shift
+                ShiftController.createShiftFromTemplateShift(templateShift._id, 1, new Date(0), function(err, shift) {
+                    done(err, shift);
+                    RecordController.recordShiftUpForGrabs('ZhiftTest', [], 'Jane Doe', shift, done);
                 });
             }));
         });
@@ -101,9 +106,10 @@ module.exports = function(fn) {
             name: 'John Doe',
             email: 'lilyseropian@gmail.edu',
             password: bCrypt.hashSync('john', bCrypt.genSaltSync(10)),
-            org: 'CC',
+            org: 'ZhiftTest',
             schedule: schedule._id,
         }).save(function(err, user) {
+            done(null, user);
             new User(user).save(done);
         });
     });

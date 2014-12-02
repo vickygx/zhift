@@ -100,11 +100,11 @@ if (app.get('env') === 'test') {
     });
 
     app.post('/test', function(req, res) {
-        require('./tests/seed-db')(function(err) {
+        require('./tests/seed-db')(function(err, data) {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.status(200).send({});
+            res.status(200).send(data);
         });
     });
 }

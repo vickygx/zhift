@@ -1,4 +1,9 @@
-<!-- @author Anji Ren, Vicky Gong -->
+//- Employee Calendar View 
+//-     Functionalities
+//-         - View shifts on schedule 
+//-         - Put up, claim, trade shifts
+//- 
+//- @author Vicky Gong, Anji Ren
 
 block head
     link(rel="stylesheet", href="stylesheets/shift-calendar/shift-calendar.css")
@@ -8,7 +13,8 @@ block head
     script(type="text/javascript", src="/javascripts/services/shift-service.js")
     script(type="text/javascript", src="/javascripts/services/swap-service.js")
 
-mixin employee-shift-calendar(org, scheduleId)
+mixin shift-calendar(org, scheduleId)
+    h3.title Shifts for #{user.org}
     div(id="shift-calendar" ng-controller="EmployeeScheduleController" ng-init="init('#{user._id}', '#{user.name}', '#{org}','#{scheduleId}')")
         div.employee-role-name(ng-if="!isManager") {{role}}
         div(id="week-picker")
@@ -18,7 +24,6 @@ mixin employee-shift-calendar(org, scheduleId)
                         ng-change="setCurrentWeek(day)")
                     option(style="display:none" value="") {{currentWeek.toDateString()}}
 
-        //- TODO: only for manager
         div.schedule-tabs-container
             div.btn-group(id="schedule-tabs")
                 button.btn.btn-default(type="button"
@@ -115,7 +120,7 @@ mixin employee-shift-calendar(org, scheduleId)
                             div.form-group
                                 div.col-lg-10
                                     select.form-control(name="offeredShift") Select from my shifts:
-                                        option(data-ng-repeat="shift in myShifts" id="{{shift._id}}" val="{{shift._id}}") {{shift.dayOfWeek}} {{shift.dateScheduled}} {{shift.start}} - {{shift.end}}
+                                        option(data-ng-repeat="shift in myShifts" id="{{shift._id}}" val="{{shift._id}}") {{shift.dayOfWeek}} {{shift.dateScheduled.substring(0, 10)}} {{shift.start}} - {{shift.end}}
                     div.modal-footer
                         button.btn.btn-default(type="button" class="offer-swap-for-shift" data-dismiss="modal") Send offer
                         button.btn.btn-default(type="button" data-dismiss="modal") Close
@@ -130,8 +135,8 @@ mixin employee-shift-calendar(org, scheduleId)
                     div.modal-body
                         form.form-horizontal
                             div.form-group
-                                div(ng-model="$parent.swapProposals" ng-if="swapProposals[activeSwapId]").col-lg-10 In exchange for your {{swapProposals[activeSwapId].shiftUpForSwap.dayOfWeek}} {{swapProposals[activeSwapId].shiftUpForSwap.dateScheduled}} {{swapProposals[activeSwapId].shiftUpForSwap.dateScheduled}} {{swapProposals[activeSwapId].shiftUpForSwap.start}} - {{swapProposals[activeSwapId].shiftUpForSwap.end}} shift:
-                                div(ng-model="$parent.swapProposals" ng-if="swapProposals[activeSwapId]").col-lg-10 {{swapProposals[activeSwapId].shiftOfferedInReturn.dayOfWeek}} {{swapProposals[activeSwapId].shiftOfferedInReturn.dateScheduled}} {{swapProposals[activeSwapId].shiftOfferedInReturn.dateScheduled}} {{swapProposals[activeSwapId].shiftOfferedInReturn.start}} - {{swapProposals[activeSwapId].shiftOfferedInReturn.end}} 
+                                div(ng-model="$parent.swapProposals" ng-if="swapProposals[activeSwapId]").col-lg-10 For your {{swapProposals[activeSwapId].shiftUpForSwap.dayOfWeek}} {{swapProposals[activeSwapId].shiftUpForSwap.dateScheduled.substring(0, 10)}} {{swapProposals[activeSwapId].shiftUpForSwap.start}} - {{swapProposals[activeSwapId].shiftUpForSwap.end}} shift:
+                                div(ng-model="$parent.swapProposals" ng-if="swapProposals[activeSwapId]").col-lg-10 {{swapProposals[activeSwapId].shiftOfferedInReturn.dayOfWeek}} {{swapProposals[activeSwapId].shiftOfferedInReturn.dateScheduled.substring(0, 10)}} {{swapProposals[activeSwapId].shiftOfferedInReturn.start}} - {{swapProposals[activeSwapId].shiftOfferedInReturn.end}} 
                                 input(ng-model="$parent.swapProposals" ng-if="swapProposals[activeSwapId]" type="submit", value="Accept", ng-click="acceptSwap(activeSwapId)")
                                 input(ng-model="$parent.swapProposals" ng-if="swapProposals[activeSwapId]" type="submit", value="Reject", ng-click="rejectSwap(activeSwapId)")
        

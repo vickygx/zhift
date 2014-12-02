@@ -2,15 +2,18 @@
  * Tests for Organization routes.
  * @author Lily Seropian
  */
+QUnit.config.reorder = false; // Prevent QUnit from running test not in order.
 
-function testOrganizationRoutes() {
+function testOrganizationRoutes(data) {
+    var org = data.Organization[0];
+
     QUnit.module('Organization');
 
     QUnit.asyncTest('GET', function(assert) {
         $.ajax({
-            url: '/org/CC',
+            url: '/org/' + org._id,
             type: 'GET',
-            success: expectedSuccess(assert, 'Existing org', {_id: 'CC'}),
+            success: expectedSuccess(assert, 'Existing org', org),
             error: unexpectedError(assert, 'Existing org')
         });
 

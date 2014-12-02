@@ -3,6 +3,16 @@
  * @author Lily Seropian
  */
 
+var compareIds = function(obj1, obj2) {
+    if (obj1._id < obj2._id) {
+        return -1;
+    }
+    if (obj1._id > obj2._id) {
+        return 1;
+    }
+    return 0;
+};
+
 /**
  * Assert that an error with the correct status code is returned.
  * @param {Object} assert QUnit's assert.
@@ -36,10 +46,20 @@ var unexpectedError = function(assert, title) {
  */
 var expectedSuccess = function(assert, title, expectedData) {
     return function(data, textStatus, jqXHR) {
-        var expectedKeys = Object.keys(expectedData);
-        for (var i = 0; i < expectedKeys.length; i++) {
-            var key = expectedKeys[i];
-            assert.equal(data[key], expectedData[key], title);
+        if (expectedData.length) {
+            data.sort(compareIds);
+            expectedData.sort(compareIds);
+            assert.deepEqual(expectedData, data, title);
+        }
+        else {
+            var expectedKeys = Object.keys(expectedData);
+            if (expectedKeys.length === 0) {
+                assert.ok(Object.keys(data).length === 0, title);
+            }
+            for (var i = 0; i < expectedKeys.length; i++) {
+                var key = expectedKeys[i];
+                assert.equal(data[key], expectedData[key], title);
+            }
         }
         QUnit.start();
     };
@@ -68,7 +88,7 @@ function clearAndSeed() {
             $.ajax({
                 url: '/test',
                 method: 'POST',
-                success: function() {
+                success: function(data, textStatus, jqXHR) {
                     $.ajax({
                         url: '/login',
                         type: 'POST',
@@ -77,8 +97,11 @@ function clearAndSeed() {
                             password: 'uepxcqkmxr3w7grs4qew',
                             org: 'ZhiftTest'
                         },
-                        success: function() {
-                            testOrganizationRoutes();
+                        success: function(d, textStatus, jqXHR) {
+                            testOrganizationRoutes(data);
+                            testScheduleRoutes();
+                            //testTemplateShiftRoutes();
+                            testRecordRoutes(data);
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.status, errorThrown);
