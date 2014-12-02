@@ -13,10 +13,9 @@ mixin employee-shift-calendar(org, scheduleId)
         div(id="weekPicker")
             form.form-inline(role="form")
                 select.form-control(ng-model="day"
-                        ng-options="day.toDateString() for day in availableWeeks track by index")
-                    //- option(ng-repeat="day in availableWeeks"
-                           value="{{day.toDateString()}}") {{day.toDateString()}}
-            button.btn.btn-default(type="submit" ng-click="setCurrentWeek(day)") Enter
+                        ng-options="day.toDateString() for day in availableWeeks")
+                    option(value="") {{currentWeek.toDateString()}}
+            button.btn.btn-default(type="submit" ng-click="setCurrentWeek(day)") Update
 
         //- TODO: only for manager
         div.schedule-tabs-container
