@@ -25,22 +25,32 @@ var fn = function(err) {
     }
 };
 
-var TOTAL_TO_COMPLETE = 9;
+var TOTAL_TO_COMPLETE = 7;
 var counter = {
     numDone: 0,
     err: [],
 };
+var body = {};
 
 module.exports = function(fn) {
     counter.numDone = 0;
-    var done = function(err) {
+    body = {};
+    var done = function(err, data) {
         if (err) {
             counter.err.push(err);
+        }
+        if (data) {
+            if (body[data.constructor.modelName]) {
+                body[data.constructor.modelName].push(data);
+            }
+            else {
+                body[data.constructor.modelName] = [data];
+            }
         }
 
         counter.numDone += 1;
         if (counter.numDone === TOTAL_TO_COMPLETE) {
-            fn(counter.err.length === 0 ? null : counter.err);
+            fn(counter.err.length === 0 ? null : counter.err, body);
         }
     }
 
@@ -55,22 +65,9 @@ module.exports = function(fn) {
         new User(user).save(done);
     });
 
-    // Organization: 'CC'
-    new Organization({_id: 'CC'}).save(done);
-
-    // Manager: 'Lily'
-    new ManagerUser({
-        name: 'Lily Seropian',
-        email: 'lilyseropian@gmail.com',
-        password: bCrypt.hashSync('lily', bCrypt.genSaltSync(10)),
-        org: 'CC',
-    }).save(function(err, user) {
-        new User(user).save(done);
-    });
-
     // Role/Schedule: 'Crocheter'
     new Schedule({
-        org: 'CC',
+        org: 'ZhiftTest',
         role: 'Crocheter',
     }).save(function(err, schedule) {
         // Employee: 'Jane' with Role: 'Crocheter' 
@@ -78,7 +75,7 @@ module.exports = function(fn) {
             name: 'Jane Doe',
             email: 'jane@mit.edu',
             password: bCrypt.hashSync('jane', bCrypt.genSaltSync(10)),
-            org: 'CC',
+            org: 'ZhiftTest',
             schedule: schedule._id,
         }).save(function(err, user) {
             new User(user).save(done);
@@ -89,7 +86,7 @@ module.exports = function(fn) {
                         if (err) {
                             return done(err);
                         }
-                        RecordController.recordShiftUpForGrabs('CC', [], 'Jane Doe', shift);
+                        RecordController.recordShiftUpForGrabs('ZhiftTest', [], 'Jane Doe', shift);
                         done();
                     });
                 });
@@ -101,7 +98,7 @@ module.exports = function(fn) {
             name: 'John Doe',
             email: 'lilyseropian@gmail.edu',
             password: bCrypt.hashSync('john', bCrypt.genSaltSync(10)),
-            org: 'CC',
+            org: 'ZhiftTest',
             schedule: schedule._id,
         }).save(function(err, user) {
             new User(user).save(done);

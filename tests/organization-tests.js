@@ -8,9 +8,9 @@ function testOrganizationRoutes() {
 
     QUnit.asyncTest('GET', function(assert) {
         $.ajax({
-            url: '/org/CC',
+            url: '/org/ZhiftTest',
             type: 'GET',
-            success: expectedSuccess(assert, 'Existing org', {_id: 'CC'}),
+            success: expectedSuccess(assert, 'Existing org', {_id: 'ZhiftTest'}),
             error: unexpectedError(assert, 'Existing org')
         });
 
