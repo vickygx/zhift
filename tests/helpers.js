@@ -97,6 +97,7 @@ function clearAndSeed() {
                         success: function(d, textStatus, jqXHR) {
                             testOrganizationRoutes(data);
                             testScheduleRoutes();
+                            //testTemplateShiftRoutes();
                             testRecordRoutes(data);
                         },
                         error: function(jqXHR, textStatus, errorThrown) {

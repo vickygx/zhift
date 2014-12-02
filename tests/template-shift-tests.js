@@ -2,93 +2,83 @@
  * Tests for Template Shift routes.
  * @author Anji Ren
  */
+QUnit.config.reorder = false; // Prevent QUnit from running test not in order.
 
 function testTemplateShiftRoutes() {
     QUnit.module('TemplateShift');
-                    day: day,
-                    startTime: startTime,
-                    endTime: endTime,
-                    employeeId: employeeId,
-                    scheduleId: scheduleId,
+
+    var employeeId = null; 
+    var scheduleId = null;
+    var templateShiftId = null;
+
+    assignEmployeeId = function(employee) {
+        employeeId = employee._id;
+    }
+
+    assignScheduleId = function(schedule) {
+        scheduleId = schedule._id;
+    };
+
+    assignTemplateShiftId = function(templateShift) {
+        templateShiftId = templateShift._id;
+    };
     // POST
     QUnit.asyncTest('POST', function(assert) {
-    // POST Create new Template Shift: Thursday 10:00 - 11:00
+
+    // POST Create new Schedule/Role: 'Kung Fu Fighter 2' for Organization 'ZhiftTest'
         $.ajax({
-            url: '/template',
+            url: '/schedule',
             type: 'POST',
             data: {
-                day: 'Thursday',
-                startTime: '10:00',
-                endTime: '11:00',
-                employeeId: employeeId,
-                scheduleId: scheduleId,
+                orgName: 'ZhiftTest',
+                role: 'Kung Fu Fighter 2'
             },
             success: function(resObj, textStatus, jqXHR) {
-                expectedSuccess(assert, 'Valid schedule', {role: 'Kung Fu Fighter'})(resObj, textStatus, jqXHR);
+                expectedSuccess(assert, 'Valid schedule', {role: 'Kung Fu Fighter 2'})(resObj, textStatus, jqXHR);
                 assignScheduleId(resObj);
                 QUnit.stop();
-    // POST Create duplicate Schedule/Role: 'Kung Fu Fighter' for Organization 'CC'
-                $.ajax('/schedule', {
+            // POST Create new Employee 'Bobby Dylan' for Organization 'ZhiftTest' and Role 'Kung Fu Fighter 2'
+                $.ajax({
+                    url: 'user/employee',
                     type: 'POST',
                     data: {
-                        name: 'Kung Fu Figther',
+                        username: 'Bobby Dylan',
+                        email: 'renalele@gmail.com',
+                        org: 'ZhiftTest',
+                        role: 'Kung Fu Fighter 2'
                     },
-                    success: unexpectedSuccess(assert, 'Duplicate schedule'),
-                    error: expectedError(assert, 'Duplicate schedule', 403)
-                });
+                    success: function(resObj, textStatus, jqXHR) {
+                        expectedSuccess(assert, 'Valid employee', {
+                            name: 'Bobby Dylan', 
+                            email: 'renalele@gmail.com',
+                            org: 'ZhiftTest', 
+                            role: 'Kung Fu Fighter 2'})(resObj, textStatus, jqXHR);
+                        assignEmployeeId(resObj);
+                        QUnit.stop();
+                    // POST Create new Template Shift: Thursday 10:00 - 11:00
+                        $.ajax({
+                            url: '/template',
+                            type: 'POST',
+                            data: {
+                                day: 'Thursday',
+                                startTime: '10:00',
+                                endTime: '11:00',
+                                employeeId: employeeId,
+                                scheduleId: scheduleId,
+                            },
+                            success: function(resObj, textStatus, jqXHR) {
+                                expectedSuccess(assert, 'Valid template shift', {role: 'Kung Fu Fighter 2'})(resObj, textStatus, jqXHR);
+                                assignTemplateShiftId(resObj);
+                                //QUnit.stop();
+                            // REASSIGN TEMPLATE SHIFT
+                            },
+                            error: unexpectedError(assert, 'Valid template shift')
+                        });
+                    },
+                    error: unexpectedError(assert, 'Valid employee')
+                })
             },
             error: unexpectedError(assert, 'Valid schedule')
         });
-
-        QUnit.stop();
-    // POST Create new Schedule/Role with empty parameters
-        $.ajax('/schedule', {
-            type: 'POST',
-            data: {},
-            success: unexpectedSuccess(assert, 'Invalid schedule'),
-            error: expectedError(assert, 'Invalid schedule', 403)
-        });
     })
-
-    // GET
-    QUnit.asyncTest('GET', function(assert) {
-    // GET Retrieve existing Schedule/Role: 'Kung Fu Fighter' for Organization 'CC'
-        $.ajax({
-            url: '/schedule/' + scheduleId,
-            type: 'GET',
-            success: expectedSuccess(assert, 'Existing schedule', {_id: scheduleId, org: 'CC', role: 'Kung Fu Fighter'}),
-            error: unexpectedError(assert, 'Existing schedule')
-        });
-        QUnit.stop();
-    // GET Retrieve non-existing Schedule/Role for Organization 'CC'
-        $.ajax('/schedule/ffff', {
-            type: 'GET',
-            success: unexpectedSuccess(assert, 'Nonexistent schedule'),
-            error: expectedError(assert, 'Nonexistent schedule', 404)
-        });
-        QUnit.stop();
-    // GET Retrieve Schedule with empty id parameter
-        $.ajax('/schedule/', {
-            type: 'GET',
-            success: unexpectedSuccess(assert, 'Empty schedule'),
-            error: expectedError(assert, 'Empty schedule', 404)
-        });
-    });
-
-    // DELETE
-    QUnit.asyncTest('DELETE', function(assert) {
-    // DELETE Remove existing Schedule/Role: 'Kung Fu Fighter' for Organization 'CC'
-        $.ajax({
-            url: '/schedule/' + scheduleId,
-            type: 'DELETE',
-            success: expectedSuccess(assert, 'Existing schedule', {_id: scheduleId, org: 'CC', role: 'Kung Fu Fighter'}),
-            error: unexpectedError(assert, 'Existing schedule')
-        });
-        QUnit.stop();
-    // DELETE Remove non-existing Schedule/Role for Organization 'CC'
-        $.ajax('/schedule/ffff', {
-            type: 'DELETE',
-            success: unexpectedSuccess(assert, 'Nonexistent schedule'),
-            error: expectedError(assert, 'Nonexistent schedule', 404)
-        });
 }
