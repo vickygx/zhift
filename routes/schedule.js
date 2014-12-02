@@ -1,6 +1,7 @@
 /**
  * All routes relating to schedules.
- * @author: Anji Ren, Lily Seropian, Vicky Gong
+ * 
+ * @author: Anji Ren, Lily Seropian, Vicky Gong, Dylan Joss
  */
 
 var express = require('express');
@@ -21,18 +22,19 @@ var errorChecking = require('../errors/error-checking');
  *     {Schedule} The created schedule.
  */
 router.post('/', function(req, res) {
-    // Checking if permissions are correct
+    // checking if permissions are correct
     UserController.isManagerOfOrganization(req.user.email, req.body.orgName, function(err, isManager){
+        if (err) {
+            res.send(err);
+        }
         if (!isManager) {
-            // TODO: temporary json, replace with proper error
-            return res.status(401).send('error: you are not a manager');
+            return res.status(401).send('Unauthorized, you are not a manager of the appropriate organization. Cannot create schedule.');
         }
 
-        // If the user is a manager, create the schedule
+        // if the user is a manager, create the schedule
         ScheduleController.createSchedule(req.body.orgName, req.body.role, function(err, schedule) {
             if (err) {
-                // TODO: temporary error
-                return res.status(403).send(err.message);
+                return res.send(err);
             } 
             res.send(schedule);
         });
@@ -46,18 +48,19 @@ router.post('/', function(req, res) {
  *     {Schedule} The deleted schedule.
  */
 router.delete('/:id', function(req, res) {
-    // Checking if permissions are correct
+    // checking if permissions are correct
     UserController.isManagerOfOrganization(req.user.email, req.user.org, function(err, isManager) {
+        if (err) {
+            res.send(err);
+        }
         if (!isManager) {
-            // TODO: temporary json, replace with proper error
-            return res.status(401).send('error: you are not a manager. cannot delete');
+            return res.status(401).send('Unauthorized, you are not a manager of the appropriate organization. Cannot delete schedule.');
         }
 
-        // If the user is a manager, delete the schedule
+        // if the user is a manager, delete the schedule
         ScheduleController.deleteSchedule(req.param('id'), req.user.org, function(err, schedule) {
             if (err) {
-                //TODO: temp error
-                return res.status(403).send(err.message);
+                return res.send(err);
             } 
             res.send(schedule);
         });
@@ -71,17 +74,18 @@ router.delete('/:id', function(req, res) {
  *     {Schedule} The retrieved schedule.
  */
 router.get('/:id', function(req, res) {
-    // Checking if permissions are correct
+    // checking if permissions are correct
     UserController.isUserOfOrganization(req.user.email, req.user.org, function(err, isUser) {
-        // If the user is in organization, get the schedule
+        if (err) {
+            res.send(err);
+        }
+        // if the user is in organization, get the schedule
         if (!isUser) {
-            // TODO: temporary json, replace with proper error
-            return res.status(401).send('error: you are not a user. cannot get schedule');
+            return res.status(401).send('Unauthorized, you are not a user of the appropriate organization. Cannot get schedule.');
         }
         ScheduleController.retrieveSchedule(req.param('id'), function(err, schedule) {
             if (err) {
-                // TODO: fix error
-                return res.status(403).send(err.message);
+                return res.send(err);
             } 
             res.send(schedule);
         });
@@ -95,16 +99,18 @@ router.get('/:id', function(req, res) {
  *     {Schedule[]} The retrieved schedules.
  */
 router.get('/all/:orgName', function(req, res) {
-    // Checking if permissions are correct
+    // checking if permissions are correct
     UserController.isUserOfOrganization(req.user.email, req.param('orgName'), function(err, isUser) {
-        // If the user is in organization, get the schedule
+        if (err) {
+            res.send(err);
+        }
+        // if the user is in organization, get the schedule
         if (!isUser) {
-            // TODO: temporary json, replace with proper error
-            return res.status(401).send('error: you are not a user. cannot get schedule');
+            return res.status(401).send('Unauthorized, you are not a user of the appropriate organization. Cannot get schedules.');
         }
         ScheduleController.retrieveSchedulesByOrg(req.param('orgName'), function(err, schedules) {
             if (err) {
-                return res.status(403).send(err.message);
+                return res.send(err);
             } 
             res.send(schedules);
         });
