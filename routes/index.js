@@ -1,5 +1,5 @@
 /**
- * Routing for page rendering and authentication.
+ * Routing for website page rendering and authentication.
  * @author Anji Ren
  */
 
@@ -9,14 +9,14 @@ var security = require('../errors/security');
 
 module.exports = function(passport) {
 	/**
-	 * GET API demo page.
+	 * Get API demo page.
 	 */
 	router.get('/api', function(req, res){
-	    res.render('api-demo/apidemo', {title: 'API testing'});
+	    res.render('api-demo/apidemo', {title: 'API Demo'});
 	});
 
 	/**
-	 * GET login page.
+	 * Get login page.
 	 */
 	router.get('/', function(req, res) {
     	// Display the Login page with any flash message, if any
@@ -24,7 +24,7 @@ module.exports = function(passport) {
 	});
 
 	/**
-	 * POST to login a user.
+	 * Post to login a user.
 	 */
 	router.post('/login', passport.authenticate('login', {
 		successRedirect: '/home',
@@ -33,14 +33,14 @@ module.exports = function(passport) {
 	}));
 
 	/**
-	 * GET Registration Page.
+	 * Get registration page.
 	 */
 	router.get('/signup', function(req, res) {
 		res.render('account-management/register', {message: req.flash('message')});
 	});
 
 	/**
-	 * POST to signup a new user.
+	 * Post to register a new user.
 	 */
 	router.post('/signup', passport.authenticate('signup', {
 		successRedirect: '/home',
@@ -49,14 +49,14 @@ module.exports = function(passport) {
 	}));
 
 	/**
-	 * GET Home Page.
+	 * Get 'Home' page.
 	 */
 	router.get('/home', security.isAuthenticated, function(req, res) {
 		res.render('index', {user: req.user});
 	});
 
 	/**
-	 * GET Edit Organization Page.
+	 * Get 'Edit Organization' page.
 	 * TODO: security - must be manager
 	 */
 	router.get('/edit', security.isAuthenticated, function(req, res) {
@@ -64,14 +64,14 @@ module.exports = function(passport) {
 	});
 
 	/**
-	 * GET User Settings Page.
+	 * Get 'User Settings' page.
 	 */
 	router.get('/settings', security.isAuthenticated, function(req, res) {
 		res.render('account-management/settings', {user: req.user});
 	});
 
 	/**
-	 * GET to sign out a user.
+	 * Get to sign out a user.
 	 */
 	router.get('/signout', function(req, res) {
 		req.logout();
@@ -79,14 +79,14 @@ module.exports = function(passport) {
 	});
 
 	/**
-	 * GET shift test page.
+	 * Get 'shift test' page.
 	 */
 	router.get('/shifts', security.isAuthenticated, function(req, res) {
     	res.render('shift/test_shift', {title: 'shift calendar testing', user: req.user});
 	});
 
 	/**
-	 * GET dashboard page.
+	 * Get 'Dashboard' page.
 	 */
 	router.get('/dashboard', security.isAuthenticated, function(req, res) {
 		res.render('dashboard/dash', {user: req.user});

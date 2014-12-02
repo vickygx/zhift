@@ -1,3 +1,5 @@
+<!-- @author Anji Ren, Vicky Gong -->
+
 block head
     link(rel="stylesheet", href="stylesheets/shift-calendar/shift-calendar.css")
     script(type="text/javascript", src="/javascripts/libraries/date.js")
@@ -126,8 +128,8 @@ mixin employee-shift-calendar(org, scheduleId)
                     div.modal-body
                         form.form-horizontal
                             div.form-group
-                                div.col-lg-10 In exchange for your {{swapProposals[activeSwapId].shiftUpForSwap.dayOfWeek}} {{swapProposals[activeSwapId].shiftUpForSwap.dateScheduled}} {{swapProposals[activeSwapId].shiftUpForSwap.start}} - {{swapProposals[activeSwapId].shiftUpForSwap.end}} shift:
-                                div.col-lg-10 {{swapProposals[activeSwapId].shiftOfferedInReturn.dayOfWeek}} {{swapProposals[activeSwapId].shiftOfferedInReturn.dateScheduled}} {{swapProposals[activeSwapId].shiftOfferedInReturn.start}} - {{swapProposals[activeSwapId].shiftOfferedInReturn.end}} 
-                                input(type="submit", value="Accept", ng-click="acceptSwap(activeSwapId)")
-                                input(type="submit", value="Reject", ng-click="rejectSwap(activeSwapId)")
+                                div(ng-if="swapProposals[activeSwapId]").col-lg-10 In exchange for your {{swapProposals[activeSwapId].shiftUpForSwap.dayOfWeek}} {{swapProposals[activeSwapId].shiftUpForSwap.dateScheduled}} {{swapProposals[activeSwapId].shiftUpForSwap.start}} - {{swapProposals[activeSwapId].shiftUpForSwap.end}} shift:
+                                div(ng-if="swapProposals[activeSwapId]").col-lg-10 {{swapProposals[activeSwapId].shiftOfferedInReturn.dayOfWeek}} {{swapProposals[activeSwapId].shiftOfferedInReturn.dateScheduled}} {{swapProposals[activeSwapId].shiftOfferedInReturn.start}} - {{swapProposals[activeSwapId].shiftOfferedInReturn.end}} 
+                                input(ng-if="swapProposals[activeSwapId]" type="submit", value="Accept", ng-click="acceptSwap(activeSwapId)")
+                                input(ng-if="swapProposals[activeSwapId]" type="submit", value="Reject", ng-click="rejectSwap(activeSwapId)")
        
