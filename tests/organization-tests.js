@@ -4,14 +4,16 @@
  */
 QUnit.config.reorder = false; // Prevent QUnit from running test not in order.
 
-function testOrganizationRoutes() {
+function testOrganizationRoutes(data) {
+    var org = data.Organization[0];
+
     QUnit.module('Organization');
 
     QUnit.asyncTest('GET', function(assert) {
         $.ajax({
-            url: '/org/ZhiftTest',
+            url: '/org/' + org._id,
             type: 'GET',
-            success: expectedSuccess(assert, 'Existing org', {_id: 'ZhiftTest'}),
+            success: expectedSuccess(assert, 'Existing org', org),
             error: unexpectedError(assert, 'Existing org')
         });
 

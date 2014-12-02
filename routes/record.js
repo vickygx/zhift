@@ -18,27 +18,12 @@ var errorChecking = require('../errors/error-checking');
  * Response body contains:
  *     {Record[]} The found records.
  */
-router.get('/schedule/:id', function(req, res, next) {
+router.get('/schedule/:id', function(req, res) {
     RecordController.getRecordsForSchedule(req.param('id'), function(err, records) {
         if (err) {
-            return next(err);
-        } 
+            return res.status(403).send(err.message);
+        }
         res.send(records);
-    });
-});
-
-/**
- * GET a specific record.
- * No request body parameters required.
- * Response body contains:
- *     {Record} The found record.
- */
-router.get('/:id', function(req, res, next) {
-    RecordController.getRecord(req.param('id'), function(err, record) {
-        if (err) {
-            return next(err);
-        } 
-        res.send(record);
     });
 });
 
