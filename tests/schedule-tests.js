@@ -90,5 +90,5 @@ function testScheduleRoutes() {
             success: unexpectedSuccess(assert, 'Nonexistent schedule'),
             error: expectedError(assert, 'Nonexistent schedule', 404)
         });
-
+    });
 }
