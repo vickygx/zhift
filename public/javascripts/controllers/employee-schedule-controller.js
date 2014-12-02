@@ -27,6 +27,7 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
         $scope.schedules = [];
         $scope.currentWeek = Date.today();
         $scope.availableWeeks = [];
+        $scope.role = null;
 
         // Shift variables
         $scope.myShifts = {};
@@ -40,7 +41,6 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
 
         // If logged in user is a manager
         if ($scope.isManager){
-            console.log(" IS MANAGER ASDJODS");
             // Populating schedules + setting current schedule
             getAllSchedules($scope.org, function(){
                 if ($scope.schedules.length === 0) {
@@ -59,8 +59,10 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
         }
         // If logged in user is an employee
         else {
-            console.log(" IS EMPLOYEE ADSAD");
             $scope.currentScheduleId = scheduleId;
+            getSchedule($scope.currentScheduleId, function(){
+                $scope.$apply();
+            });
 
             // get the current user's shifts
             ShiftService.getShiftsFor($scope.currentUserId, function(shifts) {
@@ -91,7 +93,6 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
                             console.log($scope.myShifts[shiftId] !== undefined);
                             console.log(swap.shiftOfferedInReturn);
                             if ($scope.myShifts[shiftId] !== undefined && swap.shiftOfferedInReturn) {
-                                console.log("hihi")
                                 $scope.swapProposals[swap._id] = swap;
                                 console.log($scope.swapProposals);
                                 $scope.$apply();
@@ -253,6 +254,14 @@ ZhiftApp.controller('EmployeeScheduleController', function($scope, ScheduleServi
             callback();
         });
     };
+
+    var getSchedule = function(scheduleId, callback){
+        ScheduleService.getSchedule(scheduleId, function(err, schedule){
+            if (schedule)
+                $scope.role = schedule.role;
+            callback();
+        });
+    }
 
     $scope.tradeShift = function(){};
 
