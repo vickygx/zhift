@@ -3,8 +3,8 @@
  * @author Anji Ren
  */
 
-function testTemplateShiftRoutes() {
-    QUnit.module('TemplateShift');
+function testScheduleRoutes() {
+    QUnit.module('Schedule');
 
     var scheduleId = null; 
 
