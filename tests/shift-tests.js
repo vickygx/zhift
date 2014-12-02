@@ -1,3 +1,8 @@
-QUnit.test('QUnit Test', function(assert) {
-    assert.equal(2, 2, 'Qunit works.');
-});
+/**
+*   Tests for Shift routes
+*   @author Vicky Gong
+*/
+
+function testShiftRoutes(data){
+    QUnit.module('Shift');
+}
