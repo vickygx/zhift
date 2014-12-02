@@ -18,11 +18,11 @@ var errorChecking = require('../errors/error-checking');
  * Response body contains:
  *     {Record[]} The found records.
  */
-router.get('/schedule/:id', function(req, res, next) {
+router.get('/schedule/:id', function(req, res) {
     RecordController.getRecordsForSchedule(req.param('id'), function(err, records) {
         if (err) {
-            return next(err);
-        } 
+            return res.status(403).send(err.message);
+        }
         res.send(records);
     });
 });

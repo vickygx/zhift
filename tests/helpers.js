@@ -49,7 +49,7 @@ var expectedSuccess = function(assert, title, expectedData) {
         if (expectedData.length) {
             data.sort(compareIds);
             expectedData.sort(compareIds);
-            assert.deepEqual(expectedData, data);
+            assert.deepEqual(expectedData, data, title);
         }
         else {
             var expectedKeys = Object.keys(expectedData);
