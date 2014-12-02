@@ -14,10 +14,10 @@ mixin employee-shift-calendar(org, scheduleId)
             //- should be a tab to change date range
         div(id="weekPicker")
             form.form-inline(role="form")
-                select.form-control(ng-model="day")
-                    option(data-ng-repeat="day in availableWeeks"
-                           value="{{day.toDateString()}}"
-                           class="set-current-week") {{day.toDateString()}}
+                select.form-control(ng-model="day"
+                        ng-options="day.toDateString() for day in availableWeeks track by index")
+                    //- option(ng-repeat="day in availableWeeks"
+                           value="{{day.toDateString()}}") {{day.toDateString()}}
             button.btn.btn-default(type="submit" ng-click="setCurrentWeek(day)") Enter
 
         //- TODO: only for manager
