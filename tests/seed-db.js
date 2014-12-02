@@ -25,7 +25,7 @@ var fn = function(err) {
     }
 };
 
-var TOTAL_TO_COMPLETE = 15;
+var TOTAL_TO_COMPLETE = 17;
 var counter = {
     numDone: 0,
     err: [],
@@ -85,12 +85,18 @@ module.exports = function(fn) {
             // Jane's Monday Template Shift
             TemplateShiftController.createShift('Monday', '02:00', '04:00', user._id, schedule._id, (function(err, templateShift) {
                 done(err, templateShift);
-
+                // Shift for next 3 weeks
                 [1, 2, 3].forEach(function(next) {
                     ShiftController.createShiftFromTemplateShift(templateShift._id, next, new Date(), function(err, shift) {
                         done(err, shift);
                         RecordController.recordShiftUpForGrabs('ZhiftTest', [], 'Jane Doe', shift, done);
                     });
+                });
+
+                // Old Shift
+                ShiftController.createShiftFromTemplateShift(templateShift._id, 1, new Date(0), function(err, shift) {
+                    done(err, shift);
+                    RecordController.recordShiftUpForGrabs('ZhiftTest', [], 'Jane Doe', shift, done);
                 });
             }));
         });

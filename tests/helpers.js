@@ -53,6 +53,9 @@ var expectedSuccess = function(assert, title, expectedData) {
         }
         else {
             var expectedKeys = Object.keys(expectedData);
+            if (expectedKeys.length === 0) {
+                assert.ok(Object.keys(data).length === 0, title);
+            }
             for (var i = 0; i < expectedKeys.length; i++) {
                 var key = expectedKeys[i];
                 assert.equal(data[key], expectedData[key], title);
