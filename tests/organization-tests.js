@@ -7,7 +7,6 @@ function testOrganizationRoutes() {
     QUnit.module('Organization');
 
     QUnit.asyncTest('GET', function(assert) {
-        console.log('testing');
         $.ajax({
             url: '/org/CC',
             type: 'GET',

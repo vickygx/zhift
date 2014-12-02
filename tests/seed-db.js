@@ -32,6 +32,7 @@ var counter = {
 };
 
 module.exports = function(fn) {
+    counter.numDone = 0;
     var done = function(err) {
         if (err) {
             counter.err.push(err);
@@ -39,7 +40,6 @@ module.exports = function(fn) {
 
         counter.numDone += 1;
         if (counter.numDone === TOTAL_TO_COMPLETE) {
-            console.log('done');
             fn(counter.err.length === 0 ? null : counter.err);
         }
     }

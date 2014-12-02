@@ -101,7 +101,6 @@ if (app.get('env') === 'test') {
 
     app.post('/test', function(req, res) {
         require('./tests/seed-db')(function(err) {
-            console.log('seeding done', err);
             if (err) {
                 return res.status(500).send(err);
             }
