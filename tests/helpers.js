@@ -80,6 +80,7 @@ function clearAndSeed() {
                         success: function() {
                             testOrganizationRoutes();
                             testScheduleRoutes();
+                            //testTemplateShiftRoutes();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.status, errorThrown);

@@ -1,6 +1,6 @@
 /**
  * Script to seed the test database.
- * @author Lily Seropian, Anji Ren
+ * @author Lily Seropian
  */
 
 var EmployeeUser            = require('../models/employee-user');

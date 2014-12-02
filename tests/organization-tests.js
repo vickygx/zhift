@@ -2,6 +2,7 @@
  * Tests for Organization routes.
  * @author Lily Seropian
  */
+QUnit.config.reorder = false; // Prevent QUnit from running test not in order.
 
 function testOrganizationRoutes() {
     QUnit.module('Organization');
