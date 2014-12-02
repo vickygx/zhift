@@ -64,6 +64,13 @@ module.exports = function(passport) {
 	});
 
 	/**
+	 * Get 'Shifts view' page.
+	 */
+	router.get('/shift', security.isAuthenticated, function(req, res){
+		res.render('manager/shifts', {user: req.user});
+	})
+
+	/**
 	 * Get 'User Settings' page.
 	 */
 	router.get('/settings', security.isAuthenticated, function(req, res) {
