@@ -47,11 +47,19 @@ router.post('/manager', function(req, res) {
  *     {EmployeeUser} The created employee.
  */
 router.post('/employee', function(req, res) {
-    UserController.createEmployee(req.body.username, req.body.email, req.body.org, req.body.role, function(err, employee) {
+    UserController.isManagerOfOrganization(req.user.email, req.user.org, function(err, isManager) {
         if (err) {
-            return res.status(403).send(err);
+            res.send(err);
         }
-        res.send(employee);
+        if (!isManager) {
+            return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization.');
+        }
+        UserController.createEmployee(req.body.username, req.body.email, req.body.org, req.body.role, function(err, employee) {
+            if (err) {
+                return res.status(403).send(err);
+            }
+            res.send(employee);
+        });
     });
 });
 
@@ -89,11 +97,17 @@ router.get('/employee/:id', function(req, res) {
  * PUT to change the password of a user.
  */
 router.put('/:id', function(req, res) {
-    UserController.changePassword(req.param('id'), req.body.password, function(err, employee) {
+    var id = req.param('id');
+
+    if (req.user._id.toString() !== id) {
+        return res.status(403).send('Unauthorized, you cannot change the password of another user account.');
+    }
+
+    UserController.changePassword(id, req.body.password, function(err, user) {
         if (err) {
             return res.status(403).send(err);
         }
-        res.send(employee);
+        res.send(user);
     });
 });
 

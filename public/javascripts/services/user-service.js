@@ -23,7 +23,6 @@ ZhiftApp.service('UserService', function() {
             }).success(function(res) {
                 fn(null, res);
             }).error(function(res) {
-                // TODO: error handling
                 fn(res.responseText);
             });
         },
@@ -41,7 +40,6 @@ ZhiftApp.service('UserService', function() {
             }).success(function(res) {
                 fn(null, res);
             }).error(function(res) {
-                // TODO: error handling
                 fn(res.responseText);
             });
         },
@@ -59,7 +57,6 @@ ZhiftApp.service('UserService', function() {
             }).success(function(res) {
                 fn(null, res);
             }).error(function(res) {
-                // TODO: error handling
                 fn(res.responseText);
             });
         },
@@ -86,7 +83,6 @@ ZhiftApp.service('UserService', function() {
             }).success(function(res) {
                 fn(null, res);
             }).error(function(res) {
-                // TODO: error handling
                 fn(res.responseText);
             });
         },
@@ -104,7 +100,6 @@ ZhiftApp.service('UserService', function() {
             }).success(function(res) {
                 fn(null, res);
             }).error(function(res) {
-                // TODO: error handling
                 fn(res.responseText);
             });
         },
@@ -129,7 +124,6 @@ ZhiftApp.service('UserService', function() {
             }).success(function(res) {
                 fn(null, res);
             }).error(function(res) {
-                // TODO: error handling
                 fn(res.responseText);
             });
         },
@@ -151,7 +145,6 @@ ZhiftApp.service('UserService', function() {
             }).success(function(res) {
                 fn(null, res);
             }).error(function(res) {
-                // TODO: error handling
                 fn(res.responseText);
             });
         },

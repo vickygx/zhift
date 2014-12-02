@@ -74,17 +74,23 @@ router.get('/user/:id', function(req, res, next) {
         return res.status(403).send({message: 'error: you are not a manager or the owner of this shift. cannot get'});
     }
 
-    // If the logged in user is a manager, seeing if he/she is the right manager
+    // if the logged in user is a manager, check if the manager is part of the same org as the request employee
     if (!req.user.schedule) {
         UserController.retrieveEmployeeById(req.param('id'), function(err, employee) {
-            if (employee){
-                if (req.session.org !== employee.org) {
+            if (employee) {
+                if (req.user.org !== employee.org) {
                     return res.status(403).send({message: 'error: you are not a manager for this employee. cannot get'});
                 }
+
+                // helper
             }
         });
     }
+    else {
+        // helper
+    }
 
+    // TODO: factor this out into a helper and call it in the places marked helper
     ShiftController.getAllUserShifts(req.param('id'), function(err, shifts) {
         if (err) {
             return next(err);
