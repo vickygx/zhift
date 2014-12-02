@@ -79,17 +79,16 @@ function testScheduleRoutes() {
             },
             success: function(resObj, textStatus, jqXHR) {
                 expectedSuccess(assert, 'Valid schedule', {role: 'Cab Driver'})(resObj, textStatus, jqXHR);
-                console.log(resObj);
                 assignScheduleId(resObj);
                 QUnit.stop();
     // DELETE Remove existing Schedule/Role: 'Kung Fu Fighter' for Organization 'ZhiftTest'
-            $.ajax({
-                url: '/schedule/' + scheduleId,
-                type: 'DELETE',
-                success: expectedSuccess(assert, 'Existing schedule', {_id: scheduleId, org: 'ZhiftTest', role: 'Cab Driver'}),
-                error: unexpectedError(assert, 'Existing schedule')
-            });
-            QUnit.stop();
+                $.ajax({
+                    url: '/schedule/' + scheduleId,
+                    type: 'DELETE',
+                    success: expectedSuccess(assert, 'Existing schedule', {_id: scheduleId, org: 'ZhiftTest', role: 'Cab Driver'}),
+                    error: unexpectedError(assert, 'Existing schedule')
+                });
+                QUnit.stop();
             },
             error: unexpectedError(assert, 'Valid schedule')
         });
