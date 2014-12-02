@@ -25,7 +25,7 @@ var fn = function(err) {
     }
 };
 
-var TOTAL_TO_COMPLETE = 7;
+var TOTAL_TO_COMPLETE = 15;
 var counter = {
     numDone: 0,
     err: [],
@@ -62,6 +62,7 @@ module.exports = function(fn) {
         password: bCrypt.hashSync('uepxcqkmxr3w7grs4qew', bCrypt.genSaltSync(10)),
         org: 'ZhiftTest',
     }).save(function(err, user) {
+        done(err, user);
         new User(user).save(done);
     });
 
@@ -70,6 +71,7 @@ module.exports = function(fn) {
         org: 'ZhiftTest',
         role: 'Crocheter',
     }).save(function(err, schedule) {
+        done(err, schedule);
         // Employee: 'Jane' with Role: 'Crocheter' 
         new EmployeeUser({
             name: 'Jane Doe',
@@ -78,16 +80,16 @@ module.exports = function(fn) {
             org: 'ZhiftTest',
             schedule: schedule._id,
         }).save(function(err, user) {
+            done(err, user);
             new User(user).save(done);
             // Jane's Monday Template Shift
             TemplateShiftController.createShift('Monday', '02:00', '04:00', user._id, schedule._id, (function(err, templateShift) {
+                done(err, templateShift);
+
                 [1, 2, 3].forEach(function(next) {
                     ShiftController.createShiftFromTemplateShift(templateShift._id, next, new Date(), function(err, shift) {
-                        if (err) {
-                            return done(err);
-                        }
-                        RecordController.recordShiftUpForGrabs('ZhiftTest', [], 'Jane Doe', shift);
-                        done();
+                        done(err, shift);
+                        RecordController.recordShiftUpForGrabs('ZhiftTest', [], 'Jane Doe', shift, done);
                     });
                 });
             }));
@@ -101,6 +103,7 @@ module.exports = function(fn) {
             org: 'ZhiftTest',
             schedule: schedule._id,
         }).save(function(err, user) {
+            done(null, user);
             new User(user).save(done);
         });
     });
