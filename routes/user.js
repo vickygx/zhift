@@ -1,7 +1,7 @@
 /**
  * All routes relating to users.
  *
- * TODO: error handling, permissions, implement routes
+ * TODO: implement delete route
  * 
  * @author: Dylan Joss
  */
@@ -47,9 +47,9 @@ router.post('/manager', function(req, res) {
  *     {EmployeeUser} The created employee.
  */
 router.post('/employee', function(req, res) {
-    UserController.isManagerOfOrganization(req.user.email, req.user.org, function(err, isManager) {
+    UserController.isManagerOfOrganization(req.user.email, req.body.org, function(err, isManager) {
         if (err) {
-            res.send(err);
+            return res.send(err);
         }
         if (!isManager) {
             return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization.');

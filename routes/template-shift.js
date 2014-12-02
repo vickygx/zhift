@@ -1,6 +1,7 @@
 /**
  * All routes relating to template shifts.
- * @author: Anji Ren, Lily Seropian
+ * 
+ * @author: Anji Ren, Lily Seropian, Dylan Joss
  */
 
 var express = require('express');
@@ -9,6 +10,7 @@ var router = express.Router();
 // Controllers
 var TemplateShiftController = require('../controllers/template-shift');
 var ShiftController = require('../controllers/shift');
+var UserController = require('../controllers/user');
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
 
@@ -25,22 +27,39 @@ var errorChecking = require('../errors/error-checking');
  *     {TemplateShift} The created template shift.
  */
 router.post('/', function(req, res) {
-    TemplateShiftController.createShift(req.body.day, req.body.startTime, req.body.endTime, 
-        req.body.employeeId, req.body.scheduleId, function(err, templateShift) {
+    UserController.retrieveEmployeeById(req.body.employeeId, function(err, employee) {
+        if (err) {
+            return res.send(err);
+        }
+        if (req.body.scheduleId.toString() !== employee.schedule.toString()) {
+            return res.status(400).send('Employee and schedule are part of different organizations.');
+        }
+        UserController.isManagerOfOrganization(req.user.email, employee.org, function(err, isManager) {
             if (err) {
                 return res.send(err);
             }
-            res.send(templateShift);
+            if (!isManager) {
+                return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization.');
+            }
 
-            [1, 2, 3].forEach(function(next) {
-                ShiftController.createShiftFromTemplateShift(templateShift._id, next, new Date(), function(err, shift) {
+            TemplateShiftController.createShift(req.body.day, req.body.startTime, req.body.endTime, 
+                req.body.employeeId, req.body.scheduleId, function(err, templateShift) {
                     if (err) {
-                        console.log(err);
+                        return res.send(err);
                     }
-                });
-            });
-        }
-    );
+                    res.send(templateShift);
+
+                    [1, 2, 3].forEach(function(next) {
+                        ShiftController.createShiftFromTemplateShift(templateShift._id, next, new Date(), function(err, shift) {
+                            if (err) {
+                                console.log(err);
+                            }
+                        });
+                    });
+                }
+            );
+        });
+    });
 });
 
 /**
@@ -96,17 +115,38 @@ router.get('/:id', function(req, res) {
  *     {TemplateShift} The deleted template shift.
  */
 router.delete('/:id', function(req, res) {
-    TemplateShiftController.deleteShift(req.param('id'), function(err, templateShift) {
+    var id = req.param('id');
+
+    TemplateShiftController.retrieveShift(id, function(err, retrievedTemplateShift) {
         if (err) {
             return res.send(err);
-        } 
-        ShiftController.deleteShiftsGeneratedFromTemplateShift(req.param('id'), function(err) {
+        }
+        UserController.retrieveEmployeeById(retrievedTemplateShift.responsiblePerson, function(err, employee) {
             if (err) {
                 return res.send(err);
-            } 
-            res.send(templateShift);
+            }
+            UserController.isManagerOfOrganization(req.user.email, employee.org, function(err, isManager) {
+                if (err) {
+                    return res.send(err);
+                }
+                if (!isManager) {
+                    return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization.');
+                }
+
+                TemplateShiftController.deleteShift(id, function(err, templateShift) {
+                    if (err) {
+                        return res.send(err);
+                    } 
+                    ShiftController.deleteShiftsGeneratedFromTemplateShift(id, function(err) {
+                        if (err) {
+                            return res.send(err);
+                        } 
+                        res.send(templateShift);
+                    });
+                }); 
+            });
         });
-    });
+    });    
 });
 
 /**
@@ -117,11 +157,24 @@ router.delete('/:id', function(req, res) {
  *     {TemplateShift} The changed template shift.
  */
 router.put('/reassign/:id', function(req, res) {
-    TemplateShiftController.giveShiftTo(req.param('id'), req.body.employeeId, function(err, templateShift) {
+    UserController.retrieveEmployeeById(req.body.employeeId, function(err, employee) {
         if (err) {
             return res.send(err);
         }
-        res.send(templateShift);
+        UserController.isManagerOfOrganization(req.user.email, employee.org, function(err, isManager) {
+            if (err) {
+                return res.send(err);
+            }
+            if (!isManager) {
+                return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization.');
+            }
+            TemplateShiftController.giveShiftTo(req.param('id'), req.body.employeeId, function(err, templateShift) {
+                if (err) {
+                    return res.send(err);
+                }
+                res.send(templateShift);
+            });
+        });
     });
 });
 

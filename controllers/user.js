@@ -295,7 +295,7 @@ module.exports.isUserOfOrganization = function(userEmail, orgName, fn) {
  * Check if given user is a manager of the organization.
  * @param {ObjectId} userEmail User email.
  * @param {String}   orgName   Name of organization.
- * @param {Function} fn        Callback that takes (err, isUser).
+ * @param {Function} fn        Callback that takes (err, user).
  */
 module.exports.isManagerOfOrganization = function(userEmail, orgName, fn) {
     ManagerUser.findOne({email: userEmail, org: orgName}, function(err, manager) {
