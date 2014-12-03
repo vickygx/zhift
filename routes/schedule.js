@@ -34,7 +34,7 @@ router.post('/', function(req, res) {
         // if the user is a manager, create the schedule
         ScheduleController.createSchedule(req.body.orgName, req.body.role, function(err, schedule) {
             if (err) {
-                return res.send(err);
+                return res.status(403).send(err);
             } 
             res.send(schedule);
         });
@@ -85,7 +85,7 @@ router.get('/:id', function(req, res) {
         }
         ScheduleController.retrieveSchedule(req.param('id'), function(err, schedule) {
             if (err) {
-                return res.send(err);
+                return res.status(403).send(err);
             } 
             res.send(schedule);
         });

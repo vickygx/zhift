@@ -36,8 +36,9 @@ function testTemplateShiftRoutes(data) {
                     return resObj.responsiblePerson._id === employee._id;
                 });
                 assignTemplateShiftId(resObj);
+
+                // PUT Reassign existing Template Shift to other employee
                 QUnit.stop();
-        // PUT Reassign existing Template Shift to other employee
                 $.ajax({
                     url: '/template/reassign/' + templateShiftId,
                     type: 'PUT',
@@ -64,32 +65,33 @@ function testTemplateShiftRoutes(data) {
     };
 
     // DELETE
-    QUnit.asyncTest('POST / Reassign', function(assert) {
+    QUnit.asyncTest('POST / Delete', function(assert) {
         // POST Create new Template Shift: Wednesday 3:00 - 4:00
         $.ajax({
             url: '/template',
             type: 'POST',
             data: {
                 day: 'Wednesday',
-                startTime: '3:00',
-                endTime: '4:00',
+                startTime: '03:00',
+                endTime: '04:00',
                 employeeId: employee._id,
                 scheduleId: scheduleId,
             },
             success: function(resObj, textStatus, jqXHR) {
                 expectedSuccess(assert, 'Valid template shift', 
-                    {dayOfWeek: 'Wednesday', start: '3:00', end: '4:00'})(resObj, textStatus, jqXHR);
+                    {dayOfWeek: 'Wednesday', start: '03:00', end: '04:00'})(resObj, textStatus, jqXHR);
                 assert.ok( function() {
                     return resObj.responsiblePerson._id === employee._id;
                 });
                 assignDeleteTemplateShiftId(resObj);
+
+                // DELETE Existing Template Shift
                 QUnit.stop();
-        // DELETE Existing Template Shift
                 $.ajax({
                     url: '/template/' + deleteTemplateShiftId,
                     type: 'DELETE',
                     success: function(resObj, textStatus, jqXHR) {
-                        expectedSuccess(assert, 'Valid delete', {dayOfWeek: 'Wednesday', start: '3:00', end: '4:00'})(resObj, textStatus, jqXHR);
+                        expectedSuccess(assert, 'Valid delete', {dayOfWeek: 'Wednesday', start: '03:00', end: '04:00'})(resObj, textStatus, jqXHR);
                         assert.ok( function() {
                             return resObj.responsiblePerson._id === employee._id;
                         });
