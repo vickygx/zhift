@@ -46,7 +46,10 @@ var unexpectedError = function(assert, title) {
  */
 var expectedSuccess = function(assert, title, expectedData) {
     return function(data, textStatus, jqXHR) {
-        if (expectedData.length) {
+        if (typeof expectedData === 'string'){
+            assert.equal(expectedData, data);
+        }
+        else if (expectedData.length) {
             data.sort(compareIds);
             expectedData.sort(compareIds);
             assert.deepEqual(expectedData, data, title);
@@ -100,6 +103,7 @@ function clearAndSeed() {
                         success: function(d, textStatus, jqXHR) {
                             testOrganizationRoutes(data);
                             testScheduleRoutes();
+                            testShiftRoutes(data);
                             testTemplateShiftRoutes(data);
                             testRecordRoutes(data);
                         },

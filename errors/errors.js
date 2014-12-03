@@ -66,6 +66,12 @@ module.exports.shifts.templateShiftDoesNotExist = {
     message: "Cannot create shift from this template shift. Id doesn't exist."
 }
 
+module.exports.shifts.invalidDate = {
+    status: 400,
+    name: "Bad Input",
+    message: "Cannot get shifts within this date. Invalid Date."
+}
+
 //================== Schedule error functions =================//
 
 module.exports.schedules.invalidScheduleId = {
