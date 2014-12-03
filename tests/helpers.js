@@ -104,7 +104,6 @@ function clearAndSeed() {
                             testOrganizationRoutes(data);
                             testScheduleRoutes();
                             testShiftRoutes(data);
-                            testTemplateShiftRoutes(data);
                             testRecordRoutes(data);
                         },
                         error: function(jqXHR, textStatus, errorThrown) {

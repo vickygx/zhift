@@ -41,41 +41,6 @@ function testShiftRoutes(data){
         return result;
     }
 
-    QUnit.asyncTest('POST /:templateid', function(assert){
-        $.ajax({
-            url: '/shift/' + templateShift._id,
-            type: 'POST',
-            success: function(d, textStatus, jqXHR) {
-                var expectedData = [templateShift._id, templateShift.dayOfWeek, templateShift.start, 
-                                    templateShift.end, templateShift.schedule, templateShift.responsiblePerson._id ];
-                
-                var checkData = [d.templateShift, d.dayOfWeek, d.start,
-                                 d.end, d.schedule, d.responsiblePerson];
-
-                expectedSuccess(assert, 'Valid template id', expectedData)(checkData, textStatus, jqXHR);
-                
-            },
-            error: unexpectedError(assert, 'Valid template id'),
-        });
-
-        QUnit.stop();
-        $.ajax({
-            url: '/shift/asda',
-            type: 'POST',
-            success: unexpectedSuccess(assert, 'Nonexistant template shift'),
-            error: expectedError(assert, 'Nonexistent template shift', 400)
-        });
-
-        QUnit.stop();
-        $.ajax({
-            url: '/shift/',
-            type: 'POST',
-            success: unexpectedSuccess(assert, 'Empty shift'),
-            error: expectedError(assert, 'Empty shift', 404)
-        })
-
-    })
-
     QUnit.asyncTest('GET /one/:shiftId', function(assert){
         $.ajax({
             url: '/shift/one/' + shift._id,
@@ -177,7 +142,8 @@ function testShiftRoutes(data){
                 }
                
                 expectedSuccess(assert, 'Existing shift', expectedData)(checkedData, textStatus, jqXHR);
-                
+                runPostTests();
+                testTemplateShiftRoutes(data);
             },
             error: unexpectedError(assert, 'Existing shift'),
         });
@@ -249,6 +215,38 @@ function testShiftRoutes(data){
         });
     });
     
+    var runPostTests = function() {
+        QUnit.asyncTest('POST /:templateid', function(assert){
+            $.ajax({
+                url: '/shift/' + templateShift._id,
+                type: 'POST',
+                success: function(d, textStatus, jqXHR) {
+                    var expectedData = [templateShift._id, templateShift.dayOfWeek, templateShift.start, 
+                                        templateShift.end, templateShift.schedule, templateShift.responsiblePerson._id ];
+                    
+                    var checkData = [d.templateShift, d.dayOfWeek, d.start,
+                                     d.end, d.schedule, d.responsiblePerson];
 
+                    expectedSuccess(assert, 'Valid template id', expectedData)(checkData, textStatus, jqXHR);
+                },
+                error: unexpectedError(assert, 'Valid template id'),
+            });
 
+            QUnit.stop();
+            $.ajax({
+                url: '/shift/asda',
+                type: 'POST',
+                success: unexpectedSuccess(assert, 'Nonexistant template shift'),
+                error: expectedError(assert, 'Nonexistent template shift', 400)
+            });
+
+            QUnit.stop();
+            $.ajax({
+                url: '/shift/',
+                type: 'POST',
+                success: unexpectedSuccess(assert, 'Empty shift'),
+                error: expectedError(assert, 'Empty shift', 404)
+            })
+        });
+    };
 }
