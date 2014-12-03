@@ -14,7 +14,7 @@ The tests must be run locally and are located as a QUnit page at <code>/tests.ht
 
 ####INSTRUCTIONS
 #####*Pre-populated accounts:*  
-Existing user accounts for an example organization 'ZhiftOrg' with pre-populated shifts.
+Existing user accounts for an example organization 'ZhiftOrg' with pre-populated shifts. The associated Gmail accounts can be logged into to see how our email notifications work.
 
 #####Manager
 
