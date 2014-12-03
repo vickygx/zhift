@@ -10,6 +10,8 @@ var ZhiftApp = angular.module('ZhiftApp');
 
 ZhiftApp.service('TemplateShiftService', ['$rootScope', function($rootScope) {
     var service = {
+
+        // Getting template shifts associated with a schedule
         getTemplateShifts: function(scheduleId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -23,6 +25,7 @@ ZhiftApp.service('TemplateShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Creating a template shift with given parameters
         createTemplateShift: function(day, startTime, endTime, employeeId, scheduleId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -43,6 +46,7 @@ ZhiftApp.service('TemplateShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Reassigning the template shift to another employee
         reassignTemplateShift: function(id, day, startTime, endTime, reassignToEmployeeId, scheduleId, callback) {
             $.ajax({
                 datatype: 'json',
