@@ -4,8 +4,15 @@
 }
 
 #shift-schedule{
-    border: none;
     text-align: center;
+    border: none;
+    margin: 0 auto;
+    max-height: 480px;
+    min-width: 460px;
+    overflow: scroll;
+    border-top: 3px solid #ffc40f;
+    border-bottom: 5px solid #ffc40f;
+    max-width: 1062px
 }
 
 #shift-schedule .heading {
@@ -20,7 +27,7 @@
 
 .schedule-tabs-container {
     text-align: center;
-    margin-bottom:10px;
+    margin-bottom: 10px;
 }
 
 #shift-schedule .cal-col-title {
