@@ -1,13 +1,17 @@
 /**
  * Record routes.
- * TODO: Error handling, permissions
- * @author: Lily Seropian
+ *
+ * @author: Lily Seropian, Dylan Joss
  */
 
 var express = require('express');
 var router = express.Router();
 
 var RecordController = require('../controllers/record');
+var UserController = require('../controllers/user');
+var ScheduleController = require('../controllers/schedule');
+
+var ObjectId = require('mongoose').Types.ObjectId; 
 
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
@@ -19,11 +23,26 @@ var errorChecking = require('../errors/error-checking');
  *     {Record[]} The found records.
  */
 router.get('/schedule/:id', function(req, res) {
-    RecordController.getRecordsForSchedule(req.param('id'), function(err, records) {
+    var scheduleId = new ObjectId(req.param('id'));
+
+    ScheduleController.retrieveSchedule(scheduleId, function(err, schedule) {
         if (err) {
-            return res.status(403).send(err.message);
+            return res.send(err);
         }
-        res.send(records);
+        UserController.isManagerOfOrganization(req.user.email, schedule.org, function(err, isManager) {
+            if (err) {
+                return res.send(err);
+            }
+            if (!isManager) {
+                res.status(403).send('Unauthorized, you are not a manager of the appropriate organization. Cannot get records.');
+            }
+            RecordController.getRecordsForSchedule(req.param('id'), function(err, records) {
+                if (err) {
+                    return res.status(403).send(err);
+                }
+                res.send(records);
+            });
+        });
     });
 });
 
