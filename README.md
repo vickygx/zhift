@@ -23,6 +23,8 @@ Email: *zhiftmanager@gmail.com*
 Organization: *ZhiftOrg*  
 Password: *manager*
 
+On Gmail: zhiftmanager@gmail.com; PW: managermanager  
+
 #####Employees
 
 Name: *ZhiftJohn*   
@@ -30,10 +32,14 @@ Email: *zhiftjohn@gmail.com*
 Organization: *ZhiftOrg*  
 Password: *employee*
 
+On Gmail: zhiftjohn@gmail.com; PW: employeeemployee  
+
 Name: *ZhiftEmily*   
 Email: *zhiftemily@gmail.com*  
 Organization: *ZhiftOrg*  
 Password: *employee*
+
+On Gmail: zhiftemily@gmail.com; PW: employeeemployee
 
 To create an new organization (auto-creates a new manager user account):
 - Navigate to /.
