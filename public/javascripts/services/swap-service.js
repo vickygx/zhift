@@ -11,6 +11,7 @@ var ZhiftApp = angular.module('ZhiftApp');
 
 ZhiftApp.service('SwapService', ['$rootScope', function($rootScope) {
     var service = {
+        // Putting a shift up for swap
         putUpForSwap: function(shiftId, scheduleId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -27,6 +28,7 @@ ZhiftApp.service('SwapService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Proposing a shift that is up for swap
         proposeSwap: function(swapId, shiftId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -42,6 +44,7 @@ ZhiftApp.service('SwapService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Getting a swap
         getSwapForShift: function(shiftId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -54,6 +57,7 @@ ZhiftApp.service('SwapService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Accepting a swap
         acceptSwap: function(swapId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -69,6 +73,7 @@ ZhiftApp.service('SwapService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Rejecting a swap
         rejectSwap: function(swapId, callback) {
             $.ajax({
                 datatype: 'json',

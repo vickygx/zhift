@@ -24,7 +24,7 @@ mixin shift-calendar(org, scheduleId)
                         ng-change="setCurrentWeek(day)")
                     option(style="display:none" value="") {{currentWeek.toDateString()}}
 
-        div.schedule-tabs-container
+        div.schedule-tabs-container(ng-if="isManager")
             div.btn-group(id="schedule-tabs")
                 button.btn.btn-default(type="button"
                     data-ng-repeat="schedule in schedules"
@@ -35,16 +35,14 @@ mixin shift-calendar(org, scheduleId)
             div.cal-column
                 div.cal-col-title 
                 div.events
-                    div.event-box.heading.time-label(data-ng-repeat="hour in ['12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM']") {{hour}}
+                    div.event-box.heading.time-label(
+                        data-ng-repeat="hour in ['7AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM','1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM','7 PM', '8 PM', '9 PM', '10 PM', '11 PM', '12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM']") {{hour}}
             div.cal-column(data-ng-repeat="day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']")
                 div.cal-col-title.heading {{day}}
                 div.events
                     div.event-box.open-event-slot(
-                        data-ng-repeat="hour in [12,1,2,3,4,5]")
-                        //- TODO: if shift is own shift, add ability to pop up (TRADE/PUT) modal
-                        //- TODO: if shift is not own shift, + is put up, add ability to pop up (GRAB/TRADE) modal
+                        data-ng-repeat="hour in [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,1,2,3,4,5,6]")
                         div.shift(ng-model="shiftsByDay" data-ng-repeat="shift in shiftsByDay[day][hour]")
-                            //- TODO: add shift ID to shift. Add person id somewhere too
                             p {{shift.responsiblePerson.name}}
                             button.btn.btn-default(ng-if="isMyShift(shift.responsiblePerson.name) && !shift.upForGrabs && !shift.upForSwap"
                                 ng-model="$parent.shiftsByDay"
