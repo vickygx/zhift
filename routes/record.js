@@ -16,6 +16,15 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
 
+var sendRecords = function(scheduleId, res) {
+    RecordController.getRecordsForSchedule(scheduleId, function(err, records) {
+        if (err) {
+            return res.status(403).send(err);
+        }
+        res.send(records);
+    });
+};
+
 /**
  * GET all records for a schedule.
  * No request body parameters required.
@@ -32,17 +41,22 @@ router.get('/schedule/:id', function(req, res) {
         }
         UserController.isManagerOfOrganization(req.user.email, schedule.org, function(err, isManager) {
             if (err) {
-                return res.status(401).send(err);
+                return res.status(403).send(err);
             }
             if (!isManager) {
-                return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization. Cannot get records.');
+                UserController.isEmployeeOfRole(req.user.email, req.param('id'), function(err, isEmployee) {
+                    if (err) {
+                        return res.status(403).send(err);
+                    }
+                    if (!isEmployee) {
+                        return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization. Cannot get records.');
+                    }
+                     sendRecords(req.param('id'), res);
+                });
             }
-            RecordController.getRecordsForSchedule(req.param('id'), function(err, records) {
-                if (err) {
-                    return res.status(403).send(err);
-                }
-                res.send(records);
-            });
+            else {
+                sendRecords(req.param('id'), res);
+            }
         });
     });
 });
