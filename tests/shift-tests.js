@@ -153,7 +153,7 @@ function testShiftRoutes(data){
             success: function(d, textStatus, jqXHR) {
                 var expectedData = [];
                 for (var i = 0; i < shifts.length; i++){
-                    var slot = {'id' :shifts[i]._id, 
+                    var slot = {'_id' :shifts[i]._id, 
                                 'dayOfWeek': shifts[i].dayOfWeek, 
                                 'dateScheduled': shifts[i].dateScheduled, 
                                 'start': shifts[i].start, 
@@ -164,7 +164,7 @@ function testShiftRoutes(data){
                 }
                 var checkedData = [];
                 for (var i = 0; i < d.length; i++){
-                    var slot = {'id': d[i]._id, 
+                    var slot = {'_id': d[i]._id, 
                                 'dayOfWeek': d[i].dayOfWeek, 
                                 'dateScheduled': d[i].dateScheduled, 
                                 'start': d[i].start,
@@ -172,6 +172,8 @@ function testShiftRoutes(data){
                                 'schedule': d[i].schedule, 
                                 'responsiblePerson': d[i].responsiblePerson._id };
                     checkedData.push(slot);
+                    expectedData.sort(compareIds);
+                    checkedData.sort(compareIds);
                 }
                
                 expectedSuccess(assert, 'Existing shift', expectedData)(checkedData, textStatus, jqXHR);
