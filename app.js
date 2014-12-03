@@ -119,7 +119,6 @@ app.use(function(req, res, next) {
 // Error middleware 
 app.use(function(err, req, res, next) {
     if (err.status === 400) {
-        console.log('errormessage: ', err.message); 
         res.status(400).send(err.message);
     } 
     else if (err.status === 401) {
@@ -135,7 +134,7 @@ app.use(function(err, req, res, next) {
         res.status(500).send(err.message);
     } 
     else {
-        return next(err);
+        res.status(400).send(err.message);
     }
 });
 

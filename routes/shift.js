@@ -54,6 +54,10 @@ router.get('/one/:shiftId', function(req, res, next) {
         if (shift.responsiblePerson.org !== req.user.org) {
             return res.status(403).send({message: 'error: you are not a user of this org. cannot get shift' + shift.responsiblePerson.org + req.user.org});
         }
+        if (!shift) {
+            return next(errors.shifts.invalidShiftId);
+        }
+
         res.send(shift);
     });
 });
@@ -65,11 +69,12 @@ router.get('/one/:shiftId', function(req, res, next) {
  *     {Shift[]} The retrieved shifts.
  */
 router.get('/user/:id', function(req, res, next) {
+
     // Checking if logged in user is userid
     if(req.param('id') !== req.user._id.toString() && req.user.schedule !== undefined) {
         return res.status(403).send({message: 'error: you are not a manager or the owner of this shift. cannot get'});
     }
-
+    
     // if the logged in user is a manager, check if the manager is part of the same org as the request employee
     if (!req.user.schedule) {
         UserController.retrieveEmployeeById(req.param('id'), function(err, employee) {
@@ -85,7 +90,7 @@ router.get('/user/:id', function(req, res, next) {
     else {
         // helper
     }
-
+    
     // TODO: factor this out into a helper and call it in the places marked helper
     ShiftController.getAllUserShifts(req.param('id'), function(err, shifts) {
         if (err) {
@@ -118,7 +123,7 @@ router.get('/all/:id', function(req, res, next) {
 });
 
 /**
- * GET all shifts within 7 days of a given date
+ * GET all shifts within in the same week given date
  * associated with a schedule.
  * 
  * Request Param: None
@@ -127,6 +132,11 @@ router.get('/all/:id', function(req, res, next) {
  */
 router.get('/week/:id/:date', function(req, res, next) {
     var date = new Date(req.param('date'));
+
+    if (date.toString() === 'Invalid Date'){
+        return next(errors.shifts.invalidDate);
+    }
+
     ShiftController.getAWeekShiftsOnASchedule(req.param('id'), date, function(err, shifts) {
         if (err) {
             return next(err);
@@ -134,6 +144,7 @@ router.get('/week/:id/:date', function(req, res, next) {
         if (!shifts) {
             return next(errors.schedules.invalidScheduleId);
         }
+        console.log("shifts:", shifts);
         res.send(shifts);
     });
 });
