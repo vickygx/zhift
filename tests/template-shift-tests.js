@@ -1,84 +1,103 @@
 /**
- * Tests for Template Shift routes.
- * @author Anji Ren
- */
+* Tests for Template Shift routes.
+* @author Anji Ren
+*/
 QUnit.config.reorder = false; // Prevent QUnit from running test not in order.
 
-function testTemplateShiftRoutes() {
+function testTemplateShiftRoutes(data) {
     QUnit.module('TemplateShift');
 
-    var employeeId = null; 
-    var scheduleId = null;
+    var employee = data.EmployeeUser[0]; 
+    var otherEmployee = data.EmployeeUser[1];
+    var scheduleId = data.Schedule[0]._id;
     var templateShiftId = null;
 
-    assignEmployeeId = function(employee) {
-        employeeId = employee._id;
-    }
-
-    assignScheduleId = function(schedule) {
-        scheduleId = schedule._id;
-    };
-
-    assignTemplateShiftId = function(templateShift) {
+    var assignTemplateShiftId = function(templateShift) {
         templateShiftId = templateShift._id;
     };
-    // POST
-    QUnit.asyncTest('POST', function(assert) {
 
-    // POST Create new Schedule/Role: 'Kung Fu Fighter 2' for Organization 'ZhiftTest'
+    // POST
+    QUnit.asyncTest('POST / Reassign', function(assert) {
+        // POST Create new Template Shift: Thursday 10:00 - 11:00
         $.ajax({
-            url: '/schedule',
+            url: '/template',
             type: 'POST',
             data: {
-                orgName: 'ZhiftTest',
-                role: 'Kung Fu Fighter 2'
+                day: 'Thursday',
+                startTime: '10:00',
+                endTime: '11:00',
+                employeeId: employee._id,
+                scheduleId: scheduleId,
             },
             success: function(resObj, textStatus, jqXHR) {
-                expectedSuccess(assert, 'Valid schedule', {role: 'Kung Fu Fighter 2'})(resObj, textStatus, jqXHR);
-                assignScheduleId(resObj);
+                expectedSuccess(assert, 'Valid template shift', 
+                    {dayOfWeek: 'Thursday', start: '10:00', end: '11:00'})(resObj, textStatus, jqXHR);
+                assert.ok( function() {
+                    return resObj.responsiblePerson._id === employee._id;
+                });
+                assignTemplateShiftId(resObj);
                 QUnit.stop();
-            // POST Create new Employee 'Bobby Dylan' for Organization 'ZhiftTest' and Role 'Kung Fu Fighter 2'
+        // PUT Reassign existing Template Shift to other employee
                 $.ajax({
-                    url: 'user/employee',
-                    type: 'POST',
+                    url: '/template/reassign/' + templateShiftId,
+                    type: 'PUT',
                     data: {
-                        username: 'Bobby Dylan',
-                        email: 'renalele@gmail.com',
-                        org: 'ZhiftTest',
-                        role: 'Kung Fu Fighter 2'
+                        employeeId: otherEmployee._id
                     },
                     success: function(resObj, textStatus, jqXHR) {
-                        expectedSuccess(assert, 'Valid employee', {
-                            name: 'Bobby Dylan', 
-                            email: 'renalele@gmail.com',
-                            org: 'ZhiftTest', 
-                            role: 'Kung Fu Fighter 2'})(resObj, textStatus, jqXHR);
-                        assignEmployeeId(resObj);
-                        QUnit.stop();
-                    // POST Create new Template Shift: Thursday 10:00 - 11:00
-                        $.ajax({
-                            url: '/template',
-                            type: 'POST',
-                            data: {
-                                day: 'Thursday',
-                                startTime: '10:00',
-                                endTime: '11:00',
-                                employeeId: employeeId,
-                                scheduleId: scheduleId,
-                            },
-                            success: function(resObj, textStatus, jqXHR) {
-                                expectedSuccess(assert, 'Valid template shift', {role: 'Kung Fu Fighter 2'})(resObj, textStatus, jqXHR);
-                                assignTemplateShiftId(resObj);
-                                //QUnit.stop();
-                            // REASSIGN TEMPLATE SHIFT
-                            },
-                            error: unexpectedError(assert, 'Valid template shift')
+                        expectedSuccess(assert, 'Valid reassign', {dayOfWeek: 'Thursday', start: '10:00', end: '11:00'})(resObj, textStatus, jqXHR);
+                        assert.ok( function() {
+                            return resObj.responsiblePerson._id === otherEmployee._id;
                         });
                     },
-                    error: unexpectedError(assert, 'Valid employee')
+                    error: unexpectedError(assert, 'Valid reassign')
                 })
             },
-            error: unexpectedError(assert, 'Valid schedule')
+            error: unexpectedError(assert, 'Valid template shift')
         });
-    })
+    });
+
+    var deleteTemplateShiftId = null;
+
+    var assignDeleteTemplateShiftId = function(templateShift) {
+        deleteTemplateShiftId = templateShift._id;
+    };
+
+    // DELETE
+    QUnit.asyncTest('POST / Reassign', function(assert) {
+        // POST Create new Template Shift: Wednesday 3:00 - 4:00
+        $.ajax({
+            url: '/template',
+            type: 'POST',
+            data: {
+                day: 'Wednesday',
+                startTime: '3:00',
+                endTime: '4:00',
+                employeeId: employee._id,
+                scheduleId: scheduleId,
+            },
+            success: function(resObj, textStatus, jqXHR) {
+                expectedSuccess(assert, 'Valid template shift', 
+                    {dayOfWeek: 'Wednesday', start: '3:00', end: '4:00'})(resObj, textStatus, jqXHR);
+                assert.ok( function() {
+                    return resObj.responsiblePerson._id === employee._id;
+                });
+                assignDeleteTemplateShiftId(resObj);
+                QUnit.stop();
+        // DELETE Existing Template Shift
+                $.ajax({
+                    url: '/template/' + deleteTemplateShiftId,
+                    type: 'DELETE',
+                    success: function(resObj, textStatus, jqXHR) {
+                        expectedSuccess(assert, 'Valid delete', {dayOfWeek: 'Wednesday', start: '3:00', end: '4:00'})(resObj, textStatus, jqXHR);
+                        assert.ok( function() {
+                            return resObj.responsiblePerson._id === employee._id;
+                        });
+                    },
+                    error: unexpectedError(assert, 'Valid delete')
+                })
+            },
+            error: unexpectedError(assert, 'Valid template shift')
+        });
+    });
 }

@@ -61,7 +61,7 @@ var expectedSuccess = function(assert, title, expectedData) {
             }
             for (var i = 0; i < expectedKeys.length; i++) {
                 var key = expectedKeys[i];
-                assert.equal(data[key], expectedData[key], title);
+                assert.equal(data[key], expectedData[key], title + ': ' + key + ' correct');
             }
         }
         QUnit.start();
@@ -103,8 +103,8 @@ function clearAndSeed() {
                         success: function(d, textStatus, jqXHR) {
                             testOrganizationRoutes(data);
                             testScheduleRoutes();
-                            //testTemplateShiftRoutes();
                             testShiftRoutes(data);
+                            testTemplateShiftRoutes(data);
                             testRecordRoutes(data);
                         },
                         error: function(jqXHR, textStatus, errorThrown) {

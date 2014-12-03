@@ -1,9 +1,7 @@
 /**
  * All the routes relating to shifts.
  * 
- * TODO: error handling, permissions.
- * 
- * @author: Lily Seropian, Vicky Gong, Anji Ren
+ * @author: Lily Seropian, Vicky Gong, Anji Ren, Dylan Joss
  */
  
 var express = require('express');
@@ -29,7 +27,7 @@ var datejs = require('../public/javascripts/libraries/date');
 router.post('/:templateid', function(req, res, next) {
     UserController.isManagerOfOrganization(req.user.email, req.user.org, function(err, isManager) {
         if (!isManager) {
-            return res.status(403).send({message: 'error: you are not a manager. cannot create shift'});
+            return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization. Cannot create shift.');
         }
         ShiftController.createShiftFromTemplateShift(req.param('templateid'), req.body.week, new Date(), function(err, shift) {
             if (err) {
@@ -52,7 +50,7 @@ router.get('/one/:shiftId', function(req, res, next) {
             return next(err);
         }
         if (shift.responsiblePerson.org !== req.user.org) {
-            return res.status(403).send({message: 'error: you are not a user of this org. cannot get shift' + shift.responsiblePerson.org + req.user.org});
+            return res.status(403).send('Unauthorized, you are not a user of the appropriate organization. Cannot get shift ' + shift.responsiblePerson.org + req.user.org);
         }
         if (!shift) {
             return next(errors.shifts.invalidShiftId);
@@ -72,7 +70,7 @@ router.get('/user/:id', function(req, res, next) {
 
     // Checking if logged in user is userid
     if(req.param('id') !== req.user._id.toString() && req.user.schedule !== undefined) {
-        return res.status(403).send({message: 'error: you are not a manager or the owner of this shift. cannot get'});
+        return res.status(403).send('Unauthorized, you are not a manager or the owner of this shift. Cannot get shift.');
     }
     
     // if the logged in user is a manager, check if the manager is part of the same org as the request employee
@@ -80,9 +78,8 @@ router.get('/user/:id', function(req, res, next) {
         UserController.retrieveEmployeeById(req.param('id'), function(err, employee) {
             if (employee) {
                 if (req.user.org !== employee.org) {
-                    return res.status(403).send({message: 'error: you are not a manager for this employee. cannot get'});
+                    return res.status(403).send('Unauthorized, you are not a manager for this employee. Cannot get shift.');
                 }
-
                 // helper
             }
         });
