@@ -27,6 +27,7 @@ ZhiftApp.service('ScheduleService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Get all schedules associated with org
         getSchedules: function(orgName, callback) {
             $.ajax({
                 datatype: 'json',
@@ -39,6 +40,7 @@ ZhiftApp.service('ScheduleService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // To get a specific schedule
         getSchedule: function(scheduleId, callback) {
             $.ajax({
                 datatype: 'json',

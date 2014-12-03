@@ -12,6 +12,7 @@ var ZhiftApp = angular.module('ZhiftApp');
 ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
     var service = {
 
+        // Function to get one shift
         getShift: function(shiftId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -24,6 +25,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });            
         },
 
+        // Function to get shifts associated with a schedule
         getShifts: function(scheduleId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -36,6 +38,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Function to get a user's shifts
         getMyShifts: function(userId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -48,6 +51,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Function to get the shifts in the week of the given day
         getWeekOfShifts: function(scheduleId, dateFrom, callback){
             $.ajax({
                 datatype: 'json',
@@ -60,6 +64,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Function to get shifts for an employee
         getShiftsFor: function(employeeId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -72,6 +77,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Function to get shifts that are available for grabs
         getShiftsUpForGrabs: function(scheduleId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -84,6 +90,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Function to get shifts up for swap
         getShiftsUpForSwap: function(scheduleId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -96,6 +103,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Putting a shift up for grabs
         putUpForGrabs: function(shiftId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -111,6 +119,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Putting a shift up for trade
         putUpForTrade: function(shiftId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -126,6 +135,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Claiming a shift
         claim: function(shiftId, employeeId, callback) {
             $.ajax({
                 datatype: 'json',
@@ -144,6 +154,7 @@ ZhiftApp.service('ShiftService', ['$rootScope', function($rootScope) {
             });
         },
 
+        // Creating a shift
         createShift: function(templateShiftId, week, callback) {
             $.ajax({
                 datatype: 'json',
