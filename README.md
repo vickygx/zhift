@@ -1,112 +1,81 @@
-Zhift
+ZHIFT
 =====
+####Fast and easy shift-scheduling for small organizations.
 
-6.170 Final Team Project
+**6.170 Final Team Project - Fall 2014**  
+Anji Ren | Dylan Joss | Lily Seropian | Victoria Gong
 
-Anji Ren
-Lily Seropian
-Dylan Joss
-Victoria Gong
+####LINKS
 
-Links
-=====
+[LIVE DEPLOYED APPLICATION](http://zhift-seropian.rhcloud.com/)  
 
-[Application homepage](http://zhift-vickyg.rhcloud.com/)
+####TESTING
+The tests must be run locally and are located as a QUnit page at <code>/tests.html</code>. Tests can be run from the root directory with <code>npm test</code>.
 
-[Test page for API functionality](http://zhift-vickyg.rhcloud.com/api)
+####INSTRUCTIONS
+#####*Pre-populated accounts:*  
+Existing user accounts for an example organization 'ZhiftOrg' with pre-populated shifts.
 
-Testing
-=====
-The tests must be run locally, and restarted between runs to properly seed the database. Tests can be run from the root directory with <code>npm test</code>.
+#####Manager
 
-Instructions
-=====
-Note: [if you want to see what a populated account looks like]
-Pre-populated manager:
-- Name: TestManager
-- Password: manager
-- Email: manager@mit.edu
-- Organization: ZhiftTest
+Name: *ZhiftManager*   
+Email: *zhiftmanager@gmail.com*  
+Organization: *ZhiftOrg*  
+Password: *manager*
 
-Pre-poulated employee:
-- Name: TestEmployee
-- Password: employee
-- Email: employee@mit.edu
-- Organization: ZhiftTest
+On Gmail: zhiftmanager@gmail.com; PW: managermanager  
 
-Pre-populated employee:
-- Name: ta
-- Password: ta
-- Email: ta@mit.edu
-- Organization: ZhiftTest
-- Role: Cook
- 
+#####Employees
 
+Name: *ZhiftJohn*   
+Email: *zhiftjohn@gmail.com*  
+Organization: *ZhiftOrg*  
+Password: *employee*
 
-To create an organization/manager:
+On Gmail: zhiftjohn@gmail.com; PW: employeeemployee  
+
+Name: *ZhiftEmily*   
+Email: *zhiftemily@gmail.com*  
+Organization: *ZhiftOrg*  
+Password: *employee*
+
+On Gmail: zhiftemily@gmail.com; PW: employeeemployee
+
+To create an new organization (auto-creates a new manager user account):
 - Navigate to /.
-- Click 'Create an account'.
-- Fill out the form, and put 'manager' for Account Type. Leave the 'Role' box empty.
-- Click 'Register'.
+- Click 'Create an organization'.
+- Fill out the form.
 
-To create a role/schedule:
-- After creating the manager account, you should be logged in.
-- Click 'Edit Organization'.
-- In the 'Role Name' box, type the name of a role you want to add, and click 'Submit'.
-- The role should appear under 'Existing Roles', and if you navigate to 'Home', there should be spaces for the Template Shifts and Shifts for that role.
-- You may add as many roles as you like (within reason) in this manner.
-- When you're done, click 'Sign Out' to sign out and return to home.
+To create an employee schedule for a new position (Cook, for example):
+- After creating the manager account, you should be already logged in.
+- Click the plus button at the top of the schedule shown on your landing page.
+- Fill out the form with your desired position name ('Cook').
 
-To create an employee:
+To create an account for a new manager or employee of your organization and invite them via email:
+- Click the edit icon (pencil and paper) on your navigation bar.
+- Click on the edit symbol besides 'Managers' or 'Employees'.
+- Fill out the form.
+
+To create a new permanent shift, as a manager, for an employee in your organization:
 - Navigate to '/'.
-- Click 'Create an account'.
-- Fill out the form, and put 'employee' for Account Type. Put a role you created in the previous step in the 'Role' box.
-- Click 'Register'.
+- Click on the orange plus button in the timeslot of your choice in the displayed calendar.
+- Fill out the form with the employee you wish to assign the new permanent shift to.
+. This will autogenerate shifts to be displayed to the employees.
 
-To create a template shift:
-- Navigate to '/schedule/all/[yourOrgName]', and copy the id of the schedule you want to make a template shift for.
-- Navigate to '/user/sched/[scheduleId]' and copy the id of an employee you want to be responsible for this template shift.
-- Navigate to '/api'.
-- Under Template Shift > Create, fill out all fields and click 'Submit'. Day must be a full weekday name (like Monday), and the times must be in HH:MM format.
-- The response box should be filled with the created template shift object.
+To reassign a permanent shift:
+- Navigate to '/'.
+- Click on an existing shift on the calendar, which will bring up a modal.
+- Fill out the form with the employee you wish to reassign the permanent shift to.
+- This will autoupdate the existing shifts displayed to the employees.
 
-To create a shift:
-- Navigate to '/shift/template/all/[scheduleId] and copy the id of a template shift you want to generate a shift from.
-- Navigate to '/api'.
-- Under Shift > Create, enter all the same information as you entered to create the template shift, and enter the template shift id and a date (MM/DD/YY).
-- The response box should be filled with the created shift object.
+*EMPLOYEE ONLY*  
+To put a temporal shift up for grabs:
+- Log in to an employee account.
+- Scroll to a shift on the calendar that you are currently resopnsible for and click 'GIVE UP'.
+- Choose to place the shift up for grabs (other employees can claim automatically) or for swap (other employees must offer a shift back in return before you can finalize and approve a swap).
+- You can check your current offer for a swap by clicking on the 'VIEW OFFERS' button that appears on the shift you put up for swap.
 
-To delete a template shift (and all shifts generated from it):
-- Navigate to '/api'.
-- Under Template Shift > Delete, enter the id of the template shift you wish to delete.
-- You can test whether the deletion was successful by trying to get the deleted template shift and shifts generated from it (all shifts are available at '/shift/all/[scheduleId]').
+To claim a shift or make a swap offer for a shift:
+- Scroll to a shift on the calendar that is up for grabs or up for swap and click on the button (either 'CLAIM' or 'MAKE OFFER').
+- Fill out the form.
 
-To offer a shift:
-- Log in to an employee account that has shifts associated with it.
-- Click 'Put Up For Grabs' next to the shift you want to offer.
-- The shift should appear under 'Unclaimed Shifts'. The buttons under the shift should be replaced by the text 'UP FOR GRABS'.
-
-To claim a shift:
-- Log in to an employee account that has the same role as an employee that has offered a shift.
-- Locate the offered shift you wish to claim under 'Unclaimed Shifts'.
-- Click 'Claim'.
-- The shift should be removed from 'Unclaimed Shifts' and appear under 'My Shifts'.
-
-To say you want to swap a shift:
-- Log in to an employee account that has shifts associated with it.
-- Locate the shift you want to put up for swap under 'My Shifts'.
-- Click 'Put Up For Swap'.
-- The shift should appear under 'Unclaimed Shifts'. The buttons under the shift should be replaced by the text 'UP FOR SWAP'.
-
-To say you want to participate in a swap:
-- Log in to an employee account that has the same role as an employee that has put up a shift for swap.
-- Locate the shift that you wish to swap with under 'Unclaimed Shifts'.
-- Click 'Swap'.
-- Your shifts should appear under that shift. Choose one of your shifts to offer in return, and click 'Offer For Swap' (note that no UI changes happen now).
-- Once the other employee accepts the swap, if you refresh the page you should see that you no longer have your original shift and you now have their shift.
-
-To accept a swap:
-- Log in to an employee account that had offered a ship up for swap and received a return offer.
-- Locate said return offer.
-- Click 'Accept'.
-- The shift should disappear from 'Swap Proposals'. If you refresh the page, you should see that the swap took place.
