@@ -25,8 +25,8 @@ function testRecordRoutes(data) {
         $.ajax({
             url: '/record/schedule/000000000000000000000000',
             type: 'GET',
-            success: expectedSuccess(assert, 'No records on schedule', []),
-            error: unexpectedError(assert, 'No records on schedule'),
+            success: unexpectedSuccess(assert, 'No records on schedule'),
+            error: expectedError(assert, 'No records on schedule', 404),
         });
 
         QUnit.stop();

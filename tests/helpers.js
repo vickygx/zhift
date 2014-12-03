@@ -33,7 +33,7 @@ var expectedError = function(assert, title, status) {
  */
 var unexpectedError = function(assert, title) {
     return function(jqXHR, textStatus, errorThrown) {
-        assert.equal(errorThrown, null, title);
+        assert.equal(errorThrown + ': ' + jqXHR.responseText, null, title);
         QUnit.start();
     };
 };
