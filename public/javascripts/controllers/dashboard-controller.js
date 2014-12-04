@@ -25,6 +25,10 @@ ZhiftApp.controller('RecordController', function($scope, RecordService, Schedule
         });
     };
 
+    $scope.getDisplayDate = function(dateString){
+        return new Date(dateString).toDateString();
+    }
+
     /**
      * Put all the records on the scope.
      * @param  {String} orgName    The name of the current user's organization.
