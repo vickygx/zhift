@@ -7,11 +7,11 @@
     text-align: center;
     border: none;
     margin: 0 auto;
-    max-height: 480px;
+    max-height: 500px;
     min-width: 460px;
     overflow: scroll;
-    border-top: 3px solid #ffc40f;
-    border-bottom: 5px solid #ffc40f;
+    /*border-top: 3px solid #ffc40f;
+    border-bottom: 5px solid #ffc40f;*/
     max-width: 1062px
 }
 
@@ -23,6 +23,8 @@
 #shift-schedule .time-label {
     color: #ffb500;
     text-align: right;
+    height: 80px;
+    margin-bottom: 1px;
 }
 
 .schedule-tabs-container {
@@ -35,6 +37,15 @@
     text-transform: uppercase;
 }
 
+#shift-schedule .cal-time-column {
+    vertical-align: top;
+    display: inline-block;
+    padding: 10px 10px 10px 0;
+    max-width:150px;
+    min-width: 45px;
+    margin: 0 1px;
+}
+
 #shift-schedule .cal-column{
     vertical-align: top;
     display: inline-block;
@@ -42,7 +53,7 @@
     max-width:150px;
     min-width: 130px;
     margin: 0 1px;
-    border: 1px solid #ffc40f;
+    /*border: 1px solid #ffc40f;*/
 }
 
 #shift-schedule .event-box {
@@ -50,14 +61,16 @@
     max-width: 115px;
     height: 80px;
     margin-bottom: 1px;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
+    border-top: 3px solid black;
     overflow: scroll;
 }
 
 .shift {
-    border-bottom: 1px solid gray;
     padding: 3px 0 5px 0;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.22);
+    margin-bottom: 2px;
+    background-color: #B25959;
+    color: rgb(245, 233, 233);
 }
 
 .shift p {
@@ -65,11 +78,13 @@
 }
 
 .shift:hover {
-    background: #b1c0bc;
+    background: rgba(255, 196, 15, 0.19);
 }
 .add-shift {
     width: 100%;
-    background: #fead77;
+    /*background: #fead77;*/
+    background: #383838;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.22);
     color: white;
     font-size: 0.8em;
 }
