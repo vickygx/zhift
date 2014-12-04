@@ -1,22 +1,17 @@
-//- Dashboard
-//- @author Lily Seropian
+//- Dashboard page view
+//- @author Lily Seropian, Vicky Gong
 
 extends ../layout
 
 block head
-  script(type="text/javascript", src="/javascripts/controllers/dashboard-controller.js")
-  script(type="text/javascript", src="/javascripts/services/record-service.js")
-  script(type="text/javascript", src="/javascripts/services/schedule-service.js")
+  link(rel="stylesheet", href="stylesheets/dashboard/dash.css")
+  include dashboard.jade
   include ../navbar
 
 block navbar
   +logged-in-navbar(user.schedule === undefined)
 
 block content
-  h1 Dashboard
-  div(ng-controller="RecordController", ng-init="init('#{user.org}', '#{user.schedule}')")
-    div(ng-repeat="record in records") {{record.role}}
-      ul
-        li(ng-repeat="r in record.records") {{r.content}}
-        div(ng-if="record.records.length === 0")
-          i None
+  h1.title Dashboard
+  div.dashboard-container
+    +dashboard()
