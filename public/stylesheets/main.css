@@ -37,6 +37,11 @@ a {
   line-height: 0;
 }
 
+.dropdown-menu {
+  border-radius: 0px;
+  box-shadow: none;
+}
+
 .navbar-brand {
   font-family: 'Bitter';
   font-size: 2em;

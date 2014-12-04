@@ -10,10 +10,22 @@ mixin logged-in-navbar(isManager)
         span.glyphicon.glyphicon-calendar
     a.navbar-brand(href="/dashboard")
       span.glyphicon.glyphicon-book(title="Dashboard")
-    if isManager
-      a.navbar-brand(href="/edit")
-        span.glyphicon.glyphicon-edit
-    a.navbar-brand(href="/settings")
-      span.glyphicon.glyphicon-user(title="Settings")
-    a.navbar-brand(href="/signout")
-      span.glyphicon.glyphicon-log-out(title="Sign Out")
+    a.navbar-brand.dropdown
+      a.navbar-brand.dropdown-toggle(id="userMenu" data-toggle="dropdown" aria-expanded="true")
+        span.glyphicon.glyphicon-cog(title="Settings")
+        span.caret
+      ul.dropdown-menu.dropdown-menu-right(role="menu" aria-labelledby="userMenu")
+        if isManager
+          li(role="presentation")
+            a(role="menuitem" href="/edit")
+              span(title="Settings") Edit Organization Details
+        li(role="presentation")
+          a(role="menuitem" href="/settings")
+            span(title="Settings") My Settings
+        li(role="presentation")
+          a(role="menuitem" href="/signout") Sign Out
+            span(title="Sign Out")
+    //- a.navbar-brand(href="/settings")
+    //-   span.glyphicon.glyphicon-user(title="Settings")
+    //- a.navbar-brand(href="/signout")
+    //-   span.glyphicon.glyphicon-log-out(title="Sign Out")
