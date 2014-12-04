@@ -79,6 +79,12 @@
 
 .shift:hover {
     background: rgba(255, 196, 15, 0.19);
+    color: black;
+}
+
+.shift .btn {
+    margin-bottom: 4px;
+    padding: 4px 8px;
 }
 .add-shift {
     width: 100%;
