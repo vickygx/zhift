@@ -42,6 +42,22 @@ module.exports.users.invalidUserId = {
 
 //================== Shift error functions =================//
 
+module.exports.shifts.createNotManagerError = function(extraInfo){
+    return {
+        status: 401,
+        name: "Bad permissions",
+        message: "Unauthorized, you are not a manager of the appropriate organization or schedule. " + extraInfo
+    }
+}
+
+module.exports.shifts.createInvalidManagerOrUserError = function(extraInfo){
+    return {
+        status: 401,
+        name: "Bad permissions",
+        message: "Unauthorized, you are not a manager or the owner of requested. " + extraInfo
+    }
+}
+
 module.exports.shifts.invalidShiftId = {
     status: 400,
     name: "Bad Input",

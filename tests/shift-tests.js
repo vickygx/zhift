@@ -28,14 +28,11 @@ function testShiftRoutes(data){
         var result = data.Shift[0];
         var resultDate = Date.today().add(20).days();
 
-        console.log("this is result:", result);
         for (var i = 0; i < data.Shift.length; i++){
             var current = new Date(data.Shift[i].dateScheduled);
-            console.log("current:", current);
             if (current >= givenDate && current < resultDate){
                 result = data.Shift[i];
                 resultDate = current;
-                console.log("result updated:", result);
             } 
         }
         return result;

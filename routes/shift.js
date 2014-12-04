@@ -1,7 +1,7 @@
 /**
  * All the routes relating to shifts.
  * 
- * @author: Lily Seropian, Vicky Gong, Anji Ren, Dylan Joss
+ * @author: Lily Seropian, Vicky Gong, Anji Ren
  */
  
 var express = require('express');
@@ -27,7 +27,7 @@ var datejs = require('../public/javascripts/libraries/date');
 router.post('/:templateid', function(req, res, next) {
     UserController.isManagerOfOrganization(req.user.email, req.user.org, function(err, isManager) {
         if (!isManager) {
-            return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization. Cannot create shift.');
+            return next(errors.shifts.createNotManagerError('Cannot create shift.'));
         }
         ShiftController.createShiftFromTemplateShift(req.param('templateid'), req.body.week, new Date(), function(err, shift) {
             if (err) {
@@ -50,7 +50,7 @@ router.get('/one/:shiftId', function(req, res, next) {
             return next(err);
         }
         if (shift.responsiblePerson.org !== req.user.org) {
-            return res.status(403).send('Unauthorized, you are not a user of the appropriate organization. Cannot get shift ' + shift.responsiblePerson.org + req.user.org);
+            return next(errors.shifts.createNotManagerError('Cannot get shift ' + shift.responsiblePerson.org + req.user.org));
         }
         if (!shift) {
             return next(errors.shifts.invalidShiftId);
@@ -70,34 +70,37 @@ router.get('/user/:id', function(req, res, next) {
 
     // Checking if logged in user is userid
     if(req.param('id') !== req.user._id.toString() && req.user.schedule !== undefined) {
-        return res.status(403).send('Unauthorized, you are not a manager or the owner of this shift. Cannot get shift.');
+        return next(errors.shifts.createInvalidManagerOrUserError('Cannot get shift.'));
     }
+
+    var getUserShifts = function(){
+        ShiftController.getAllUserShifts(req.param('id'), function(err, shifts) {
+            if (err) {
+                return next(err);
+            }
+            if (!shifts) {
+                return next(errors.users.invalidUserId);
+            }
+            res.send(shifts);
+        });
+    };
     
-    // if the logged in user is a manager, check if the manager is part of the same org as the request employee
+    // If the logged in user is a manager, check if the manager is part of the same org as the request employee
     if (!req.user.schedule) {
         UserController.retrieveEmployeeById(req.param('id'), function(err, employee) {
             if (employee) {
                 if (req.user.org !== employee.org) {
-                    return res.status(403).send('Unauthorized, you are not a manager for this employee. Cannot get shift.');
+                    return next(errors.shifts.createNotManagerError('Cannot get shift of this employee.'));
                 }
-                // helper
+                getUserShifts();
             }
         });
     }
     else {
-        // helper
+        getUserShifts();
     }
     
-    // TODO: factor this out into a helper and call it in the places marked helper
-    ShiftController.getAllUserShifts(req.param('id'), function(err, shifts) {
-        if (err) {
-            return next(err);
-        }
-        if (!shifts) {
-            return next(errors.users.invalidUserId);
-        }
-        res.send(shifts);
-    });
+  
 });
 
 
@@ -141,7 +144,6 @@ router.get('/week/:id/:date', function(req, res, next) {
         if (!shifts) {
             return next(errors.schedules.invalidScheduleId);
         }
-        console.log("shifts:", shifts);
         res.send(shifts);
     });
 });
