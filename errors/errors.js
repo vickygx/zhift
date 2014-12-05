@@ -4,10 +4,11 @@
 */
 
 // Any specific errors go into their own object
-module.exports.org = {};
+module.exports.orgs = {};
 module.exports.users = {};
 module.exports.shifts = {};
 module.exports.schedules = {};
+module.exports.records = {};
 
 //================== Global error functions =================//
 
@@ -27,7 +28,8 @@ module.exports.invalidIdError = {
 
 
 //================== Org error functions =================//
-module.exports.org.invalidId = {
+
+module.exports.orgs.invalidId = {
     status: 404,
     message: "The given organization does not exist"
 };
@@ -100,3 +102,15 @@ module.exports.schedules.invalidScheduleId = {
     name: "Bad Input",
     message: "The given schedule id doesn't exist"
 };
+
+//================== Record error functions =================//
+
+module.exports.records.invalidScheduleId = {
+    status: 404,
+    message: "The given schedule id doesn't exist"
+};
+
+module.exports.records.unauthorized = {
+    status: 403,
+    message: "Unauthorized, you are not a manager of the appropriate organization. Cannot get records."
+}

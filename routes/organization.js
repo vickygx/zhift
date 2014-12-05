@@ -41,7 +41,7 @@ router.get('/:id', function(req, res, next) {
             return next(err);
         } 
         if (!org) {
-            return next(errors.org.invalidId);
+            return next(errors.orgs.invalidId);
         }
         res.send(org);
     });

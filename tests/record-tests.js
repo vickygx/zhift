@@ -34,7 +34,7 @@ function testRecordRoutes(data) {
             url: '/record/schedule/asdf',
             type: 'GET',
             success: unexpectedSuccess(assert, 'Invalid schedule'),
-            error: expectedError(assert, 'Invalid schedule', 403),
+            error: expectedError(assert, 'Invalid schedule', 400),
         });
 
         QUnit.stop();

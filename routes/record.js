@@ -16,10 +16,10 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var errors = require('../errors/errors');
 var errorChecking = require('../errors/error-checking');
 
-var sendRecords = function(scheduleId, res) {
+var sendRecords = function(scheduleId, res, next) {
     RecordController.getRecordsForSchedule(scheduleId, function(err, records) {
         if (err) {
-            return res.status(403).send(err);
+            return next(err);
         }
         res.send(records);
     });
@@ -31,25 +31,25 @@ var sendRecords = function(scheduleId, res) {
  * Response body contains:
  *     {Record[]} The found records.
  */
-router.get('/schedule/:id', function(req, res) {
+router.get('/schedule/:id', function(req, res, next) {
     ScheduleController.retrieveSchedule(req.param('id'), function(err, schedule) {
         if (err) {
-            return res.status(403).send(err);
+            return next(err);
         }
         if (!schedule) {
-            return res.status(404).send('Schedule ' + req.param('id') + ' does not exist.');
+            return next(errors.records.invalidScheduleId);
         }
         UserController.isManagerOfOrganization(req.user.email, schedule.org, function(err, isManager) {
             if (err) {
-                return res.status(403).send(err);
+                return next(err);
             }
             if (!isManager) {
                 UserController.isEmployeeOfRole(req.user.email, req.param('id'), function(err, isEmployee) {
                     if (err) {
-                        return res.status(403).send(err);
+                        return next(err);
                     }
                     if (!isEmployee) {
-                        return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization. Cannot get records.');
+                        return next(errors.records.unauthorized);
                     }
                      sendRecords(req.param('id'), res);
                 });
@@ -69,7 +69,7 @@ router.get('/schedule/:id', function(req, res) {
 router.delete('/old', function(req, res) {
     RecordController.deleteOldRecords(function(err, numDeleted) {
         if (err) {
-            return res.status(403).send(err.message);
+            return next(err);
         }
         res.send({deleted: numDeleted});
     });
