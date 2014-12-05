@@ -48,7 +48,7 @@ function testOrganizationRoutes(data) {
                         name: 'Test',
                     },
                     success: unexpectedSuccess(assert, 'Duplicate org'),
-                    error: expectedError(assert, 'Duplicate org', 403)
+                    error: expectedError(assert, 'Duplicate org', 400)
                 });
             },
             error: unexpectedError(assert, 'Valid org')
@@ -59,7 +59,7 @@ function testOrganizationRoutes(data) {
             type: 'POST',
             data: {},
             success: unexpectedSuccess(assert, 'Invalid org'),
-            error: expectedError(assert, 'Invalid org', 403)
+            error: expectedError(assert, 'Invalid org', 400)
         });
     });
 }
