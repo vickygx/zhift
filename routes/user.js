@@ -24,10 +24,10 @@ var errorChecking = require('../errors/error-checking');
  * Response body contains:
  *     {ManagerUser} The created manager.
  */
-router.post('/manager', function(req, res) {
+router.post('/manager', function(req, res, next) {
     UserController.createManager(req.body.username, req.body.email, req.body.password, req.body.org, function(err, manager) {
         if (err) {
-            return res.send(err);
+            return next(err);
         }
         res.send(manager);
     });
@@ -47,14 +47,14 @@ router.post('/manager', function(req, res) {
 router.post('/employee', function(req, res) {
     UserController.isManagerOfOrganization(req.user.email, req.body.org, function(err, isManager) {
         if (err) {
-            return res.send(err);
+            return next(err);
         }
         if (!isManager) {
-            return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization.');
+            return next(errors.users.badManager);
         }
         UserController.createEmployee(req.body.username, req.body.email, req.body.org, req.body.role, function(err, employee) {
             if (err) {
-                return res.status(403).send(err);
+                return next(err);
             }
             res.send(employee);
         });
@@ -82,10 +82,10 @@ router.get('/manager/:id', function(req, res) {
  * Response body contains:
  *     {EmployeeUser} The retrieved employee.
  */
-router.get('/employee/:id', function(req, res) {
+router.get('/employee/:id', function(req, res, next) {
     UserController.retrieveEmployeeById(req.param('id'), function(err, employee) {
         if (err) {
-            return res.send(err);
+            return next(err);
         }
         res.send(employee);
     });
@@ -98,12 +98,12 @@ router.put('/:id', function(req, res) {
     var id = req.param('id');
 
     if (req.user._id.toString() !== id) {
-        return res.status(403).send('Unauthorized, you cannot change the password of another user account.');
+        return next(errors.user.badUserPasswordChange);
     }
 
     UserController.changePassword(id, req.body.password, function(err, user) {
         if (err) {
-            return res.status(403).send(err);
+            return next(err);
         }
         res.send(user);
     });
@@ -115,10 +115,10 @@ router.put('/:id', function(req, res) {
  * Response body contains:
  *     {ManagerUser[]} The retrieved managers.
  */
-router.get('/org/:id/manager', function(req, res) {
+router.get('/org/:id/manager', function(req, res, next) {
     UserController.retrieveManagersByOrgId(req.param('id'), function(err, managers) {
         if (err) {
-            return res.send(err);
+            return next(err);
         }
         res.send(managers);
     });
@@ -130,10 +130,10 @@ router.get('/org/:id/manager', function(req, res) {
  * Response body contains:
  *     {EmployeeUser[]} The retrieved employees.
  */
-router.get('/org/:id/employee', function(req, res) {
+router.get('/org/:id/employee', function(req, res, next) {
     UserController.retrieveEmployeesByOrgId(req.param('id'), function(err, employees) {
         if (err) {
-            return res.send(err);
+            return next(err);
         }
         res.send(employees);
     });
@@ -142,10 +142,10 @@ router.get('/org/:id/employee', function(req, res) {
 /**
  * DELETE a manager by id.
  */
-router.delete('/manager/:id', function(req, res) {
+router.delete('/manager/:id', function(req, res, next) {
     UserController.deleteManager(req.param('id'), function(err, user) {
         if (err) {
-            return res.send(err);
+            return next(err);
         }
         res.status(200).end();
     });
@@ -155,10 +155,10 @@ router.delete('/manager/:id', function(req, res) {
 /**
  * DELETE an employee by id.
  */
-router.delete('/employee/:id', function(req, res) {
+router.delete('/employee/:id', function(req, res, next) {
     UserController.deleteEmployee(req.param('id'), function(err, user) {
         if (err) {
-            return res.send(err);
+            return next(err);
         }
         res.status(200).end();
     });
@@ -170,10 +170,10 @@ router.delete('/employee/:id', function(req, res) {
  * Response body contains:
  *     {EmployeeUser[]} The retrieved employees.
  */
-router.get('/sched/:id', function(req, res) {
+router.get('/sched/:id', function(req, res, next) {
     UserController.retrieveEmployeesByScheduleId(req.param('id'), function(err, employees) {
         if (err) {
-            return res.send(err);
+            return next(err);
         } 
         res.send(employees);
     });

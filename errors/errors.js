@@ -11,6 +11,7 @@ module.exports.schedules = {};
 module.exports.records = {};
 module.exports.swaps = {};
 module.exports.templateshifts = {};
+module.exports.users = {};
 
 //================== Global error functions =================//
 
@@ -167,4 +168,18 @@ module.exports.templateshifts.badManager = {
     status: 401,
     name: "Bad Permissions",
     message: "Unauthorized, you are not a manager of the appropriate organization."
+};
+
+//================== User error functions =================//
+
+module.exports.users.badManager = {
+    status: 401,
+    name: "Bad Permissions",
+    message: "Unauthorized, you are not a manager of the appropriate organization."
+};
+
+module.exports.users.badUserPasswordChange = {
+    status: 401,
+    name: "Bad Permissions",
+    message: "Unauthorized, you cannot change the password of another user account."
 };
