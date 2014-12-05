@@ -27,7 +27,7 @@ var datejs = require('../public/javascripts/libraries/date');
 router.post('/:templateid', function(req, res, next) {
     UserController.isManagerOfOrganization(req.user.email, req.user.org, function(err, isManager) {
         if (!isManager) {
-            return next(errors.shifts.createNotManagerError('Cannot create shift.'));
+            return next(errors.shifts.notManagerCreate);
         }
         ShiftController.createShiftFromTemplateShift(req.param('templateid'), req.body.week, new Date(), function(err, shift) {
             if (err) {
@@ -50,7 +50,7 @@ router.get('/one/:shiftId', function(req, res, next) {
             return next(err);
         }
         if (shift.responsiblePerson.org !== req.user.org) {
-            return next(errors.shifts.createNotManagerError('Cannot get shift ' + shift.responsiblePerson.org + req.user.org));
+            return next(errors.shifts.notManagerGet);
         }
         if (!shift) {
             return next(errors.shifts.invalidShiftId);
@@ -69,7 +69,7 @@ router.get('/one/:shiftId', function(req, res, next) {
 router.get('/user/:id', function(req, res, next) {
     // Checking if logged in user is userid
     if(req.param('id') !== req.user._id.toString() && req.user.schedule !== undefined) {
-        return next(errors.shifts.createInvalidManagerOrUserError('Cannot get shift.'));
+        return next(errors.shifts.notManagerGetShifts);
     }
 
     var getUserShifts = function() {
@@ -89,7 +89,7 @@ router.get('/user/:id', function(req, res, next) {
         UserController.retrieveEmployeeById(req.param('id'), function(err, employee) {
             if (employee) {
                 if (req.user.org !== employee.org) {
-                    return next(errors.shifts.createNotManagerError('Cannot get shift of this employee.'));
+                    return next(errors.shifts.notManagerGet);
                 }
                 getUserShifts();
             }

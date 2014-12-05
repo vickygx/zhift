@@ -70,21 +70,7 @@ module.exports.users.badUserPasswordChange = create401('Unauthorized, you cannot
 
 //================== Shift error functions =================//
 
-module.exports.shifts.createNotManagerError = function(extraInfo) {
-    return {
-        status: 401,
-        name: 'Bad permissions',
-        message: 'Unauthorized, you are not a manager of the appropriate organization or schedule. ' + extraInfo
-    }
-};
-
-module.exports.shifts.createInvalidManagerOrUserError = function(extraInfo) {
-    return {
-        status: 401,
-        name: 'Bad permissions',
-        message: 'Unauthorized, you are not a manager or the owner of requested. ' + extraInfo
-    }
-};
+module.exports.shifts.notManagerGetShifts = create401('Unauthorized, you are not a manager or the owner of the requested employee. Cannot get shifts.');
 
 module.exports.shifts.invalidShiftId = create400('The given shift id does not exist for the current user.');
 
@@ -97,6 +83,10 @@ module.exports.shifts.templateShiftDoesNotExist = create400('Cannot create shift
 module.exports.shifts.invalidDate = create400('Cannot get shifts within this date. Invalid Date.');
 
 module.exports.shifts.employeeNotFound = create404('Invalid user id.');
+
+module.exports.shifts.notManagerCreate = create401('Unauthorized, you are not a manager or the owner of the requested template shift. Cannot create shift.');
+
+module.exports.shifts.notManagerGet = create401('Unauthorized, you are not a manager or the owner of the requested shift.');
 
 //================== Schedule error functions =================//
 
