@@ -55,7 +55,6 @@ function testShiftRoutes(data){
             error: unexpectedError(assert, 'Existing shift'),
         });
 
-
         QUnit.stop();
         $.ajax('/shift/one/lala', {
             type: 'GET',
@@ -69,7 +68,6 @@ function testShiftRoutes(data){
             success: unexpectedSuccess(assert, 'Empty shift'),
             error: expectedError(assert, 'Empty shift', 404)
         });
-
     });
 
     QUnit.asyncTest('GET /user/:id', function(assert){
@@ -95,7 +93,7 @@ function testShiftRoutes(data){
             url: '/shift/user/lala',
             type: 'GET',
             success: unexpectedSuccess(assert, 'Invalid user id'),
-            error: expectedError(assert, 'Invalid user id', 400)
+            error: expectedError(assert, 'Invalid user id', 404)
         });
         
         QUnit.stop();

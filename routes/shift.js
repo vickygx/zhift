@@ -67,13 +67,12 @@ router.get('/one/:shiftId', function(req, res, next) {
  *     {Shift[]} The retrieved shifts.
  */
 router.get('/user/:id', function(req, res, next) {
-
     // Checking if logged in user is userid
     if(req.param('id') !== req.user._id.toString() && req.user.schedule !== undefined) {
         return next(errors.shifts.createInvalidManagerOrUserError('Cannot get shift.'));
     }
 
-    var getUserShifts = function(){
+    var getUserShifts = function() {
         ShiftController.getAllUserShifts(req.param('id'), function(err, shifts) {
             if (err) {
                 return next(err);
@@ -93,6 +92,9 @@ router.get('/user/:id', function(req, res, next) {
                     return next(errors.shifts.createNotManagerError('Cannot get shift of this employee.'));
                 }
                 getUserShifts();
+            }
+            else {
+                 return next(errors.shifts.employeeNotFound);
             }
         });
     }

@@ -88,6 +88,11 @@ module.exports.shifts.invalidDate = {
     message: "Cannot get shifts within this date. Invalid Date."
 }
 
+module.exports.shifts.employeeNotFound = {
+    status: 404,
+    message: "Invalid user id."
+}
+
 //================== Schedule error functions =================//
 
 module.exports.schedules.invalidScheduleId = {
