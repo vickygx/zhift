@@ -10,6 +10,7 @@ module.exports.shifts = {};
 module.exports.schedules = {};
 module.exports.records = {};
 module.exports.swaps = {};
+module.exports.templateshifts = {};
 
 //================== Global error functions =================//
 
@@ -143,13 +144,27 @@ module.exports.swaps.unauthorized = {
     message: "Unauthorized, you are not an employee of the appropriate schedule."
 };
 
-module.exports.noSwapForShift = {
+module.exports.swaps.noSwapForShift = {
     status: 404,
     message: "This shift has no swaps associated with it."
 };
 
-module.exports.badSwap = {
+module.exports.swaps.badSwap = {
     status: 400,
     name: "Bad Input",
     message: "Unidentified request."
-}
+};
+
+//================== Template Shift error functions =================//
+
+module.exports.templateshifts.badSchedule = {
+    status: 401,
+    name: "Bad Permissions",
+    message: "Employee and schedule are part of different organizations."
+};
+
+module.exports.templateshifts.badManager = {
+    status: 401,
+    name: "Bad Permissions",
+    message: "Unauthorized, you are not a manager of the appropriate organization."
+};
