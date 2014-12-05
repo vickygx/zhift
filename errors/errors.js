@@ -67,7 +67,7 @@ module.exports.shifts.invalidShiftId = {
 };
 
 module.exports.shifts.notOwnerOfShift = {
-    status: 400,
+    status: 401,
     name: "Bad permissions",
     message: "User is not owner of shift. Cannot put up for grabs."
 };
@@ -103,6 +103,24 @@ module.exports.schedules.invalidScheduleId = {
     message: "The given schedule id doesn't exist"
 };
 
+module.exports.schedules.unauthorizedCreate = {
+    status: 401,
+    name: "Bad Permissions",
+    message: "Unauthorized, you are not a manager of the appropriate organization. Cannot create schedule."
+};
+
+module.exports.schedules.unauthorizedDelete = {
+    status: 401,
+    name: "Bad Permissions",
+    message: "Unauthorized, you are not a manager of the appropriate organization. Cannot delete schedule."
+};
+
+module.exports.schedules.unauthorizedGet = {
+    status: 401,
+    name: "Bad Permissions",
+    message: "Unauthorized, you are not a manager of the appropriate organization. Cannot get schedule."
+};
+
 //================== Record error functions =================//
 
 module.exports.records.invalidScheduleId = {
@@ -111,6 +129,7 @@ module.exports.records.invalidScheduleId = {
 };
 
 module.exports.records.unauthorized = {
-    status: 403,
+    status: 401,
+    name: "Bad Permissions",
     message: "Unauthorized, you are not a manager of the appropriate organization. Cannot get records."
 };

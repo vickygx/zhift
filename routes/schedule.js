@@ -21,20 +21,20 @@ var errorChecking = require('../errors/error-checking');
  * Response body contains:
  *     {Schedule} The created schedule.
  */
-router.post('/', function(req, res) {
+router.post('/', function(req, res, next) {
     // checking if permissions are correct
     UserController.isManagerOfOrganization(req.user.email, req.body.orgName, function(err, isManager){
         if (err) {
-            res.send(err);
+            return next(err);
         }
         if (!isManager) {
-            return res.status(401).send('Unauthorized, you are not a manager of the appropriate organization. Cannot create schedule.');
+            return next(errors.schedules.unauthorized);
         }
 
         // if the user is a manager, create the schedule
         ScheduleController.createSchedule(req.body.orgName, req.body.role, function(err, schedule) {
             if (err) {
-                return res.status(403).send(err);
+                return next(err);
             } 
             res.send(schedule);
         });
@@ -47,20 +47,20 @@ router.post('/', function(req, res) {
  * Response body contains:
  *     {Schedule} The deleted schedule.
  */
-router.delete('/:id', function(req, res) {
+router.delete('/:id', function(req, res, next) {
     // checking if permissions are correct
     UserController.isManagerOfOrganization(req.user.email, req.user.org, function(err, isManager) {
         if (err) {
-            res.send(err);
+            return next(err);
         }
         if (!isManager) {
-            return res.status(401).send('Unauthorized, you are not a manager of the appropriate organization. Cannot delete schedule.');
+            return next(errors.schedules.unauthorized);
         }
 
         // if the user is a manager, delete the schedule
         ScheduleController.deleteSchedule(req.param('id'), req.user.org, function(err, schedule) {
             if (err) {
-                return res.send(err);
+                return next(err);
             } 
             res.send(schedule);
         });
@@ -73,19 +73,19 @@ router.delete('/:id', function(req, res) {
  * Response body contains:
  *     {Schedule} The retrieved schedule.
  */
-router.get('/:id', function(req, res) {
+router.get('/:id', function(req, res, next) {
     // checking if permissions are correct
     UserController.isUserOfOrganization(req.user.email, req.user.org, function(err, isUser) {
         if (err) {
-            res.send(err);
+            return next(err);
         }
         // if the user is in organization, get the schedule
         if (!isUser) {
-            return res.status(401).send('Unauthorized, you are not a user of the appropriate organization. Cannot get schedule.');
+            return next(errors.schedules.unauthorizedGet);
         }
         ScheduleController.retrieveSchedule(req.param('id'), function(err, schedule) {
             if (err) {
-                return res.status(403).send(err);
+                return next(err);
             } 
             res.send(schedule);
         });
@@ -102,15 +102,15 @@ router.get('/all/:orgName', function(req, res) {
     // checking if permissions are correct
     UserController.isUserOfOrganization(req.user.email, req.param('orgName'), function(err, isUser) {
         if (err) {
-            res.send(err);
+            return next(err);
         }
         // if the user is in organization, get the schedule
         if (!isUser) {
-            return res.status(401).send('Unauthorized, you are not a user of the appropriate organization. Cannot get schedules.');
+            return next(errors.schedules.unauthorizedGet);
         }
         ScheduleController.retrieveSchedulesByOrg(req.param('orgName'), function(err, schedules) {
             if (err) {
-                return res.send(err);
+                return next(err);
             } 
             res.send(schedules);
         });
