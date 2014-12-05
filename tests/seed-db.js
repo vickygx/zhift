@@ -104,7 +104,7 @@ module.exports = function(fn) {
         // Employee: 'John'
         new EmployeeUser({
             name: 'John Doe',
-            email: 'lilyseropian@gmail.edu',
+            email: 'john@mit.edu',
             password: bCrypt.hashSync('john', bCrypt.genSaltSync(10)),
             org: 'ZhiftTest',
             schedule: schedule._id,

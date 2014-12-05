@@ -23,7 +23,7 @@ var errors = require('../errors/errors');
 router.post('/', function(req, res, next) {
     OrgController.createOrg(req.body.name, function(err, org) {
         if (err) {
-            res.status(403).send(err.err);
+            return next(err);
         }
         res.send(org);
     });
@@ -41,7 +41,7 @@ router.get('/:id', function(req, res, next) {
             return next(err);
         } 
         if (!org) {
-            return next(errors.org.invalidId);
+            return next(errors.orgs.invalidId);
         }
         res.send(org);
     });

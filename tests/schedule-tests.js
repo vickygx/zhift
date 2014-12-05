@@ -36,7 +36,7 @@ function testScheduleRoutes() {
                         role: 'Kung Fu Fighter',
                     },
                     success: unexpectedSuccess(assert, 'Duplicate schedule'),
-                    error: expectedError(assert, 'Duplicate schedule', 403)
+                    error: expectedError(assert, 'Duplicate schedule', 400)
                 });
 
                 QUnit.stop();
@@ -58,7 +58,7 @@ function testScheduleRoutes() {
         $.ajax('/schedule/ffff', {
             type: 'GET',
             success: unexpectedSuccess(assert, 'Nonexistent schedule'),
-            error: expectedError(assert, 'Nonexistent schedule', 403)
+            error: expectedError(assert, 'Nonexistent schedule', 400)
         });
 
         QUnit.stop();

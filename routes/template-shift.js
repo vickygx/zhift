@@ -26,26 +26,26 @@ var errorChecking = require('../errors/error-checking');
  * Response body contains:
  *     {TemplateShift} The created template shift.
  */
-router.post('/', function(req, res) {
+router.post('/', function(req, res, next) {
     UserController.retrieveEmployeeById(req.body.employeeId, function(err, employee) {
         if (err) {
-            return res.status(403).send(err);
+            return next(err);
         }
         if (req.body.scheduleId.toString() !== employee.schedule.toString()) {
-            return res.status(400).send('Employee and schedule are part of different organizations.');
+            return next(errors.templateshifts.badSchedule);
         }
         UserController.isManagerOfOrganization(req.user.email, employee.org, function(err, isManager) {
             if (err) {
-                return res.status(403).send(err);
+                return next(err);
             }
             if (!isManager) {
-                return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization.');
+                return next(errors.templateshifts.badManager);
             }
 
             TemplateShiftController.createShift(req.body.day, req.body.startTime, req.body.endTime, 
                 req.body.employeeId, req.body.scheduleId, function(err, templateShift) {
                     if (err) {
-                        return res.status(403).send(err);
+                        return next(err);
                     }
                     res.send(templateShift);
 
@@ -69,10 +69,10 @@ router.post('/', function(req, res) {
  * Response body contains:
  *     {TemplateShift[]} The retrieved template shfits.
  */
-router.get('/all', function(req, res) {
+router.get('/all', function(req, res, next) {
     TemplateShiftController.getAllShifts(function(err, templateShifts) {
         if (err) {
-            return res.status(403).send(err);
+            return next(err);
         }
         res.send(templateShifts);
     });
@@ -84,10 +84,10 @@ router.get('/all', function(req, res) {
  * Response body contains:
  *     {TemplateShift[]} The retrieved template shifts. 
  */
-router.get('/all/:scheduleId', function(req, res) {
+router.get('/all/:scheduleId', function(req, res, next) {
     TemplateShiftController.getAllShiftsBySchedule(req.param('scheduleId'), function(err, templateShifts) {
         if (err) {
-            return res.status(403).send(err);
+            return next(err);
         }
         res.send(templateShifts);
     });
@@ -102,7 +102,7 @@ router.get('/all/:scheduleId', function(req, res) {
 router.get('/:id', function(req, res) {
     TemplateShiftController.retrieveShift(req.param('id'), function(err, templateShift) {
         if (err) {
-            return res.status(403).send(err);
+            return next(err);
         }
         res.send(templateShift);
     });
@@ -119,27 +119,27 @@ router.delete('/:id', function(req, res) {
 
     TemplateShiftController.retrieveShift(id, function(err, retrievedTemplateShift) {
         if (err) {
-            return res.status(403).send(err);
+            return next(err);
         }
         UserController.retrieveEmployeeById(retrievedTemplateShift.responsiblePerson, function(err, employee) {
             if (err) {
-                return res.status(403).send(err);
+                return next(err);
             }
             UserController.isManagerOfOrganization(req.user.email, employee.org, function(err, isManager) {
                 if (err) {
-                    return res.status(403).send(err);
+                    return next(err);
                 }
                 if (!isManager) {
-                    return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization.');
+                    return next(errors.templateshifts.badManager);
                 }
 
                 TemplateShiftController.deleteShift(id, function(err, templateShift) {
                     if (err) {
-                        return res.status(403).send(err);
+                        return next(err);
                     } 
                     ShiftController.deleteShiftsGeneratedFromTemplateShift(id, function(err) {
                         if (err) {
-                            return res.status(403).send(err);
+                            return next(err);
                         } 
                         res.send(templateShift);
                     });
@@ -159,18 +159,18 @@ router.delete('/:id', function(req, res) {
 router.put('/reassign/:id', function(req, res) {
     UserController.retrieveEmployeeById(req.body.employeeId, function(err, employee) {
         if (err) {
-            return res.status(403).send(err);
+            return next(err);
         }
         UserController.isManagerOfOrganization(req.user.email, employee.org, function(err, isManager) {
             if (err) {
-                return res.status(403).send(err);
+                return next(err);
             }
             if (!isManager) {
-                return res.status(403).send('Unauthorized, you are not a manager of the appropriate organization.');
+                return next(errors.templateshifts.badManager);
             }
             TemplateShiftController.giveShiftTo(req.param('id'), req.body.employeeId, function(err, templateShift) {
                 if (err) {
-                    return res.status(403).send(err);
+                    return next(err);
                 }
                 res.send(templateShift);
             });
