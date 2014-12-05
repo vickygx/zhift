@@ -1,8 +1,6 @@
 /**
  * All routes relating to users.
- *
- * TODO: implement delete route
- * 
+ *  
  * @author: Dylan Joss
  */
 
@@ -142,12 +140,28 @@ router.get('/org/:id/employee', function(req, res) {
 });
 
 /**
- * DELETE a user by id.
+ * DELETE a manager by id.
  */
-router.delete('/:id', function(req, res) {
-    // TODO: not for MVP
-    // will need to delete from both user DB and manager/employee DB
-    throw new Error('DELETE /:id not implemented');
+router.delete('/manager/:id', function(req, res) {
+    UserController.deleteManager(req.param('id'), function(err, user) {
+        if (err) {
+            return res.send(err);
+        }
+        res.status(200).end();
+    });
+});
+
+
+/**
+ * DELETE an employee by id.
+ */
+router.delete('/employee/:id', function(req, res) {
+    UserController.deleteEmployee(req.param('id'), function(err, user) {
+        if (err) {
+            return res.send(err);
+        }
+        res.status(200).end();
+    });
 });
 
 /**

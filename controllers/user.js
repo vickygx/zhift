@@ -38,11 +38,11 @@ module.exports = {};
  * @param  {String}   email    Employee email.
  * @param  {String}   org      Organization employee is part of.
  * @param  {String}   role     Employee role.
- * @param  {Function} callback Callback that takes (err, employee).
+ * @param  {Function} fn       Callback that takes (err, employee).
  */
-module.exports.createEmployee = function(name, email, org, role, callback) {
+module.exports.createEmployee = function(name, email, org, role, fn) {
     if (!validator.isEmail(email)) {
-        return callback('Invalid email address.');
+        return fn('Invalid email address.');
     }
 
     var password = generatePassword();
@@ -59,25 +59,25 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
     // employees cannot be associated with a nonexistent organization
     OrgController.retrieveOrg(org, function(err, retrievedOrg) {
         if (err) {
-            return callback(err.message);
+            return fn(err.message);
         }
         if (!retrievedOrg) {
-            return callback('Employee cannot be associated with a nonexistent organization.');
+            return fn('Employee cannot be associated with a nonexistent organization.');
         }
         else {
             // employees cannot be associated with a nonexistent role (i.e. one for which there
             // is no associated schedule)
             ScheduleController.retrieveScheduleByOrgAndRole(org, role, function(err, schedule) {
                 if (err) {
-                    return callback(err.message);                 
+                    return fn(err.message);                 
                 }
                 if (!schedule) {
-                    return callback('No schedule found for that organization and role');
+                    return fn('No schedule found for that organization and role');
                 }
                 else {
                     newUser.save(function(err, user) {
                         if (err) {
-                            return callback(err.message);
+                            return fn(err.message);
                         }
 
                         // ensure that the ID of User saved to the User database is same as that of 
@@ -90,10 +90,10 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
 
                         newEmployee.save(function(err, employee) {
                             if (err) {
-                                return callback(err.message);
+                                return fn(err.message);
                             }
                             RecordController.inviteEmployee(name, email, password, role, org);
-                            callback(null, employee);
+                            fn(null, employee);
                         });
                     });
                 }
@@ -103,12 +103,12 @@ module.exports.createEmployee = function(name, email, org, role, callback) {
 };
 
 
-var createManagerHelper = function(userData, inviteManager, callback) {
+var createManagerHelper = function(userData, inviteManager, fn) {
     var newUser = new User(userData);
 
     newUser.save(function(err, user) {
         if (err) {
-            return callback(err.message);
+            return fn(err.message);
         }
         // ensure that the ID of User saved to the User database is same as that of 
         // Manager saved to the ManagerUser database
@@ -118,12 +118,12 @@ var createManagerHelper = function(userData, inviteManager, callback) {
 
         newManager.save(function(err, manager) {
             if (err) {
-                return callback(err.message);
+                return fn(err.message);
             }
             if (inviteManager) {
                 RecordController.inviteManager(manager.name, manager.email, manager.password, manager.org);
             }
-            callback(null, manager);
+            fn(null, manager);
         });
     });
 };
@@ -134,11 +134,11 @@ var createManagerHelper = function(userData, inviteManager, callback) {
  * @param  {String}   email    Manager email.
  * @param  {String}   password Manager password.
  * @param  {String}   org      Organization manager is part of.
- * @param  {Function} callback Callback that takes (err, manager)
+ * @param  {Function} fn       Callback that takes (err, manager)
  */
-module.exports.createManager = function(name, email, password, org, callback) {
+module.exports.createManager = function(name, email, password, org, fn) {
     if (!validator.isEmail(email)) {
-        return callback('Invalid email address.');
+        return fn('Invalid email address.');
     }
 
     var hashedPassword;
@@ -160,18 +160,18 @@ module.exports.createManager = function(name, email, password, org, callback) {
         var inviteManager = retrievedOrg !== null;
 
         if (err) {
-            return callback(err.message);
+            return fn(err.message);
         }
         if (!retrievedOrg) {
             OrgController.createOrg(org, function(err, newOrg) {
                 if (err) {
-                    return callback('Invalid organization name.'); 
+                    return fn('Invalid organization name.'); 
                 }
-                createManagerHelper(userData, false, callback);
+                createManagerHelper(userData, false, fn);
             }); 
         }
         else {
-            createManagerHelper(userData, true, callback);
+            createManagerHelper(userData, true, fn);
         }
     });
 };
@@ -180,102 +180,102 @@ module.exports.createManager = function(name, email, password, org, callback) {
  * Retrieve existing user.
  * @param {String}   email    User email.
  * @param {String}   org      Organization user is part of.
- * @param {Function} callback Callback that takes (err, user).
+ * @param {Function} fn       Callback that takes (err, user).
  */
-module.exports.retrieveUser = function(email, org, callback) {
+module.exports.retrieveUser = function(email, org, fn) {
     User.findOne({email: email, org: org}, function(err, user) {
         if (err) {
-            return callback(err.message);
+            return fn(err.message);
         } 
         if (!user) {
-            return callback('Incorrect name or organization.');
+            return fn('Incorrect name or organization.');
         } 
-        callback(null, user);
+        fn(null, user);
     });
 };
 
 /**
  * Retrieve existing employee by id.
  * @param {ObjectId} id       Employee id.
- * @param {Function} callback Callback that takes (err, user).
+ * @param {Function} fn       Callback that takes (err, user).
  */
-module.exports.retrieveEmployeeById = function(id, callback) {
+module.exports.retrieveEmployeeById = function(id, fn) {
     EmployeeUser.findById(id, function(err, employeeUser) {
         if (err) {
-            return callback(err);
+            return fn(err);
         } 
         if (!employeeUser) {
-            return callback('Incorrect employee id.');
+            return fn('Incorrect employee id.');
         } 
-        callback(null, employeeUser);
+        fn(null, employeeUser);
     });
 };
 
 /**
  * Retrieve existing manager by id.
  * @param {ObjectId} id       Manager id.
- * @param {Function} callback Callback that takes (err, user).
+ * @param {Function} fn       Callback that takes (err, user).
  */
-module.exports.retrieveManagerById = function(id, callback) {
+module.exports.retrieveManagerById = function(id, fn) {
     ManagerUser.findById(id, function(err, managerUser) {
         if (err) {
-            return callback(err);
+            return fn(err);
         } 
         if (!managerUser) {
-            return callback('Incorrect manager id.');
+            return fn('Incorrect manager id.');
         } 
-        callback(null, managerUser);
+        fn(null, managerUser);
     });
 };
 
 /** 
  * Retrieve all employees associated with the org with the id.
  * @param {ObjectId} id       Org id.
- * @param {Function} callback Callback that takes (err, user).
+ * @param {Function} fn       Callback that takes (err, user).
  */
-module.exports.retrieveEmployeesByOrgId = function(id, callback) {
+module.exports.retrieveEmployeesByOrgId = function(id, fn) {
     EmployeeUser.find({org: id}, function(err, employeeUsers) {
         if (err) {
-            return callback(err);
+            return fn(err);
         } 
         if (!employeeUsers) {
-            return callback('Incorrect org id.');
+            return fn('Incorrect org id.');
         } 
-        callback(null, employeeUsers);
+        fn(null, employeeUsers);
     });
 };
 
 /** 
  * Retrieve all managers associated with the org with the id.
  * @param {ObjectId} id       Org id.
- * @param {Function} callback Callback that takes (err, user).
+ * @param {Function} fn       Callback that takes (err, user).
  */
-module.exports.retrieveManagersByOrgId = function(id, callback) {
+module.exports.retrieveManagersByOrgId = function(id, fn) {
     ManagerUser.find({org: id}, function(err, managerUsers) {
         if (err) {
-            return callback(err);
+            return fn(err);
         } 
         if (!managerUsers) {
-            return callback('Incorrect org id.');
+            return fn('Incorrect org id.');
         } 
-        callback(null, managerUsers);
+        fn(null, managerUsers);
     });
 };
 
 /** 
  * Retrieve all employees associated with the schedule with the id.
  * @param {ObjectId} id       Org id.
- * @param {Function} callback Callback that takes (err, user).
+ * @param {Function} fn       Callback that takes (err, user).
  */
-module.exports.retrieveEmployeesByScheduleId = function(id, callback) {
+module.exports.retrieveEmployeesByScheduleId = function(id, fn) {
     EmployeeUser.find({schedule: id}, function(err, employeeUsers) {
         if (err) {
-            return callback(err);
+            return fn(err);
         } 
         if (!employeeUsers) {
-            return callback('Incorrect schedule id.');
+            return fn('Incorrect schedule id.');
         } 
-        callback(null, employeeUsers);
+        fn(null, employeeUsers);
     });
 };
 
@@ -345,5 +345,33 @@ module.exports.changePassword = function(userId, newPassword, fn) {
         else { // is a manager
             ManagerUser.findByIdAndUpdate(userId, {password: hashedPassword}, fn);
         }
+    });
+};
+
+/**
+ * Delete a manager.
+ * @param  {ObjectId} userId    The id of the manager to be deleted.
+ * @param  {Function} fn        Callback that takes (err, user)
+ */
+module.exports.deleteManager = function(userId, fn) {
+    User.remove(userId, function(err, user) {
+        if (err) {
+            return fn(err);
+        }
+        ManagerUser.remove(userId, fn);
+    });
+};
+
+/**
+ * Delete an employee.
+ * @param  {ObjectId} userId    The id of the employee to be deleted.
+ * @param  {Function} fn        Callback that takes (err, user)
+ */
+module.exports.deleteEmployee = function(userId, fn) {
+    User.remove(userId, function(err, user) {
+        if (err) {
+            return fn(err);
+        }
+        EmployeeUser.remove(userId, fn);
     });
 };
