@@ -9,6 +9,7 @@ module.exports.users = {};
 module.exports.shifts = {};
 module.exports.schedules = {};
 module.exports.records = {};
+module.exports.swaps = {};
 
 //================== Global error functions =================//
 
@@ -125,7 +126,7 @@ module.exports.schedules.unauthorizedGet = {
 
 module.exports.records.invalidScheduleId = {
     status: 404,
-    message: "The given schedule id doesn't exist"
+    message: "The given schedule id doesn't exist."
 };
 
 module.exports.records.unauthorized = {
@@ -133,3 +134,22 @@ module.exports.records.unauthorized = {
     name: "Bad Permissions",
     message: "Unauthorized, you are not a manager of the appropriate organization. Cannot get records."
 };
+
+//================== Swap error functions =================//
+
+module.exports.swaps.unauthorized = {
+    status: 401,
+    name: "Bad Permissions",
+    message: "Unauthorized, you are not an employee of the appropriate schedule."
+};
+
+module.exports.noSwapForShift = {
+    status: 404,
+    message: "This shift has no swaps associated with it."
+};
+
+module.exports.badSwap = {
+    status: 400,
+    name: "Bad Input",
+    message: "Unidentified request."
+}
