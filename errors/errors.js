@@ -12,13 +12,13 @@ module.exports.records = {};
 
 //================== Global error functions =================//
 
-module.exports.create400Error = function(name, msg){
+module.exports.create400Error = function(name, msg) {
     return {
         status: 400,
         name: name,
         message: msg
     };
-}
+};
 
 module.exports.invalidIdError = {
     status: 400, 
@@ -44,21 +44,21 @@ module.exports.users.invalidUserId = {
 
 //================== Shift error functions =================//
 
-module.exports.shifts.createNotManagerError = function(extraInfo){
+module.exports.shifts.createNotManagerError = function(extraInfo) {
     return {
         status: 401,
         name: "Bad permissions",
         message: "Unauthorized, you are not a manager of the appropriate organization or schedule. " + extraInfo
     }
-}
+};
 
-module.exports.shifts.createInvalidManagerOrUserError = function(extraInfo){
+module.exports.shifts.createInvalidManagerOrUserError = function(extraInfo) {
     return {
         status: 401,
         name: "Bad permissions",
         message: "Unauthorized, you are not a manager or the owner of requested. " + extraInfo
     }
-}
+};
 
 module.exports.shifts.invalidShiftId = {
     status: 400,
@@ -82,18 +82,18 @@ module.exports.shifts.templateShiftDoesNotExist = {
     status: 400,
     name: "Bad Input",
     message: "Cannot create shift from this template shift. Id doesn't exist."
-}
+};
 
 module.exports.shifts.invalidDate = {
     status: 400,
     name: "Bad Input",
     message: "Cannot get shifts within this date. Invalid Date."
-}
+};
 
 module.exports.shifts.employeeNotFound = {
     status: 404,
     message: "Invalid user id."
-}
+};
 
 //================== Schedule error functions =================//
 
@@ -113,4 +113,4 @@ module.exports.records.invalidScheduleId = {
 module.exports.records.unauthorized = {
     status: 403,
     message: "Unauthorized, you are not a manager of the appropriate organization. Cannot get records."
-}
+};
