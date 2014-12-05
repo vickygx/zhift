@@ -32,14 +32,14 @@ router.post('/', function(req, res, next) {
             return next(err);
         }
         if (req.body.scheduleId.toString() !== employee.schedule.toString()) {
-            return next(errors.templateshifts.badSchedule);
+            return next(errors.notEmployeeOfRole);
         }
         UserController.isManagerOfOrganization(req.user.email, employee.org, function(err, isManager) {
             if (err) {
                 return next(err);
             }
             if (!isManager) {
-                return next(errors.templateshifts.badManager);
+                return next(errors.notManagerOfOrg);
             }
 
             TemplateShiftController.createShift(req.body.day, req.body.startTime, req.body.endTime, 
@@ -130,7 +130,7 @@ router.delete('/:id', function(req, res) {
                     return next(err);
                 }
                 if (!isManager) {
-                    return next(errors.templateshifts.badManager);
+                    return next(errors.notManagerOfOrg);
                 }
 
                 TemplateShiftController.deleteShift(id, function(err, templateShift) {
@@ -166,7 +166,7 @@ router.put('/reassign/:id', function(req, res) {
                 return next(err);
             }
             if (!isManager) {
-                return next(errors.templateshifts.badManager);
+                return next(errors.notManagerOfOrg);
             }
             TemplateShiftController.giveShiftTo(req.param('id'), req.body.employeeId, function(err, templateShift) {
                 if (err) {

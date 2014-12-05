@@ -5,14 +5,9 @@
  */
 
 // Any specific errors go into their own object
-module.exports.orgs = {};
-module.exports.users = {};
 module.exports.shifts = {};
-module.exports.schedules = {};
 module.exports.records = {};
 module.exports.swaps = {};
-module.exports.templateshifts = {};
-module.exports.users = {};
 
 /**
  * Create an error.
@@ -56,74 +51,32 @@ var create404 = function(message) {
     return createError(404, 'Not Found', message);
 };
 
-//================== Org error functions =================//
+/* Authorization */
 
-module.exports.orgs.invalidId = create404('The given organization does not exist.');
+module.exports.notManagerOfOrg = create401('You are not a manager of this organization.');
+module.exports.notMemberOfOrg = create401('You are not a member of this organization.');
+module.exports.notManagerOrEmployeeOfRole = create401('You are neither an employee of this role nor a manager.');
+module.exports.notManagerOrOwner = create401('You are neither responsible for this shift nor a manager.');
+module.exports.notEmployeeOfRole = create401('You are not an employee of the appropriate schedule.');
+module.exports.notUser = create401('You are not the user associated with this request.');
 
-//================== User error functions =================//
+/* Not found */
 
-module.exports.users.invalidUserId = create400('The given user id does not exist.');
+module.exports.notFound = create404('');
 
-module.exports.users.badManager = create401('Unauthorized, you are not a manager of the appropriate organization.');
+/* Shift */
 
-module.exports.users.badUserPasswordChange = create401('Unauthorized, you cannot change the password of another user account.');
-
-//================== Shift error functions =================//
-
-module.exports.shifts.createNotManagerError = function(extraInfo) {
-    return {
-        status: 401,
-        name: 'Bad permissions',
-        message: 'Unauthorized, you are not a manager of the appropriate organization or schedule. ' + extraInfo
-    }
-};
-
-module.exports.shifts.createInvalidManagerOrUserError = function(extraInfo) {
-    return {
-        status: 401,
-        name: 'Bad permissions',
-        message: 'Unauthorized, you are not a manager or the owner of requested. ' + extraInfo
-    }
-};
-
-module.exports.shifts.invalidShiftId = create400('The given shift id does not exist for the current user.');
-
-module.exports.shifts.notOwnerOfShift = create401('User is not owner of shift. Cannot put up for grabs.');
-
+module.exports.shifts.invalidDate = create400('Invalid Date.');
 module.exports.shifts.shiftForWeekAlreadyCreated = create400('Shift associated with this template shift and week already exists! Try another week!');
+module.exports.shifts.noShiftsForUser = create404('This user is not responsible for any shifts.');
+module.exports.shifts.templateShiftDoesNotExist = create404('Template shift not found.');
+module.exports.shifts.employeeNotFound = create404('Employee not found.');
 
-module.exports.shifts.templateShiftDoesNotExist = create400('Cannot create shift from this template shift. Id does not exist.');
+/* Record */
 
-module.exports.shifts.invalidDate = create400('Cannot get shifts within this date. Invalid Date.');
+module.exports.records.scheduleNotFound = create404('Schedule not found.');
 
-module.exports.shifts.employeeNotFound = create404('Invalid user id.');
-
-//================== Schedule error functions =================//
-
-module.exports.schedules.invalidScheduleId = create400('The given schedule id does not exist');
-
-module.exports.schedules.unauthorizedCreate = create401('Unauthorized, you are not a manager of the appropriate organization. Cannot create schedule.');
-
-module.exports.schedules.unauthorizedDelete = create401('Unauthorized, you are not a manager of the appropriate organization. Cannot delete schedule.');
-
-module.exports.schedules.unauthorizedGet = create401('Unauthorized, you are not a manager of the appropriate organization. Cannot get schedule.');
-
-//================== Record error functions =================//
-
-module.exports.records.invalidScheduleId = create404('The given schedule id does not exist.');
-
-module.exports.records.unauthorized = create401('Unauthorized, you are not a manager of the appropriate organization. Cannot get records.');
-
-//================== Swap error functions =================//
-
-module.exports.swaps.unauthorized = create401('Unauthorized, you are not an employee of the appropriate schedule.');
-
-module.exports.swaps.noSwapForShift = create404('This shift has no swaps associated with it.');
+/* Swap */
 
 module.exports.swaps.badSwap = create400('Unidentified request.');
-
-//================== Template Shift error functions =================//
-
-module.exports.templateshifts.badSchedule = create401('Employee and schedule are part of different organizations.');
-
-module.exports.templateshifts.badManager = create401('Unauthorized, you are not a manager of the appropriate organization.');
+module.exports.swaps.noSwapsForShift = create404('This shift has no swaps associated with it.');
