@@ -50,7 +50,7 @@ router.post('/employee', function(req, res) {
             return next(err);
         }
         if (!isManager) {
-            return next(errors.users.badManager);
+            return next(errors.notManagerOfOrg);
         }
         UserController.createEmployee(req.body.username, req.body.email, req.body.org, req.body.role, function(err, employee) {
             if (err) {
@@ -98,7 +98,7 @@ router.put('/:id', function(req, res) {
     var id = req.param('id');
 
     if (req.user._id.toString() !== id) {
-        return next(errors.user.badUserPasswordChange);
+        return next(errors.notUser);
     }
 
     UserController.changePassword(id, req.body.password, function(err, user) {

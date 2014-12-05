@@ -28,7 +28,7 @@ router.post('/', function(req, res, next) {
             return next(err);
         }
         if (!isManager) {
-            return next(errors.schedules.unauthorized);
+            return next(errors.notManagerOfOrg);
         }
 
         // if the user is a manager, create the schedule
@@ -54,7 +54,7 @@ router.delete('/:id', function(req, res, next) {
             return next(err);
         }
         if (!isManager) {
-            return next(errors.schedules.unauthorized);
+            return next(errors.notManagerOfOrg);
         }
 
         // if the user is a manager, delete the schedule
@@ -81,7 +81,7 @@ router.get('/:id', function(req, res, next) {
         }
         // if the user is in organization, get the schedule
         if (!isUser) {
-            return next(errors.schedules.unauthorizedGet);
+            return next(errors.notMemberOfOrg);
         }
         ScheduleController.retrieveSchedule(req.param('id'), function(err, schedule) {
             if (err) {
@@ -106,7 +106,7 @@ router.get('/all/:orgName', function(req, res) {
         }
         // if the user is in organization, get the schedule
         if (!isUser) {
-            return next(errors.schedules.unauthorizedGet);
+            return next(errors.notMemberOfOrg);
         }
         ScheduleController.retrieveSchedulesByOrg(req.param('orgName'), function(err, schedules) {
             if (err) {

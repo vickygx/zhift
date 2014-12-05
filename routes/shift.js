@@ -27,7 +27,7 @@ var datejs = require('../public/javascripts/libraries/date');
 router.post('/:templateid', function(req, res, next) {
     UserController.isManagerOfOrganization(req.user.email, req.user.org, function(err, isManager) {
         if (!isManager) {
-            return next(errors.shifts.notManagerCreate);
+            return next(errors.notManagerOrOwner);
         }
         ShiftController.createShiftFromTemplateShift(req.param('templateid'), req.body.week, new Date(), function(err, shift) {
             if (err) {
@@ -50,10 +50,10 @@ router.get('/one/:shiftId', function(req, res, next) {
             return next(err);
         }
         if (shift.responsiblePerson.org !== req.user.org) {
-            return next(errors.shifts.notManagerGet);
+            return next(errors.notManagerOrOwner);
         }
         if (!shift) {
-            return next(errors.shifts.invalidShiftId);
+            return next(errors.notFound);
         }
 
         res.send(shift);
@@ -69,7 +69,7 @@ router.get('/one/:shiftId', function(req, res, next) {
 router.get('/user/:id', function(req, res, next) {
     // Checking if logged in user is userid
     if(req.param('id') !== req.user._id.toString() && req.user.schedule !== undefined) {
-        return next(errors.shifts.notManagerGetShifts);
+        return next(errors.notManagerOrOwner);
     }
 
     var getUserShifts = function() {
@@ -78,7 +78,7 @@ router.get('/user/:id', function(req, res, next) {
                 return next(err);
             }
             if (!shifts) {
-                return next(errors.users.invalidUserId);
+                return next(errors.shifts.noShiftsForUser);
             }
             res.send(shifts);
         });
@@ -89,7 +89,7 @@ router.get('/user/:id', function(req, res, next) {
         UserController.retrieveEmployeeById(req.param('id'), function(err, employee) {
             if (employee) {
                 if (req.user.org !== employee.org) {
-                    return next(errors.shifts.notManagerGet);
+                    return next(errors.shifts.notManagerOfOrg);
                 }
                 getUserShifts();
             }
@@ -164,7 +164,7 @@ router.put('/upForGrabs/:id', function(req, res, next) {
             return next(err);
         }
         if (!shift) {
-            return next(errors.shifts.invalidShiftId);
+            return next(errors.notFound);
         }
         //RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
         res.send(shift);
@@ -221,7 +221,7 @@ router.put('/upForSwap/:id', function(req, res, next) {
             return next(err);
         }
         if (!shift) {
-            return next(errors.shifts.invalidShiftId);
+            return next(errors.notFound);
         }
         //RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
         res.send(shift);
@@ -240,7 +240,7 @@ router.put('/claim/:id', function(req, res, next) {
             return next(err);
         }
         if (!shift) {
-            return next(errors.schedules.invalidShiftId);
+            return next(errors.notFound);
         }
         //RecordController.recordShiftClaim(req.user.org, [originalOwner.email, req.user.email], originalOwner.name, req.user.name, shift);
         res.send(shift);

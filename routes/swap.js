@@ -29,7 +29,7 @@ router.post('/', function(req, res, next) {
             return next(err);
         }
         if (!isEmployeeOfRole) {
-            return errors.swaps.unauthorized;
+            return next(errors.notEmployeeOfRole);
         }
         // createSwap checks that the current user owns the shift for which to create a swap
         SwapController.createSwap(req.body.shiftId, req.user._id, req.body.scheduleId, function(err, swap) {
@@ -55,7 +55,7 @@ router.get('/shift/:id', function(req, res, next) {
             return next(err);
         }
         if (!swap) {
-            return next(errors.swaps.noSwapForShift);
+            return next(errors.swaps.noSwapsForShift);
         }
         res.send(swap);
     });
@@ -95,7 +95,7 @@ router.put('/:id', function(req, res, next) {
         // proposing a shift to swap
         if (req.body.shiftId !== undefined) {
             if (shift.schedule.toString() !== req.user.schedule.toString()) {
-                return next(errors.swap.unauthorized);
+                return next(errors.notEmployeeOfRole);
             }
             SwapController.offerShiftForSwap(id, req.body.shiftId, function(err, swap) {
                 if (err) {

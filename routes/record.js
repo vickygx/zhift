@@ -37,7 +37,7 @@ router.get('/schedule/:id', function(req, res, next) {
             return next(err);
         }
         if (!schedule) {
-            return next(errors.records.invalidScheduleId);
+            return next(errors.records.scheduleNotFound);
         }
         UserController.isManagerOfOrganization(req.user.email, schedule.org, function(err, isManager) {
             if (err) {
@@ -49,7 +49,7 @@ router.get('/schedule/:id', function(req, res, next) {
                         return next(err);
                     }
                     if (!isEmployee) {
-                        return next(errors.records.unauthorized);
+                        return next(errors.notManagerOrMemberOfRole);
                     }
                      sendRecords(req.param('id'), res);
                 });
