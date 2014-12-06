@@ -48,7 +48,7 @@ var getManagerEmails = function(org, fn) {
             return manager.email;
         }));
     });
-}
+};
 
 /**
  * Get all records about a schedule.
