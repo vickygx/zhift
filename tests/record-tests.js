@@ -46,6 +46,8 @@ function testRecordRoutes(data) {
     });
 
     var runDeleteTests = function() {
+        QUnit.module('Record');
+
         QUnit.asyncTest('DELETE', function(assert) {
             $.ajax('/record/old', {
                 type: 'DELETE',
