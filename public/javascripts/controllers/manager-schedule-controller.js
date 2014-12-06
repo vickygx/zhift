@@ -195,7 +195,26 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             }
         );
     };
-    
+
+    $scope.deleteTemplateShift = function(id) {
+        TemplateShiftService.deleteTemplateShift(id,
+            function(err, shift) {
+                if (err) {
+                    // TODO
+                    return console.log(err);
+                }
+                var scopeDayHour = $scope.templateShiftsByDay[shift.dayOfWeek][getHour(shift.start)];
+                for (var i = 0; i < scopeDayHour.length; i++) {
+                    if (scopeDayHour[i]._id = shift._id) {
+                        delete scopeDayHour[i];
+                        $scope.$apply();
+                        break;
+                    }
+                }
+            }
+        );
+    };
+
     $scope.reassignTemplateShift = function(id, day, startTime, endTime, employeeId, scheduleId) {
         TemplateShiftService.reassignTemplateShift(id, day, startTime, endTime, employeeId, scheduleId,
             function(err, shift) {
@@ -291,6 +310,21 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
                     scope.activeShift['endTime'],
                     employeeId,
                     scope.currentScheduleId
+                );
+            });
+        }
+    };
+})
+
+.directive('deleteTemplateShift', function() {
+    return {
+        restrict: 'C', 
+        link: function(scope, element, attrs) {
+            element.unbind('click');
+            element.bind('click', function(evt) {
+                evt.stopPropagation();
+                scope.deleteTemplateShift(
+                    scope.activeShift['shiftId']
                 );
             });
         }

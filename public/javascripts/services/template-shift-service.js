@@ -45,6 +45,18 @@ ZhiftApp.service('TemplateShiftService', ['$rootScope', function($rootScope) {
                 callback(res.responseText);
             });
         },
+        // Deleting a template shift
+        deleteTemplateShift: function(id, callback) {
+            $.ajax({
+                datatype: 'json',
+                type: 'DELETE',
+                url: '/template/' + id,
+            }).success(function(res) {
+                callback(null, res);
+            }).error(function(res) {
+                callback(res.responseText);
+            })
+        },
 
         // Reassigning the template shift to another employee
         reassignTemplateShift: function(id, day, startTime, endTime, reassignToEmployeeId, scheduleId, callback) {
