@@ -4,10 +4,20 @@
  */
 QUnit.config.reorder = false; // Prevent QUnit from running test not in order.
 
+
+
 function testUserRoutes(data) {
     var schedules = data.Schedule;
+    var managers = data.ManagerUser;
+    var employees = data.EmployeeUser;
+
     var crocheterScheduleId;
     var tuftedTitmouseCoalitionMemberYOLOSwag420HashtagPumpkinSpiceLatteBasicBetchScheduleId;
+    var testManagerId;
+    var testManagerPassword;
+    var eLilySeropianId;
+    var eLilySeropianScheduleId;
+    var eLilySeropianPassword;
 
     if (schedules[0].role === 'Crocheter') {
         crocheterScheduleId = schedules[0]._id;
@@ -18,8 +28,28 @@ function testUserRoutes(data) {
         crocheterScheduleId = schedules[1]._id;
     }
 
-    QUnit.module('User');
+    for (var i = 0; i < managers.length; i++) {
+        manager = managers[i]
 
+        if (manager.name === 'test') {
+            testManagerId = manager._id;
+            testManagerPassword = manager.password;
+            break;
+        }
+    }
+
+    for (var i = 0; i < employees.length; i++) {
+        employee = employees[i]
+
+        if (employee.name === 'E Lily Seropian') {
+            eLilySeropianId = employee._id;
+            eLilySeropianScheduleId = employee.schedule;
+            eLilySeropianPassword = employee.password;
+            break;
+        }
+    }
+
+    QUnit.module('User');
 
     // GET all of ZhiftTest managers
     // GET all of ZhiftTest employees
@@ -71,10 +101,36 @@ function testUserRoutes(data) {
     });
 
     // GET
-    // QUnit.asyncTest('GET', function(assert) {
+    QUnit.asyncTest('GET', function(assert) {
         // GET existing manager, test
+        $.ajax({
+            url: 'user/manager/' + testManagerId,
+            type: 'GET',
+            success: expectedSuccess(assert, 'Get manager', {
+                name: 'test',
+                email: 'test@zhift.com',
+                password: testManagerPassword,
+                org: 'ZhiftTest',
+            }),
+            error: unexpectedError(assert, 'Get manager')
+        });
+
+        QUnit.stop();
+
         // GET existing employee, E Lily Seropian
-    // });
+        $.ajax({
+            url: 'user/employee/' + eLilySeropianId,
+            type: 'GET',
+            success: expectedSuccess(assert, 'Get employee', {
+                name: 'E Lily Seropian',
+                email: 'seropian@gmail.edu',
+                password: eLilySeropianPassword,
+                org: 'ZhiftTest',
+                schedule: eLilySeropianScheduleId
+            }),
+            error: unexpectedError(assert, 'Get employee')
+        });
+    });
 
     // // PUT
     // QUnit.asyncTest('PUT', function(assert) {
