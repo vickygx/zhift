@@ -25,7 +25,7 @@ var fn = function(err) {
     }
 };
 
-var TOTAL_TO_COMPLETE = 23;
+var TOTAL_TO_COMPLETE = 22;
 var counter = {
     numDone: 0,
     err: [],
@@ -36,8 +36,6 @@ module.exports = function(fn) {
     counter.numDone = 0;
     body = {};
     var done = function(err, data) {
-        console.log(data);
-
         if (err) {
             counter.err.push(err);
         }
@@ -57,8 +55,6 @@ module.exports = function(fn) {
     }
 
     new Organization({_id: 'ZhiftTest'}).save(done);
-
-    new Organization({_id: 'TuftedTitmouseCoalition'}).save(done);
 
     new ManagerUser({
         name: 'test',
@@ -140,7 +136,7 @@ module.exports = function(fn) {
             name: 'E Lily Seropian',
             email: 'seropian@gmail.edu',
             password: bCrypt.hashSync('lilz', bCrypt.genSaltSync(10)),
-            org: 'TuftedTitmouseCoalition',
+            org: 'ZhiftTest',
             schedule: schedule._id,
         }).save(function(err, user) {
             done(null, user);
