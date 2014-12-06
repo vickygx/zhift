@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+/**
+ * @author Lily Seropian
+ */
+
 var request = require('request');
 var fs = require('fs');
 

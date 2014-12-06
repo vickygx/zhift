@@ -70,7 +70,7 @@ router.post('/employee', function(req, res, next) {
 router.get('/manager/:id', function(req, res, next) {
     UserController.retrieveManagerById(req.param('id'), function(err, manager) {
         if (err) {
-            return res.send(err);
+            return next(err);
         }
         res.send(manager);
     });

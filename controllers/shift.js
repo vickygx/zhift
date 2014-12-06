@@ -258,3 +258,14 @@ module.exports.getShiftsUpForSwapOnASchedule = function(scheduleId, fn) {
 module.exports.deleteOldShifts = function(fn) {
     Shift.remove({dateScheduled: {$lt: new Date()}}, fn);
 };
+
+/**
+ * Get all shifts that are scheduled for tomorrow that are either up for grabs or up for swap. Only called by cron.
+ * @param  {Function} fn Callback that takes (err, shift[]).
+ */
+module.exports.getUnfilledShiftsForTomorrow = function(fn) {
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    Shift.find({dateScheduled: tomorrow, $or: [{upForGrabs: true}, {upForSwap: true}]}).populate('responsiblePerson').exec(fn);
+};

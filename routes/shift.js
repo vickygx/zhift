@@ -166,7 +166,7 @@ router.put('/upForGrabs/:id', function(req, res, next) {
         if (!shift) {
             return next(errors.notFound);
         }
-        //RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
+        RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
         res.send(shift);
     });
 });
@@ -223,7 +223,7 @@ router.put('/upForSwap/:id', function(req, res, next) {
         if (!shift) {
             return next(errors.notFound);
         }
-        //RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
+        RecordController.recordShiftUpForGrabs(req.user.org, [], req.user.name, shift);
         res.send(shift);
     });
 });
@@ -242,7 +242,7 @@ router.put('/claim/:id', function(req, res, next) {
         if (!shift) {
             return next(errors.notFound);
         }
-        //RecordController.recordShiftClaim(req.user.org, [originalOwner.email, req.user.email], originalOwner.name, req.user.name, shift);
+        RecordController.recordShiftClaim(req.user.org, [originalOwner.email, req.user.email], originalOwner.name, req.user.name, shift);
         res.send(shift);
     });
 });
@@ -257,7 +257,22 @@ router.delete('/old', function(req, res, next) {
         if (err) {
             return next(err);
         }
-        res.send({});
+        res.status(200).end();
+    });
+});
+
+/**
+ * GET all shifts that are scheduled for tomorrow that are either up for grabs or up for swap. Only called by cron.
+ * No request body parameters required.
+ * Response body contains:
+ *     {Shift[]} The unfilled shifts.
+ */
+router.get('/unfilledtomorrow', function(req, res, next) {
+    ShiftController.getUnfilledShiftsForTomorrow(function(err, shifts) {
+        if (err) {
+            return next(err);
+        }
+        res.send(shifts);
     });
 });
 
