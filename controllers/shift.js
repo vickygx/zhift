@@ -223,9 +223,6 @@ module.exports.getAWeekShiftsOnASchedule = function(scheduleId, dateFrom, fn){
     var end = new Date(dateFrom);
     end.next().sunday();
 
-    console.log("datefrom:", dateFrom);
-    console.log("end:", end);
-
     Shift.find({'schedule': scheduleId,
                 'dateScheduled': {"$gte": dateFrom, "$lt": end}
                })
