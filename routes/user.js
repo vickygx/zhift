@@ -44,7 +44,7 @@ router.post('/manager', function(req, res, next) {
  * Response body contains:
  *     {EmployeeUser} The created employee.
  */
-router.post('/employee', function(req, res) {
+router.post('/employee', function(req, res, next) {
     UserController.isManagerOfOrganization(req.user.email, req.body.org, function(err, isManager) {
         if (err) {
             return next(err);
@@ -67,7 +67,7 @@ router.post('/employee', function(req, res) {
  * Response body contains:
  *     {ManagerUser} The retrieved manager.
  */
-router.get('/manager/:id', function(req, res) {
+router.get('/manager/:id', function(req, res, next) {
     UserController.retrieveManagerById(req.param('id'), function(err, manager) {
         if (err) {
             return res.send(err);
@@ -94,7 +94,7 @@ router.get('/employee/:id', function(req, res, next) {
 /**
  * PUT to change the password of a user.
  */
-router.put('/:id', function(req, res) {
+router.put('/:id', function(req, res, next) {
     var id = req.param('id');
 
     if (req.user._id.toString() !== id) {
