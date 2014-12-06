@@ -25,7 +25,7 @@ var fn = function(err) {
     }
 };
 
-var TOTAL_TO_COMPLETE = 17;
+var TOTAL_TO_COMPLETE = 23;
 var counter = {
     numDone: 0,
     err: [],
@@ -36,6 +36,8 @@ module.exports = function(fn) {
     counter.numDone = 0;
     body = {};
     var done = function(err, data) {
+        console.log(data);
+
         if (err) {
             counter.err.push(err);
         }
@@ -56,10 +58,22 @@ module.exports = function(fn) {
 
     new Organization({_id: 'ZhiftTest'}).save(done);
 
+    new Organization({_id: 'TuftedTitmouseCoalition'}).save(done);
+
     new ManagerUser({
         name: 'test',
         email: 'test@zhift.com',
         password: bCrypt.hashSync('uepxcqkmxr3w7grs4qew', bCrypt.genSaltSync(10)),
+        org: 'ZhiftTest',
+    }).save(function(err, user) {
+        done(err, user);
+        new User(user).save(done);
+    });
+
+    new ManagerUser({
+        name: 'test2',
+        email: 'test2@zhift.com',
+        password: bCrypt.hashSync('nnk9yttdkl33n2hskbnk', bCrypt.genSaltSync(10)),
         org: 'ZhiftTest',
     }).save(function(err, user) {
         done(err, user);
@@ -107,6 +121,26 @@ module.exports = function(fn) {
             email: 'john@mit.edu',
             password: bCrypt.hashSync('john', bCrypt.genSaltSync(10)),
             org: 'ZhiftTest',
+            schedule: schedule._id,
+        }).save(function(err, user) {
+            done(null, user);
+            new User(user).save(done);
+        });
+    });
+
+    // Role/Schedule: 'TuftedTitmouseCoalitionMemberYOLOSwag420HashtagPumpkinSpiceLatteBasicBetch'
+    new Schedule({
+        org: 'ZhiftTest',
+        role: 'TuftedTitmouseCoalitionMemberYOLOSwag420HashtagPumpkinSpiceLatteBasicBetch'
+    }).save(function(err, schedule) {
+        done(err, schedule);
+
+        // Employee: 'E Lily Seropian' with Role 'TuftedTitmouseCoalitionMemberYOLOSwag420HashtagPumpkinSpiceLatteBasicBetch'
+        new EmployeeUser({
+            name: 'E Lily Seropian',
+            email: 'seropian@gmail.edu',
+            password: bCrypt.hashSync('lilz', bCrypt.genSaltSync(10)),
+            org: 'TuftedTitmouseCoalition',
             schedule: schedule._id,
         }).save(function(err, user) {
             done(null, user);
