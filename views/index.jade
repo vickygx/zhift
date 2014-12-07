@@ -12,8 +12,6 @@ block navbar
   +logged-in-navbar(user.schedule === undefined)
 
 block content
-  h2 Welcome, #{user.name}!
-
   if user.schedule
     +employee(user)
   else

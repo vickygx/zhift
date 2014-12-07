@@ -38,6 +38,8 @@ html
       div.navbar.navbar-inverse.navbar-static-top
         div.container
           a.navbar-brand(href="/home") ZHIFT
+          span.navbar-brand#orgname #{user.org} |
+          span.navbar-brand#username #{user.name}
           block navbar
     div.message-container
 

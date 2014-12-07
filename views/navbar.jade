@@ -3,13 +3,11 @@
 
 mixin logged-in-navbar(isManager)
   span.navbar-right
-    a.navbar-brand(href="/home")
-      span.glyphicon.glyphicon-home(title="Home")
     if isManager
       a.navbar-brand(href="/shift")
-        span.glyphicon.glyphicon-calendar
+        span.glyphicon.glyphicon-calendar(title="Upcoming Shifts")
     a.navbar-brand(href="/dashboard")
-      span.glyphicon.glyphicon-book(title="Dashboard")
+      span.glyicon.fa.fa-flag(title="Notifications")
     a.navbar-brand.dropdown
       a.navbar-brand.dropdown-toggle(id="userMenu" data-toggle="dropdown" aria-expanded="true")
         span.glyphicon.glyphicon-cog(title="Settings")
