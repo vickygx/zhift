@@ -200,7 +200,6 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         TemplateShiftService.deleteTemplateShift(id,
             function(err, shift) {
                 if (err) {
-                    // TODO
                     return console.log(err);
                 }
                 var scopeDayHour = $scope.templateShiftsByDay[shift.dayOfWeek][getHour(shift.start)];
@@ -318,10 +317,10 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
         link: function(scope, element, attrs) {
             element.unbind('click');
             element.bind('click', function(evt) {
-                evt.stopPropagation();
                 scope.deleteTemplateShift(
                     scope.activeShift['shiftId']
                 );
+                window.location.reload();
             });
         }
     };

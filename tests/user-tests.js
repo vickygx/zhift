@@ -67,7 +67,8 @@ function testUserRoutes(data) {
             data: {
                 username: 'Bob',
                 email: 'bob@titmouse.gov',
-                org: 'ZhiftTest'
+                org: 'ZhiftTest',
+                invite: false
             },
             success: expectedSuccess(assert, 'Create manager', {
                 name: 'Bob',
@@ -131,14 +132,4 @@ function testUserRoutes(data) {
             error: unexpectedError(assert, 'Get employee')
         });
     });
-
-    // // PUT
-    // QUnit.asyncTest('PUT', function(assert) {
-
-    // });
-
-    // // DELETE
-    // QUnit.asyncTest('DELETE', function(assert) {
-
-    // });
 }

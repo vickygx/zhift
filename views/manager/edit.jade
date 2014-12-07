@@ -23,7 +23,7 @@ block content
       div(ng-show="showAddManager")
         input(type="text", placeholder="Name", ng-model="name")
         input(type="text", placeholder="Email", ng-model="email")
-        input(type="submit", value="Submit", ng-click="showAddManager = false; createManager(name, email)")
+        input(type="submit", value="Submit", ng-click="showAddManager = false; createManager(name, email, invite)")
       table.center.edit-table
         thead
           tr

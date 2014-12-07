@@ -123,7 +123,7 @@ ZhiftApp.service('UserService', function() {
          * @param {String}   org   The org of the new manager.
          * @param {Function} fn    Callback that takes (err, manager).
          */
-        createManager: function(name, email, org, fn) {
+        createManager: function(name, email, org, invite, fn) {
             $.ajax({
                 datatype: 'json',
                 type: 'POST',
@@ -132,6 +132,7 @@ ZhiftApp.service('UserService', function() {
                     username: name,
                     email: email,
                     org: org,
+                    invite: invite
                 },
             }).success(function(res) {
                 fn(null, res);

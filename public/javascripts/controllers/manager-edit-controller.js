@@ -12,6 +12,7 @@ ZhiftApp.controller('ManagerEditController', function($scope, ScheduleService, U
         $scope.employees = [];
         $scope.name = '';
         $scope.email = '';
+        $scope.invite = "true";
         $scope.role = '';
         $scope.tab = 'Managers';
 
@@ -40,7 +41,7 @@ ZhiftApp.controller('ManagerEditController', function($scope, ScheduleService, U
      * @param {String} email The email of the new manager.
      */
     $scope.createManager = function() {
-        UserService.createManager($scope.name, $scope.email, $scope.org, function(err, manager) {
+        UserService.createManager($scope.name, $scope.email, $scope.org, $scope.invite, function(err, manager) {
             if (err) {
                 return $('.message-container').text(err);
             }

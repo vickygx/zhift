@@ -136,7 +136,7 @@ var createManagerHelper = function(userData, inviteManager, fn) {
  * @param  {String}   org      Organization manager is part of.
  * @param  {Function} fn       Callback that takes (err, manager)
  */
-module.exports.createManager = function(name, email, password, org, fn) {
+module.exports.createManager = function(name, email, password, org, isInvite, fn) {
     if (!validator.isEmail(email)) {
         return fn('Invalid email address.');
     }
@@ -157,7 +157,7 @@ module.exports.createManager = function(name, email, password, org, fn) {
 
     // creating a manager associated with a new organization --> create that organization
     OrgController.retrieveOrg(org, function(err, retrievedOrg) {
-        var inviteManager = retrievedOrg !== null;
+        var inviteManager = ((retrievedOrg !== null) && (isInvite))
 
         if (err) {
             return fn(err.message);
@@ -170,7 +170,9 @@ module.exports.createManager = function(name, email, password, org, fn) {
                 createManagerHelper(userData, false, fn);
             }); 
         }
-        else {
+        else if (!inviteManager) {
+            return fn('This organization already exists!');
+        } else if (inviteManager) {
             createManagerHelper(userData, true, fn);
         }
     });

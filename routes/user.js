@@ -21,11 +21,17 @@ var errorChecking = require('../errors/error-checking');
  *     {String} email    The email for the new manager.
  *     {String} password The password for the new manager.
  *     {String} org      The organization the new manager belongs to.
+ *     {Boolean} invite  Whether or not the manager was invited to be part of an existing org.
  * Response body contains:
  *     {ManagerUser} The created manager.
  */
 router.post('/manager', function(req, res, next) {
-    UserController.createManager(req.body.username, req.body.email, req.body.password, req.body.org, function(err, manager) {
+    var isInvite = false;
+    if (req.body.invite == "true") {
+        isInvite = true;
+    }
+    console.log(req.body.invite, isInvite);
+    UserController.createManager(req.body.username, req.body.email, req.body.password, req.body.org, isInvite, function(err, manager) {
         if (err) {
             return next(err);
         }
@@ -45,6 +51,7 @@ router.post('/manager', function(req, res, next) {
  *     {EmployeeUser} The created employee.
  */
 router.post('/employee', function(req, res, next) {
+    console.log(req.body.invite, "hi");
     UserController.isManagerOfOrganization(req.user.email, req.body.org, function(err, isManager) {
         if (err) {
             return next(err);

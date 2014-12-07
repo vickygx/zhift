@@ -77,7 +77,7 @@ module.exports = function(passport) {
  
         password = createHash(password);
 
-        UserController.createManager(name, email, password, org, function(err, newManager) {
+        UserController.createManager(name, email, password, org, false, function(err, newManager) {
             if (err) {
                 return done(null, false, req.flash('message', err));
             }
