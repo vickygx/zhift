@@ -157,6 +157,7 @@ router.delete('/manager/:id', function(req, res, next) {
  */
 router.delete('/employee/:id', function(req, res, next) {
     UserController.deleteEmployee(req.param('id'), function(err, user) {
+        console.log(req.param('id'));
         if (err) {
             return next(err);
         }

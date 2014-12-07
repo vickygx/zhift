@@ -69,4 +69,33 @@ ZhiftApp.controller('ManagerEditController', function($scope, ScheduleService, U
             $scope.$apply();
         });
     };
-});
+
+    $scope.removeEmployee = function(id) {
+        UserService.deleteEmployee(id, function(err, employee) {
+            if (err) {
+                return $('.message-container').text(err);
+            }
+            $scope.employees = [];
+        
+            UserService.getEmployees(org, function(err, employees) {
+                $scope.employees = employees;
+                $scope.$apply();
+            });
+        });
+    };
+})
+
+.directive('removeEmployee', function() {
+    return {
+        restrict: 'C', 
+        link: function(scope, element, attrs) {
+            element.unbind('click');
+            element.bind('click', function(evt) {
+                console.log(evt.currentTarget.dataset.employeeId);
+                scope.removeEmployee(
+                    evt.currentTarget.dataset.employeeId
+                );
+            });
+        }
+    };
+})

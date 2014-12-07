@@ -13,7 +13,7 @@ block head
     
 
 mixin template-shift-calendar(org)
-    h3.title Permanent Shifts for #{user.org}
+    h3.title Permanent Shifts
     div(id="shift-calendar" ng-controller="ManagerScheduleController" ng-init="init('#{org}')")
         div.schedule-tabs-container
             div.btn-group(id="schedule-tabs")

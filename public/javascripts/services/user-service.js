@@ -87,6 +87,18 @@ ZhiftApp.service('UserService', function() {
             });
         },
 
+        deleteEmployee: function(id, fn) {
+            $.ajax({
+                datatype: 'json',
+                type: 'DELETE',
+                url: '/user/employee/'+id
+            }).success(function(res) {
+                fn(null, res);
+            }).error(function(res) {
+                fn(res.responseText);
+            });
+        },
+        
         /**
          * GET /user/org/[orgId]/manager.
          * @param {String}   id The id of the organization for which to get all managers.

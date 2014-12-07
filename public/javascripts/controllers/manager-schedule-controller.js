@@ -257,10 +257,6 @@ ZhiftApp.controller('ManagerScheduleController', function($scope, ScheduleServic
             $scope.schedules.push(newSchedule);
             $scope.setCurrentSchedule(newSchedule._id);
             $scope.$apply();
-            // newSchedule.shifts = [];
-            // newSchedule.templateShifts = [];
-            // $scope.schedules[newSchedule._id] = newSchedule;
-            // $scope.$apply();
         });
     };
 })
