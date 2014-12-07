@@ -10,8 +10,6 @@
     max-height: 500px;
     min-width: 460px;
     overflow: scroll;
-    /*border-top: 3px solid #ffc40f;
-    border-bottom: 5px solid #ffc40f;*/
     max-width: 1062px
 }
 
@@ -53,7 +51,6 @@
     max-width:150px;
     min-width: 130px;
     margin: 0 1px;
-    /*border: 1px solid #ffc40f;*/
 }
 
 #shift-schedule .event-box {
@@ -88,7 +85,6 @@
 }
 .add-shift {
     width: 100%;
-    /*background: #fead77;*/
     background: #383838;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.22);
     color: white;

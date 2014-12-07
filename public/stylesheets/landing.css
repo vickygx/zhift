@@ -24,11 +24,15 @@ a {
 	font-weight: 400;
 }
 
+a:hover{
+  color: white;
+}
+
 .message-container {
 }
 
 .info-container {
-  	margin: 60px 0 0 60px;
+  margin: 60px 0 0 60px;
 	color: #2c3e50;
 	float: left;
 	padding: 30px 0 0 0;
@@ -39,8 +43,6 @@ a {
   max-width: 85%;
   margin: 60px 20px;
   padding: 30px 60px 30px 60px;
-  border-top: solid 2px #D9D9D6;
-  border-left: solid 2px #D9D9D6;
   float: right;
   background: rgba(0, 0, 0, 0.2);
 }
