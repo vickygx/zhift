@@ -105,6 +105,7 @@ function clearAndSeed() {
                             testScheduleRoutes();
                             testShiftRoutes(data);
                             testRecordRoutes(data);
+                            testUserRoutes(data);
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             console.log(jqXHR.status, errorThrown);

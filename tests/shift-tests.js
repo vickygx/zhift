@@ -9,17 +9,11 @@ function testShiftRoutes(data){
     var templateShift = data.TemplateShift[0];
     var shift = data.Shift[0];
     var schedule = data.Schedule[0];
-    var jane = null;
-    var john = null;
+    var employees = {};
 
-    setJaneAndJohn = function(){
-        if (data.EmployeeUser[0].name === 'Jane Doe'){
-            jane = data.EmployeeUser[0];
-            john = data.EmployeeUser[1];
-        }
-        else {
-            jane = data.EmployeeUser[1];
-            john = data.EmployeeUser[0];
+    setEmployees = function() {
+        for (var i = 0; i < data.EmployeeUser.length; i++) {
+            employees[data.EmployeeUser[i].name] =  data.EmployeeUser[i];
         }
     }
 
@@ -70,11 +64,11 @@ function testShiftRoutes(data){
         });
     });
 
-    QUnit.asyncTest('GET /user/:id', function(assert){
-        setJaneAndJohn();
+    QUnit.asyncTest('GET /user/:id', function(assert) {
+        setEmployees();
 
         $.ajax({
-            url: '/shift/user/' + jane._id,
+            url: '/shift/user/' + employees['Jane Doe']._id,
             type: 'GET',
             success: expectedSuccess(assert, 'Some shifts', data.Shift),
             error: unexpectedError(assert, 'Some shifts')
@@ -82,7 +76,7 @@ function testShiftRoutes(data){
 
         QUnit.stop();
         $.ajax({
-            url: '/shift/user/' + john._id,
+            url: '/shift/user/' + employees['John Doe']._id,
             type: 'GET',
             success: expectedSuccess(assert, 'No shifts', []),
             error: unexpectedError(assert, 'No shifts')
@@ -164,7 +158,6 @@ function testShiftRoutes(data){
         var currentDate = Date.today().next().sunday();
         
         var shift = getNextShift(currentDate);
-        console.log("this is shift:", shift);
         $.ajax({
             url: '/shift/week/' + schedule._id + '/' + currentDate,
             type: 'GET',
@@ -241,7 +234,7 @@ function testShiftRoutes(data){
                 type: 'POST',
                 success: unexpectedSuccess(assert, 'Empty shift'),
                 error: expectedError(assert, 'Empty shift', 404)
-            })
+            });
         });
     };
 }
