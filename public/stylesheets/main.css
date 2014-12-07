@@ -1,5 +1,7 @@
 body {
-  font-family: 'Oxygen';
+  font-family: 'Merriweather';
+  font-weight: 300;
+  background: transparent;
 }
 
 a {
@@ -42,10 +44,11 @@ a {
   box-shadow: none;
 }
 
-.navbar-brand {
+.navbar-inverse .navbar-brand {
   font-family: 'Bitter';
   font-size: 2em;
   font-weight: 700;
+  color: #e3e48d;
 }
 .navbar-inverse {
   background: #2c3e50

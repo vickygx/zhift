@@ -2,20 +2,25 @@
 //- @author Anji Ren
 
 extends ../layout
+block head
+  link(rel="stylesheet", href="/stylesheets/landing.css")
+
 
 block content
   - if(message)
     div.message-container #{message}
+  div.info-container
+    h1 Schedule your way.
+    div Finally, a free and easy online tool for managing work shifts <br> for any size and shape organization.
   div.form-container
     form.form-horizontal(action="/login", method="POST")
       fieldset
-        h2 Sign in
         div.form-group
           label.col-lg-2.control-label Email
           div.col-lg-10
             input.form-control(type="email", name="email", placeholder='"jane@applebees.com"', required, autofocus)
         div.form-group
-          label.col-lg-2.control-label Organization
+          label.col-lg-2.control-label Org
           div.col-lg-10
             input.form-control(type="text", name="org" placeholder='"Applebee\'s"', required, autofocus)
         div.form-group
@@ -24,6 +29,6 @@ block content
             input.form-control(type="password", name="password", required)
         div.form-group
           div.col-lg-10.col-lg-offset-2
-            input.btn.btn-primary.yellow-button(type="submit", value="Sign in")
+            input.btn.btn-primary.yellow-button(type="submit", value="LOGIN")
     br
-    a(href="/signup") Create an organization
+    a(href="/signup") Register a new organization
