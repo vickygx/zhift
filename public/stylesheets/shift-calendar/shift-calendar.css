@@ -82,6 +82,10 @@
     color: black;
 }
 
+.clickable-shift:hover {
+    cursor: pointer;
+}
+
 .shift .btn {
     margin-bottom: 4px;
     padding: 4px 8px;
