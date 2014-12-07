@@ -44,7 +44,7 @@ mixin template-shift-calendar(org)
                                 data-end-time="{{hour+1}}"
                                 class="set-active-shift-info")
                                 i.fa.fa-plus.add-shift-button
-                            div.shift(data-ng-repeat="shift in templateShiftsByDay[day][hour]"
+                            div.shift.clickable-shift(data-ng-repeat="shift in templateShiftsByDay[day][hour]"
                                 data-toggle="modal" 
                                 data-target="#reassignShiftModal"
                                 data-shift-id="{{shift._id}}"
@@ -52,7 +52,7 @@ mixin template-shift-calendar(org)
                                 data-start-time="{{hour}}" 
                                 data-end-time="{{hour+1}}"
                                 class="set-active-shift-info")
-                                p {{shift.responsiblePerson.name}}
+                                p.clickable-shift {{shift.responsiblePerson.name}}
         div.modal.fade#addShiftModal
             div.modal-dialog
                 div.modal-content
